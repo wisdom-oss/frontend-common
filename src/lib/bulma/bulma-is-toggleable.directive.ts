@@ -7,7 +7,7 @@ import {
 } from "@angular/core";
 
 @Directive({
-  selector: '.is-toggleable'
+  selector: ".is-toggleable"
 })
 export class BulmaIsToggleableDirective {
 
