@@ -11,6 +11,14 @@ import {Component, Input} from "@angular/core";
 })
 export class IonIconComponent {
 
+  /**
+   * The name of the icon.
+   * Is not used by angular but needed to render the correct icon and necessary
+   * so that angular stops complaining.
+   *
+   * You can find the names at the official website
+   * {@link https://ionic.io/ionicons}.
+   */
   @Input() name: string | undefined;
 
 }
