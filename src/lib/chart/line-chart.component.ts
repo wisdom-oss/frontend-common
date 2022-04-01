@@ -13,7 +13,7 @@ import Chart, {ChartData, ChartOptions} from "chart.js/auto";
 /** Component for displaying bar line with chart.js */
 @Component({
   selector: "line-chart",
-  template: "<canvas #chart></canvas>"
+  template: "<div><canvas style='max-width: min(100%, 100vw)' #chart></canvas></div>"
 })
 export class LineChartComponent implements AfterViewInit, OnChanges {
 

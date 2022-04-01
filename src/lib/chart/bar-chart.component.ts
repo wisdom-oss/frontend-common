@@ -5,7 +5,6 @@ import {
   Component,
   AfterViewInit,
   Input,
-  Output,
   ElementRef
 } from "@angular/core";
 import Chart, {ChartData, ChartOptions} from "chart.js/auto";
@@ -13,7 +12,7 @@ import Chart, {ChartData, ChartOptions} from "chart.js/auto";
 /** Component for displaying bar charts with chart.js */
 @Component({
   selector: "bar-chart",
-  template: "<canvas #chart></canvas>"
+  template: "<div><canvas style='max-width: min(100%, 100vw)' #chart></canvas></div>"
 })
 export class BarChartComponent implements AfterViewInit, OnChanges {
 
@@ -36,7 +35,7 @@ export class BarChartComponent implements AfterViewInit, OnChanges {
       type: "bar",
       data: this.data ?? {datasets: []},
       options: this.options
-    })
+    });
   }
 
   /**
