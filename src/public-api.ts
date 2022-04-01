@@ -11,6 +11,7 @@ export * from "./lib/chart/line-chart.component";
 
 export * from "./lib/http-context/use-api-url";
 export * from "./lib/http-context/use-base-url";
+export * from "./lib/http-context/use-cache";
 
 export {WisdomInterface} from "./WisdomInterface";
 
