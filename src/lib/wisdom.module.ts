@@ -6,15 +6,13 @@ import {
 import {ChartModule} from "./chart/chart.module";
 import {IonIconComponent} from "./ion-icon/ion-icon.component";
 import {MapComponent} from "./map/map.component";
-import {PageLoaderComponent} from './page-loader/page-loader.component';
 import {TranslateModule} from "@ngx-translate/core";
 
 @NgModule({
   declarations: [
     IonIconComponent,
     BulmaIsToggleableDirective,
-    MapComponent,
-    PageLoaderComponent
+    MapComponent
   ],
   imports: [
     TranslateModule
@@ -23,8 +21,7 @@ import {TranslateModule} from "@ngx-translate/core";
     IonIconComponent,
     BulmaIsToggleableDirective,
     MapComponent,
-    ChartModule,
-    PageLoaderComponent
+    ChartModule
   ]
 })
 export class WisdomModule {}
