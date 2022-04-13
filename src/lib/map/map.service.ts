@@ -5,6 +5,7 @@ import {firstValueFrom} from "rxjs";
 import * as idb from "idb-keyval";
 
 import {USE_API_URL} from "../http-context/use-api-url";
+import {USE_LOADER} from "../http-context/use-loader";
 
 const API_URL = "geodata-rest";
 
@@ -49,7 +50,7 @@ export class MapService {
         "Content-Type": "application/json"
       }),
       responseType: "json",
-      context: new HttpContext().set(USE_API_URL, true)
+      context: new HttpContext().set(USE_API_URL, true).set(USE_LOADER, true)
     }));
 
     await idb.set(dbKey, layerData);
