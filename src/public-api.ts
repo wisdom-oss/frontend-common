@@ -14,5 +14,7 @@ export * from "./lib/http-context/use-base-url";
 export * from "./lib/http-context/use-cache";
 export * from "./lib/http-context/use-loader";
 
+export * from "./lib/util";
+
 export {WisdomInterface} from "./WisdomInterface";
 
