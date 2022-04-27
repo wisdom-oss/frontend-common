@@ -10,6 +10,7 @@ import {
 } from "@angular/core";
 
 import * as L from "leaflet";
+import * as LX from "./invert-selection";
 
 import {MapService} from "./map.service";
 
@@ -164,6 +165,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     if (this.layerData) {
       // control to select which base layer to use
       let control = L.control.layers();
+      let layers: L.Layer[] = [];
 
       this.layerData.then(layerData => {
         // this promise is started in the init part, but is needed here
@@ -208,6 +210,8 @@ export class MapComponent implements OnInit, AfterViewInit {
                   // selecting a shape should update the output
                   this.emitSelection();
                 });
+
+                layers.push(layer);
               }
             });
 
@@ -241,6 +245,11 @@ export class MapComponent implements OnInit, AfterViewInit {
       });
 
       control.addTo(map);
+      LX.control.invertSelection(() => {
+        for (let layer of layers) {
+          layer.fire("click");
+        }
+      }).addTo(map);
     }
   }
 
