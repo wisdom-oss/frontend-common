@@ -23,3 +23,20 @@ export function stringToColor(str: string, map?: Record<string, string>): string
   }
   return color;
 }
+
+/**
+ * Returns a number presentation where every third digit from the end is
+ * separated by a dot.
+ * @example prettyPrintNum(12345678) => "12.345.678"
+ * @param num Number to pretty print
+ */
+export function prettyPrintNum(num: number): string {
+  return num
+    .toString()
+    .split("")
+    .reverse()
+    .map((value, index) => index % 3 == 0 ? value + "." : value)
+    .reverse()
+    .join("")
+    .slice(0, -1);
+}
