@@ -8,6 +8,9 @@
  *
  * @returns A hex color code in the style of '#abc123'
  */
+import {TranslateService} from "@ngx-translate/core";
+import {Inject} from "@angular/core";
+
 export function stringToColor(str: string, map?: Record<string, string>): string {
   if (map && map[str]) {
     return map[str];
@@ -39,4 +42,31 @@ export function prettyPrintNum(num: number): string {
     .reverse()
     .join("")
     .slice(0, -1);
+}
+
+/**
+ * Utility function to translate strings in any data object using the given
+ * translate service.
+ *
+ * Internally the `instant()` method is used, causing this to be sync, beware.
+ * @param service Translate service to translate with
+ * @param obj Object to iterate and translate through
+ */
+export function translateObject<T>(service: TranslateService, obj: T): T {
+  function internalTranslate(obj: any): any {
+    console.log(obj);
+    switch (typeof obj) {
+      case "object":
+        let newObj: any = {};
+        for (let [key, val] of Object.entries(obj)) {
+          newObj[key] = internalTranslate(val);
+        }
+        return newObj
+      case "string":
+        return service.instant(obj);
+      default:
+        return obj;
+    }
+  }
+  return internalTranslate(obj);
 }
