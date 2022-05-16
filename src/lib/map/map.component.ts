@@ -13,6 +13,7 @@ import * as L from "leaflet";
 import * as LX from "./invert-selection";
 
 import {MapService} from "./map.service";
+import LayerData from "./layer-data";
 
 /**
  * GeoJSON data type used by Leaflet.
@@ -78,7 +79,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   @Input("layers") layers?: Record<string, string[]>
 
   /** Layer data fetching the map data. */
-  private layerData?: Promise<Record<string, Record<string, {name: string, geojson: GeoJsonObject}[]>>>
+  private layerData?: Promise<Record<string, Record<string, LayerData[]>>>
 
   /** Input for a hex code for unselected shapes. */
   @Input("unselectedColor") unselectedColor = "#1f5aec";
@@ -107,7 +108,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   @Output() selected = new EventEmitter<{
     layerName: string,
     resolution: string,
-    shapes: string[]
+    keys: string[],
   }>();
 
   /**
@@ -186,7 +187,7 @@ export class MapComponent implements OnInit, AfterViewInit {
 
                 layer.on("click", () => {
                   let value = [layerName, resolution, feature.properties.name];
-                  let key = value.join(".");
+                  let key = feature.properties.key;
 
                   let path = layer as L.Path;
 
@@ -215,10 +216,10 @@ export class MapComponent implements OnInit, AfterViewInit {
               }
             });
 
-            for (let {name, geojson} of shapes) {
+            for (let {name, key, geojson} of shapes) {
               // assign the name as a property in the shape to allow its usage
               // in the click handler
-              geoJsonLayer.addData(Object.assign(geojson!, {properties: {name}}));
+              geoJsonLayer.addData(Object.assign(geojson!, {properties: {name, key}}));
             }
 
             if (!baseLayerDisplayed) {
@@ -260,15 +261,16 @@ export class MapComponent implements OnInit, AfterViewInit {
    */
   private emitSelection(): void {
     let [layerName, resolution] = this.selectedLayer!;
-    let shapes = Object.values(this.selectedShapes)
+    let keys = Object.entries(this.selectedShapes)
+      .map(([key, values]) => [...values, key])
       .filter(([elLayerName, elResolution]) => {
         return elLayerName == layerName && elResolution == resolution;
       })
-      .map(([layerName, resolution, shape]) => shape);
+      .map(([layerName, resolution, shape, key]) => key);
     this.selected.emit({
       layerName,
       resolution,
-      shapes
+      keys
     });
   }
 }
