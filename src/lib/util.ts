@@ -54,7 +54,6 @@ export function prettyPrintNum(num: number): string {
  */
 export function translateObject<T>(service: TranslateService, obj: T): T {
   function internalTranslate(obj: any): any {
-    console.log(obj);
     switch (typeof obj) {
       case "object":
         let newObj: any = {};
