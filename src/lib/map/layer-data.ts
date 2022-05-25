@@ -4,12 +4,15 @@ import * as L from "leaflet";
  * GeoJSON data type used by Leaflet.
  * @private
  */
-type GeoJsonObject = Parameters<typeof L["geoJSON"]>[0];
+export type GeoJsonObject = Parameters<typeof L["geoJSON"]>[0];
 /** Type to represent layer data received from the geo data server. */
-interface LayerData {
+export interface ShapeData {
   name: string,
   key: string,
-  geojson: GeoJsonObject
-}[];
+  nutsKey: string,
+  geoJson: GeoJsonObject
+};
+
+export type LayerData = ShapeData[];
 
 export default LayerData;

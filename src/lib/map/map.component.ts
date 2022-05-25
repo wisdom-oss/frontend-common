@@ -13,13 +13,21 @@ import * as L from "leaflet";
 import * as LX from "./invert-selection";
 
 import {MapService} from "./map.service";
-import LayerData from "./layer-data";
+import LayerData, {ShapeData} from "./layer-data";
+import {Resolution} from "./resolution";
+import {BehaviorSubject, Observable, Subject} from "rxjs";
 
 /**
  * GeoJSON data type used by Leaflet.
  * @private
  */
 type GeoJsonObject = Parameters<typeof L["geoJSON"]>[0];
+
+/** Type alias to enforce the meaning of the layer keys. */
+type LayerKey = string;
+
+/** A layer config for the input of {@link MapComponent.inputLayers}. */
+type LayerConfig = Record<LayerKey, [string, Resolution | null, string[] | null]>;
 
 /**
  * Component for displaying maps.
@@ -36,6 +44,9 @@ type GeoJsonObject = Parameters<typeof L["geoJSON"]>[0];
   ]
 })
 export class MapComponent implements OnInit, AfterViewInit {
+
+  /** Reexport of the {@link Resolution} enum. */
+  static Resolution = Resolution;
 
   /** The ref to the map html element. */
   @ViewChild("map") private mapElement!: ElementRef<HTMLDivElement>;
@@ -60,31 +71,62 @@ export class MapComponent implements OnInit, AfterViewInit {
   /** Zoom level of the map, defaults to 7. */
   zoom = 7;
 
+  /** Input for a hex code for unselected shapes. */
+  @Input("unselectedColor") unselectedColor = "#1f5aec";
+  /** Input for a hex code selected shapes. */
+  @Input("selectedColor") selectedColor = "#d35a0c";
+
   /**
    * Input for the layers that should be displayed.
    *
-   * The record expects as the key the `layer_name` and as the value an array
-   * of `layer_resolutions`.
+   * The key of the record is layer key and is also emitted on the selection.
+   * The value of the record is an array and the values of that should be the
+   * following:
+   * <ol>
+   *   <li>
+   *     The name of the layer, this will be only used to display a name of
+   *     the layer (may also be a translation key).
+   *     // TODO: actually implement translation here
+   *   </li>
+   *   <li>
+   *     This should be the resolution to display the layer at, this may also
+   * be
+   *     null to display the keys directly without any shape intersection
+   *     resolving.
+   *   </li>
+   *   <li>
+   *     These should be the keys used to display the shapes from.
+   *     If the given keys are empty or null, this will display everything from
+   *     the give resolution.
+   *   </li>
+   * </ol>
+   *
+   * **Attention**: The service needs at least one of the resolution or the
+   * keys
+   * to properly respond.
    *
    * @example
    * ```html
    * <map
    *   height="70vh"
-   *   [layers]="{'lower-saxony': ['municipalities', 'districts', 'regions']}"
+   *   [layers]="{
+   *     full_res: ['All of municipal resolution', Resolution.MUNICIPAL, null],
+   *     only_keys: ['Only show exactly these', null, ['01', '034030000000']],
+   *     mixed: ['Show district resolution', Resolution.DISTRICT, ['01',
+   *   '034030000000']]
+   *   }"
    * ></map>
    * ```
-   *
+   * // TODO: update link when geo data docs update
    * @see https://wisdom04.vlba.uni-oldenburg.de/repos/service-geo-data-rest/main/api/get-layer
    */
-  @Input("layers") layers?: Record<string, string[]>
-
-  /** Layer data fetching the map data. */
-  private layerData?: Promise<Record<string, Record<string, LayerData[]>>>
-
-  /** Input for a hex code for unselected shapes. */
-  @Input("unselectedColor") unselectedColor = "#1f5aec";
-  /** Input for a hex code selected shapes. */
-  @Input("selectedColor") selectedColor = "#d35a0c";
+  @Input("layers")
+  set inputLayers(layerConfig: LayerConfig) {
+    this.layerConfig.next(layerConfig);
+  };
+  private layerConfig: BehaviorSubject<LayerConfig> = new BehaviorSubject({});
+  private layerData: BehaviorSubject<Record<LayerKey, LayerData>> = new BehaviorSubject({});
+  private layerNames: Record<LayerKey, string> = {};
 
   /** The leaflet map that is displayed here. */
   map?: L.Map;
@@ -92,22 +134,20 @@ export class MapComponent implements OnInit, AfterViewInit {
   /**
    * Internally holds all elements that are currently selected.
    *
-   * Keys: `"layer_name.resolution.shape"`
-   * Values: `[layer_name, resolution, shape]`
-   * @private
+   * The set holds all keys of shapes currently selected.
    */
-  private selectedShapes: Record<string, [string, string, string]> = {};
+  private selectedShapes: Record<LayerKey, Set<string>> = {};
 
   /**
    * The currently selected layer in the map control.
    * @private
    */
-  private selectedLayer?: [string, string];
+  private selectedLayer?: LayerKey;
 
   /** Outputs the currently selected shapes. */
   @Output() selected = new EventEmitter<{
-    layerName: string,
-    resolution: string,
+    layer: LayerKey,
+    name: string,
     keys: string[],
   }>();
 
@@ -125,24 +165,26 @@ export class MapComponent implements OnInit, AfterViewInit {
     if (this.inputTileUrl) this.tileUrl = this.inputTileUrl;
     if (this.inputCenter) this.center = this.inputCenter;
     if (this.inputZoom) this.zoom = parseInt(this.inputZoom);
-    if (this.layers) {
-      this.layerData = new Promise(async (resolve, reject) => {
-        let layerData: Awaited<MapComponent["layerData"]> = {};
-        let requests: Promise<any>[] = [];
-        for (let [layerName, resolutions] of Object.entries(this.layers!)) {
-          layerData[layerName] = {};
-          for (let resolution of resolutions) {
-            requests.push(
-              this.service.fetchLayerData(layerName, resolution)
-                .then(data => layerData![layerName][resolution] = data)
-            );
-          }
-        }
-        Promise.all(requests)
-          .then(() => resolve(layerData!))
-          .catch(e => reject(e));
-      });
-    }
+
+    this.layerConfig.subscribe(async config => {
+      let layerData = {};
+      let requests: Record<LayerKey, Promise<LayerData>> = {};
+      for (
+        let [layerKey, [displayName, resolution, keys]]
+        of Object.entries(config)
+      ) {
+        this.layerNames[layerKey] = displayName;
+        requests[layerKey] = this.service.fetchLayerData(
+          resolution,
+          keys?.map(k => k.split(" ").join(""))
+        );
+      }
+      let fetched: Record<LayerKey, LayerData> = {};
+      for (let [layerKey, data] of Object.entries(requests)) {
+        fetched[layerKey] = await data;
+      }
+      this.layerData.next(fetched);
+    });
   }
 
   /**
@@ -162,96 +204,75 @@ export class MapComponent implements OnInit, AfterViewInit {
     L.tileLayer(this.tileUrl).addTo(map);
 
     this.map = map;
+    let layersControl: L.Control.Layers;
+    // TODO: make a clear type from this
+    let invertSelectionControl: any;
 
-    if (this.layerData) {
-      // control to select which base layer to use
-      let control = L.control.layers();
+    this.layerData.subscribe(layerData => {
+      let displayLayer = true;
+
+      // reset selected data
+      this.selectedShapes = {};
+
+      if (layersControl) map.removeControl(layersControl);
+      layersControl = L.control.layers();
       let layers: L.Layer[] = [];
 
-      this.layerData.then(layerData => {
-        // this promise is started in the init part, but is needed here
-
-        let baseLayerDisplayed = false;
-
-        for (let [layerName, resolutions] of Object.entries(layerData)) {
-          for (let [resolution, shapes] of Object.entries(resolutions)) {
-
-            // put the geojson in a single layer to optimize runtime of the map
-            let geoJsonLayer = L.geoJSON(undefined, {
-              style: {color: this.unselectedColor},
-              onEachFeature: (feature, layer) => {
-                // TODO: make automatic tooltips
-                layer.bindTooltip(feature.properties.name, {
-                  direction: "center"
-                });
-
-                layer.on("click", () => {
-                  let value = [layerName, resolution, feature.properties.name];
-                  let key = feature.properties.key;
-
-                  let path = layer as L.Path;
-
-                  // highlight the clicked on shape and add it to the selection
-                  // if already in the selection, unselect
-                  if (this.selectedShapes[key]) {
-                    path.setStyle({
-                      color: this.unselectedColor
-                    });
-                    path.bringToBack();
-                    delete this.selectedShapes[key];
-                  }
-                  else {
-                    path.setStyle({
-                      color: this.selectedColor
-                    });
-                    path.bringToFront();
-                    this.selectedShapes[key] = value as [string, string, string];
-                  }
-
-                  // selecting a shape should update the output
-                  this.emitSelection();
-                });
-
-                layers.push(layer);
+      // update map with new layer data
+      for (let [key, data] of Object.entries(layerData)) {
+        let selectedShapes = this.selectedShapes[key] = new Set();
+        // use for every layer a new geoJSON layer
+        let geoJsonLayer = L.geoJSON(undefined, {
+          style: {color: this.unselectedColor},
+          onEachFeature: (feature, layer) => {
+            // used properties are injected later into the feature
+            layer.bindTooltip(feature.properties.name, {direction: "center"});
+            layer.on("click", () => {
+              let [key, path] = [feature.properties.key, layer as L.Path];
+              if (selectedShapes.has(key)) {
+                path.setStyle({color: this.unselectedColor});
+                path.bringToBack();
+                selectedShapes.delete(key);
               }
-            });
-
-            for (let {name, key, geojson} of shapes) {
-              // assign the name as a property in the shape to allow its usage
-              // in the click handler
-              geoJsonLayer.addData(Object.assign(geojson!, {properties: {name, key}}));
-            }
-
-            if (!baseLayerDisplayed) {
-              // the first base layer should be the default
-              geoJsonLayer.addTo(map);
-              baseLayerDisplayed = true;
-              this.selectedLayer = [layerName, resolution];
-            }
-
-            // TODO: use names here than can be translated
-            control.addBaseLayer(geoJsonLayer, `${layerName}: ${resolution}`);
-
-            map.on("baselayerchange", data => {
-              // check if the current layer is selected, this preffered over the
-              // name, since the name might change caused by translation efforts
-              let {layer} = data as L.LayersControlEvent;
-              if (layer == geoJsonLayer) {
-                this.selectedLayer = [layerName, resolution];
-                this.emitSelection();
+              else {
+                path.setStyle({color: this.selectedColor});
+                path.bringToFront();
+                selectedShapes.add(key);
               }
+              this.emitSelection();
             });
+            layers.push(layer);
+          }
+        });
+        for (let shape of data) {
+          geoJsonLayer.addData(Object.assign(shape.geoJson, {properties: {
+            name: shape.name,
+            key: shape.key
+          }}));
+          if (displayLayer) {
+            geoJsonLayer.addTo(map);
+            displayLayer = false;
+            this.selectedLayer = key;
           }
         }
-      });
+        layersControl.addBaseLayer(geoJsonLayer, this.layerNames[key]);
+        map.on("baselayerchange", ({layer}) => {
+          if (layer = geoJsonLayer) {
+            this.selectedLayer = key;
+            this.emitSelection();
+          }
+        })
+      }
+      if (Object.keys(layerData).length > 1) layersControl.addTo(map);
 
-      control.addTo(map);
-      LX.control.invertSelection(() => {
+      if (invertSelectionControl) map.removeControl(invertSelectionControl);
+      invertSelectionControl = LX.control.invertSelection(() => {
         for (let layer of layers) {
           layer.fire("click");
         }
-      }).addTo(map);
-    }
+      });
+      invertSelectionControl.addTo(map);
+    });
   }
 
   /**
@@ -260,16 +281,12 @@ export class MapComponent implements OnInit, AfterViewInit {
    * @private
    */
   private emitSelection(): void {
-    let [layerName, resolution] = this.selectedLayer!;
-    let keys = Object.entries(this.selectedShapes)
-      .map(([key, values]) => [...values, key])
-      .filter(([elLayerName, elResolution]) => {
-        return elLayerName == layerName && elResolution == resolution;
-      })
-      .map(([layerName, resolution, shape, key]) => key);
+    let layerKey = this.selectedLayer!;
+    let layerName = this.layerNames[layerKey]!;
+    let keys = Array.from(this.selectedShapes[layerKey]);
     this.selected.emit({
-      layerName,
-      resolution,
+      layer: layerKey,
+      name: layerName,
       keys
     });
   }
