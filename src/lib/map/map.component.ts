@@ -8,14 +8,15 @@ import {
   Output,
   ElementRef
 } from "@angular/core";
+import {BehaviorSubject} from "rxjs";
 
 import * as L from "leaflet";
-import * as LX from "./invert-selection";
 
 import {MapService} from "./map.service";
-import LayerData, {ShapeData} from "./layer-data";
+import LayerData from "./layer-data";
 import {Resolution} from "./resolution";
-import {BehaviorSubject, Observable, Subject} from "rxjs";
+
+import * as LX from "./invert-selection";
 
 /**
  * GeoJSON data type used by Leaflet.
