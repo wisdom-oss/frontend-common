@@ -243,6 +243,7 @@ import {
 import {ChartModule} from &quot;./chart/chart.module&quot;;
 import {IonIconComponent} from &quot;./ion-icon/ion-icon.component&quot;;
 import {MapComponent} from &quot;./map/map.component&quot;;
+import {TranslateModule} from &quot;@ngx-translate/core&quot;;
 
 @NgModule({
   declarations: [
@@ -250,7 +251,9 @@ import {MapComponent} from &quot;./map/map.component&quot;;
     BulmaIsToggleableDirective,
     MapComponent
   ],
-  imports: [],
+  imports: [
+    TranslateModule
+  ],
   exports: [
     IonIconComponent,
     BulmaIsToggleableDirective,

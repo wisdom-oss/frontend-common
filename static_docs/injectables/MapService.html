@@ -79,6 +79,22 @@ lazily.</p>
     <h3 id="index">Index</h3>
     <table class="table table-sm table-bordered index-table">
         <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#idb" >idb</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
 
                 <tr>
                     <td class="col-md-4">
@@ -115,7 +131,7 @@ lazily.</p>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="20" class="link-to-prism">src/lib/map/map.service.ts:20</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="62" class="link-to-prism">src/lib/map/map.service.ts:62</a></div>
                             </td>
                         </tr>
 
@@ -180,15 +196,15 @@ lazily.</p>
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>fetchLayerData(layerName: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, layerResolution: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, force: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>)</code>
+                    <code>fetchLayerData(resolution: <a href="../miscellaneouss/Resolution.html" target="_self">Resolution | null | undefined</a>, keys?: string[] | null, force: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="36"
-                            class="link-to-prism">src/lib/map/map.service.ts:36</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="85"
+                            class="link-to-prism">src/lib/map/map.service.ts:85</a></div>
                 </td>
             </tr>
 
@@ -214,9 +230,9 @@ lazily.</p>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>layerName</td>
+                                    <td>resolution</td>
                                     <td>
-                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                <code><a href="../miscellaneous/enumerations.html#Resolution" target="_self" >Resolution | null | undefined</a></code>
                                     </td>
 
                                     <td>
@@ -227,25 +243,25 @@ lazily.</p>
                                     </td>
 
                                     <td>
-                                        <p>The layer name to request data from</p>
+                                        <p>The resolution the of the shapes returned by the service</p>
 
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>layerResolution</td>
+                                    <td>keys</td>
                                     <td>
-                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            <code>string[] | null</code>
                                     </td>
 
                                     <td>
-                                        No
+                                        Yes
                                     </td>
 
                                     <td>
                                     </td>
 
                                     <td>
-                                        <p>The resolution to request shapes from</p>
+                                        <p>The keys given to look for shapes</p>
 
                                     </td>
                                 </tr>
@@ -274,7 +290,7 @@ lazily.</p>
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>unknown</code>
+                        <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#LayerData" target="_self" >Promise&lt;LayerData&gt;</a></code>
 
                     </div>
                     <div class="io-description">
@@ -285,20 +301,88 @@ lazily.</p>
         </tbody>
     </table>
 </section>
+            <section>
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="idb"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>idb</b></span>
+                        <a href="#idb"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="62" class="link-to-prism">src/lib/map/map.service.ts:62</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
 
     </div>
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {HttpClient, HttpContext, HttpHeaders} from &quot;@angular/common/http&quot;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {
+  HttpClient,
+  HttpContext,
+  HttpHeaders,
+  HttpParams
+} from &quot;@angular/common/http&quot;;
 import {Injectable} from &quot;@angular/core&quot;;
+import {openDB, DBSchema} from &quot;idb&quot;;
 import {firstValueFrom} from &quot;rxjs&quot;;
 
-import * as idb from &quot;idb-keyval&quot;;
-
+import {Resolution} from &quot;./resolution&quot;;
+import {LayerData, ShapeData, GeoJsonObject} from &quot;./layer-data&quot;;
 import {USE_API_URL} from &quot;../http-context/use-api-url&quot;;
+import {USE_LOADER} from &quot;../http-context/use-loader&quot;;
 
-const API_URL &#x3D; &quot;geodata-rest&quot;;
+const API_URL &#x3D; &quot;geodata&quot;;
+const DB_NAME &#x3D; &quot;map-db&quot;;
+const SCHEMA_V &#x3D; 1;
+
+/** The schema the map db uses. */
+interface MapDB extends DBSchema {
+  /**
+   * All cached queries, used to identify if a query is already in the db.
+   *
+   * The key[0] represents the resolution of the query, a -1 represents no
+   * resolution.
+   * The rest are the given keys.
+   *
+   * The value is an array of all the keys the query returned.
+   */
+  queries: {
+    key: [number, ...string[]],
+    value: string[]
+  },
+
+  /**
+   * All shapes in the indexed db.
+   *
+   * The key is the key of the shape.
+   *
+   * The value is some {@link ShapeData}.
+   * Since {@link LayerData} is simply an array of {@link ShapeData}, this may
+   * be used to reconstruct some layer data.
+   */
+  shapes: {
+    key: string,
+    value: ShapeData
+  }
+}
 
 /**
  * Service to interact with the geo data api to fetch map data.
@@ -311,40 +395,98 @@ const API_URL &#x3D; &quot;geodata-rest&quot;;
 })
 export class MapService {
 
+  private readonly idb;
+
   /**
    * Constructor.
    * @param http Client to request geo data
    */
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    this.idb &#x3D; openDB&lt;MapDB&gt;(DB_NAME, SCHEMA_V, {
+      upgrade(db) {
+        db.createObjectStore(&quot;queries&quot;);
+        db.createObjectStore(&quot;shapes&quot;);
+      }
+    });
+  }
 
   /**
    * Asynchronously fetch the map from the geo data rest api.
    *
    * Will only fetch data if not already stored in the indexedDB.
-   * @param layerName The layer name to request data from
-   * @param layerResolution The resolution to request shapes from
+   * @param resolution The resolution the of the shapes returned by the service
+   * @param keys The keys given to look for shapes
    * @param force If true, this will ignore the cache and request everything
    */
   async fetchLayerData(
-    layerName: string,
-    layerResolution: string,
+    resolution: Resolution | null | undefined,
+    keys?: string[] | null,
     force: boolean &#x3D; false
-  ) {
-    let dbKey &#x3D; &#x60;MAP_LAYER_DATA:${layerName}:${layerResolution}&#x60;;
-    if (!force &amp;&amp; (await idb.keys()).includes(dbKey)) {
-      return await idb.get(dbKey);
+  ): Promise&lt;LayerData&gt; {
+    // prepare db and keys
+    let idb &#x3D; await this.idb;
+    let trimmedKeys &#x3D; keys ?? [];
+    let resolutionNum &#x3D; resolution ? Resolution.toKeyLength(resolution) : -1;
+    let queryKey &#x3D; [resolutionNum, ...trimmedKeys] as [number, ...string[]];
+
+    // check for cached keys or ignore if is force is true
+    let cachedKeys &#x3D; force ? undefined : await idb.get(&quot;queries&quot;, queryKey);
+    if (cachedKeys) {
+      let tx &#x3D; idb.transaction(&quot;shapes&quot;, &quot;readonly&quot;);
+      let store &#x3D; tx.objectStore(&quot;shapes&quot;);
+      let shapes: ShapeData[] &#x3D; [];
+      let operations &#x3D; [];
+      for (let key of cachedKeys) {
+        operations.push(store.get(key).then(shape &#x3D;&gt; {
+          if (shape) shapes.push(shape);
+        }));
+      }
+      operations.push(tx.done);
+      await Promise.all(operations);
+      return shapes;
     }
 
-    let url &#x3D; encodeURI(&#x60;${API_URL}/${layerName}/${layerResolution}&#x60;);
-    let layerData &#x3D; await firstValueFrom(this.http.get(url, {
+    // if cachedKeys was empty, request data from the server
+    let params &#x3D; new HttpParams();
+    if (resolution) params &#x3D; params.set(&quot;resolution&quot;, resolution);
+    if (keys &amp;&amp; keys.length) params &#x3D; params.appendAll({key: keys.map(k &#x3D;&gt; {
+      if (resolution) return k.substring(0, resolutionNum);
+      return k;
+    })});
+
+    let layerData: LayerData &#x3D; (await firstValueFrom(this.http.get&lt;{
+      name: string,
+      key: string,
+      nuts_key: string,
+      geojson: GeoJsonObject
+    }[]&gt;(&#x60;${API_URL}/&#x60;, {
       headers: new HttpHeaders({
         &quot;Content-Type&quot;: &quot;application/json&quot;
       }),
+      params,
       responseType: &quot;json&quot;,
-      context: new HttpContext().set(USE_API_URL, true)
+      context: new HttpContext()
+        .set(USE_API_URL, true)
+        .set(USE_LOADER, &quot;fetching map data&quot;)
+    })) ?? []).map(rawShape &#x3D;&gt; ({
+      nutsKey: rawShape.nuts_key,
+      geoJson: rawShape.geojson,
+      ...rawShape
     }));
 
-    await idb.set(dbKey, layerData);
+    // store the requested data back into the db
+    let tx &#x3D; idb.transaction([&quot;queries&quot;, &quot;shapes&quot;], &quot;readwrite&quot;);
+    let operations &#x3D; [];
+    let shapeStore &#x3D; tx.objectStore(&quot;shapes&quot;);
+    let shapeKeys &#x3D; [];
+    for (let shape of layerData) {
+      operations.push(shapeStore.put(shape, shape.key));
+      shapeKeys.push(shape.key);
+    }
+    let queryStore &#x3D; tx.objectStore(&quot;queries&quot;);
+    operations.push(queryStore.put(shapeKeys, queryKey));
+    await Promise.all(operations);
+
     return layerData;
   }
 

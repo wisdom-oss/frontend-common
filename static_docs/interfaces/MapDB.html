@@ -1,0 +1,439 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>common documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+        <link rel="stylesheet" href="../styles/stripe.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">common documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content interface">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li>Interfaces</li>
+  <li
+  >
+  MapDB</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/lib/map/map.service.ts</code>
+        </p>
+
+
+            <p class="comment">
+                <h3>Description</h3>
+            </p>
+            <p class="comment">
+                <p>The schema the map db uses.</p>
+
+            </p>
+
+            <p class="comment">
+                <h3>Extends</h3>
+            </p>
+            <p class="comment">
+                    <code>DBSchema</code>
+            </p>
+
+        <section>
+            <h3 id="index">Index</h3>
+            <table class="table table-sm table-bordered index-table">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Properties</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                        <a href="#queries" 
+>
+                                            queries
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#shapes" 
+>
+                                            shapes
+                                        </a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+
+
+            <section>
+                <h3 id="inputs">Properties</h3>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="queries"></a>
+                                        <span class="name "><b>queries</b>
+                                            <a href="#queries">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>queries:     <code>literal type</code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>    <code>literal type</code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-description"><p>All cached queries, used to identify if a query is already in the db.</p>
+<p>The key[0] represents the resolution of the query, a -1 represents no
+resolution.
+The rest are the given keys.</p>
+<p>The value is an array of all the keys the query returned.</p>
+</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="shapes"></a>
+                                        <span class="name "><b>shapes</b>
+                                            <a href="#shapes">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>shapes:     <code>literal type</code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>    <code>literal type</code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-description"><p>All shapes in the indexed db.</p>
+<p>The key is the key of the shape.</p>
+<p>The value is some <a href="../interfaces/ShapeData.html">ShapeData</a>.
+Since <a href="../miscellaneous/typealiases.html#LayerData">LayerData</a> is simply an array of <a href="../interfaces/ShapeData.html">ShapeData</a>, this may
+be used to reconstruct some layer data.</p>
+</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+            </section>
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {
+  HttpClient,
+  HttpContext,
+  HttpHeaders,
+  HttpParams
+} from &quot;@angular/common/http&quot;;
+import {Injectable} from &quot;@angular/core&quot;;
+import {openDB, DBSchema} from &quot;idb&quot;;
+import {firstValueFrom} from &quot;rxjs&quot;;
+
+import {Resolution} from &quot;./resolution&quot;;
+import {LayerData, ShapeData, GeoJsonObject} from &quot;./layer-data&quot;;
+import {USE_API_URL} from &quot;../http-context/use-api-url&quot;;
+import {USE_LOADER} from &quot;../http-context/use-loader&quot;;
+
+const API_URL &#x3D; &quot;geodata&quot;;
+const DB_NAME &#x3D; &quot;map-db&quot;;
+const SCHEMA_V &#x3D; 1;
+
+/** The schema the map db uses. */
+interface MapDB extends DBSchema {
+  /**
+   * All cached queries, used to identify if a query is already in the db.
+   *
+   * The key[0] represents the resolution of the query, a -1 represents no
+   * resolution.
+   * The rest are the given keys.
+   *
+   * The value is an array of all the keys the query returned.
+   */
+  queries: {
+    key: [number, ...string[]],
+    value: string[]
+  },
+
+  /**
+   * All shapes in the indexed db.
+   *
+   * The key is the key of the shape.
+   *
+   * The value is some {@link ShapeData}.
+   * Since {@link LayerData} is simply an array of {@link ShapeData}, this may
+   * be used to reconstruct some layer data.
+   */
+  shapes: {
+    key: string,
+    value: ShapeData
+  }
+}
+
+/**
+ * Service to interact with the geo data api to fetch map data.
+ *
+ * Fetched map data is cached in the indexedDB and therefore only retrieved
+ * lazily.
+ */
+@Injectable({
+  providedIn: &#x27;root&#x27;
+})
+export class MapService {
+
+  private readonly idb;
+
+  /**
+   * Constructor.
+   * @param http Client to request geo data
+   */
+  constructor(private http: HttpClient) {
+    this.idb &#x3D; openDB&lt;MapDB&gt;(DB_NAME, SCHEMA_V, {
+      upgrade(db) {
+        db.createObjectStore(&quot;queries&quot;);
+        db.createObjectStore(&quot;shapes&quot;);
+      }
+    });
+  }
+
+  /**
+   * Asynchronously fetch the map from the geo data rest api.
+   *
+   * Will only fetch data if not already stored in the indexedDB.
+   * @param resolution The resolution the of the shapes returned by the service
+   * @param keys The keys given to look for shapes
+   * @param force If true, this will ignore the cache and request everything
+   */
+  async fetchLayerData(
+    resolution: Resolution | null | undefined,
+    keys?: string[] | null,
+    force: boolean &#x3D; false
+  ): Promise&lt;LayerData&gt; {
+    // prepare db and keys
+    let idb &#x3D; await this.idb;
+    let trimmedKeys &#x3D; keys ?? [];
+    let resolutionNum &#x3D; resolution ? Resolution.toKeyLength(resolution) : -1;
+    let queryKey &#x3D; [resolutionNum, ...trimmedKeys] as [number, ...string[]];
+
+    // check for cached keys or ignore if is force is true
+    let cachedKeys &#x3D; force ? undefined : await idb.get(&quot;queries&quot;, queryKey);
+    if (cachedKeys) {
+      let tx &#x3D; idb.transaction(&quot;shapes&quot;, &quot;readonly&quot;);
+      let store &#x3D; tx.objectStore(&quot;shapes&quot;);
+      let shapes: ShapeData[] &#x3D; [];
+      let operations &#x3D; [];
+      for (let key of cachedKeys) {
+        operations.push(store.get(key).then(shape &#x3D;&gt; {
+          if (shape) shapes.push(shape);
+        }));
+      }
+      operations.push(tx.done);
+      await Promise.all(operations);
+      return shapes;
+    }
+
+    // if cachedKeys was empty, request data from the server
+    let params &#x3D; new HttpParams();
+    if (resolution) params &#x3D; params.set(&quot;resolution&quot;, resolution);
+    if (keys &amp;&amp; keys.length) params &#x3D; params.appendAll({key: keys.map(k &#x3D;&gt; {
+      if (resolution) return k.substring(0, resolutionNum);
+      return k;
+    })});
+
+    let layerData: LayerData &#x3D; (await firstValueFrom(this.http.get&lt;{
+      name: string,
+      key: string,
+      nuts_key: string,
+      geojson: GeoJsonObject
+    }[]&gt;(&#x60;${API_URL}/&#x60;, {
+      headers: new HttpHeaders({
+        &quot;Content-Type&quot;: &quot;application/json&quot;
+      }),
+      params,
+      responseType: &quot;json&quot;,
+      context: new HttpContext()
+        .set(USE_API_URL, true)
+        .set(USE_LOADER, &quot;fetching map data&quot;)
+    })) ?? []).map(rawShape &#x3D;&gt; ({
+      nutsKey: rawShape.nuts_key,
+      geoJson: rawShape.geojson,
+      ...rawShape
+    }));
+
+    // store the requested data back into the db
+    let tx &#x3D; idb.transaction([&quot;queries&quot;, &quot;shapes&quot;], &quot;readwrite&quot;);
+    let operations &#x3D; [];
+    let shapeStore &#x3D; tx.objectStore(&quot;shapes&quot;);
+    let shapeKeys &#x3D; [];
+    for (let shape of layerData) {
+      operations.push(shapeStore.put(shape, shape.key));
+      shapeKeys.push(shape.key);
+    }
+    let queryStore &#x3D; tx.objectStore(&quot;queries&quot;);
+    operations.push(queryStore.put(shapeKeys, queryKey));
+    await Promise.all(operations);
+
+    return layerData;
+  }
+
+}
+</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'interface';
+            var COMPODOC_CURRENT_PAGE_URL = 'MapDB.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>
