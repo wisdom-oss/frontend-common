@@ -14,7 +14,7 @@ import {Resolution} from "./resolution";
 import {GeoJsonObject, LayerData, ShapeData} from "./layer-data";
 import {geoJSON, GeoJSON} from "leaflet";
 
-const API_URL = "T-geodata/";
+const API_URL = "geodata";
 const DB_NAME = "map-db";
 const SCHEMA_V = 1;
 
@@ -124,7 +124,7 @@ export class MapService {
       key: string,
       nuts_key: string,
       geojson: GeoJsonObject
-    }[]>(API_URL, {
+    }[]>(`${API_URL}/`, {
       headers: new HttpHeaders({
         "Content-Type": "application/json"
       }),
