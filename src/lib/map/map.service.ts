@@ -131,7 +131,7 @@ export class MapService {
       responseType: "json",
       context: new HttpContext()
         .set(USE_API_URL, true)
-        .set(USE_LOADER, "fetching map data")
+        .set(USE_LOADER, true)
     })) ?? []).map(rawShape => ({
       nutsKey: rawShape.nuts_key,
       geoJson: rawShape.geojson,
