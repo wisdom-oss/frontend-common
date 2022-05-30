@@ -17,6 +17,7 @@ import LayerData from "./layer-data";
 import {Resolution} from "./resolution";
 
 import * as LX from "./invert-selection";
+import {Layer} from "leaflet";
 
 /**
  * GeoJSON data type used by Leaflet.
@@ -153,6 +154,8 @@ export class MapComponent implements OnInit, AfterViewInit {
    * @private
    */
   private selectedLayer?: LayerKey;
+  /** The currently selected geo json layer. */
+  private selectedGeoJsonLayer?: Layer;
 
   /** Outputs the currently selected shapes. */
   @Output() selected = new EventEmitter<{
@@ -229,6 +232,8 @@ export class MapComponent implements OnInit, AfterViewInit {
       layersControl = L.control.layers();
       let layers: L.Layer[] = [];
 
+      if (this.selectedGeoJsonLayer) map.removeLayer(this.selectedGeoJsonLayer);
+
       // update map with new layer data
       for (let [key, data] of Object.entries(layerData)) {
         let selectedShapes = this.selectedShapes[key] = new Set();
@@ -275,6 +280,7 @@ export class MapComponent implements OnInit, AfterViewInit {
             geoJsonLayer.addTo(map);
             displayLayer = false;
             this.selectedLayer = key;
+            this.selectedGeoJsonLayer = geoJsonLayer;
             map.fitBounds([
               data.box[0],
               data.box[2]
@@ -284,6 +290,7 @@ export class MapComponent implements OnInit, AfterViewInit {
         layersControl.addBaseLayer(geoJsonLayer, this.layerNames[key]);
         map.on("baselayerchange", ({layer}) => {
           if (layer == geoJsonLayer) {
+            this.selectedGeoJsonLayer = layer;
             this.selectedLayer = key;
             this.emitSelection();
           }
