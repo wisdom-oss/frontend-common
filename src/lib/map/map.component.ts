@@ -135,6 +135,9 @@ export class MapComponent implements OnInit, AfterViewInit {
   private layerData: BehaviorSubject<Record<LayerKey, LayerData>> = new BehaviorSubject({});
   private layerNames: Record<LayerKey, string> = {};
 
+  /** Should the layers be selectable. */
+  @Input("layerSelectable") inputLayerSelectable: boolean = true;
+
   /** The leaflet map that is displayed here. */
   map?: L.Map;
 
@@ -235,20 +238,22 @@ export class MapComponent implements OnInit, AfterViewInit {
           onEachFeature: (feature, layer) => {
             // used properties are injected later into the feature
             layer.bindTooltip(feature.properties.name, {direction: "center"});
-            layer.on("click", () => {
-              let [key, path] = [feature.properties.key, layer as L.Path];
-              if (selectedShapes.has(key)) {
-                path.setStyle({color: this.unselectedColor});
-                path.bringToBack();
-                selectedShapes.delete(key);
-              }
-              else {
-                path.setStyle({color: this.selectedColor});
-                path.bringToFront();
-                selectedShapes.add(key);
-              }
-              this.emitSelection();
-            });
+            if (this.inputLayerSelectable) {
+              layer.on("click", () => {
+                let [key, path] = [feature.properties.key, layer as L.Path];
+                if (selectedShapes.has(key)) {
+                  path.setStyle({color: this.unselectedColor});
+                  path.bringToBack();
+                  selectedShapes.delete(key);
+                }
+                else {
+                  path.setStyle({color: this.selectedColor});
+                  path.bringToFront();
+                  selectedShapes.add(key);
+                }
+                this.emitSelection();
+              });
+            }
             layers.push(layer);
           }
         });
@@ -273,13 +278,16 @@ export class MapComponent implements OnInit, AfterViewInit {
       }
       if (Object.keys(layerData).length > 1) layersControl.addTo(map);
 
-      if (invertSelectionControl) map.removeControl(invertSelectionControl);
-      invertSelectionControl = LX.control.invertSelection(() => {
-        for (let layer of layers) {
-          layer.fire("click");
-        }
-      });
-      invertSelectionControl.addTo(map);
+      if (this.inputLayerSelectable) {
+        console.log("show lx");
+        if (invertSelectionControl) map.removeControl(invertSelectionControl);
+        invertSelectionControl = LX.control.invertSelection(() => {
+          for (let layer of layers) {
+            layer.fire("click");
+          }
+        });
+        invertSelectionControl.addTo(map);
+      }
     });
   }
 
