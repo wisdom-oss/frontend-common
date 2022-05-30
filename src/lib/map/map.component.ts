@@ -258,7 +258,7 @@ export class MapComponent implements OnInit, AfterViewInit {
         }
         layersControl.addBaseLayer(geoJsonLayer, this.layerNames[key]);
         map.on("baselayerchange", ({layer}) => {
-          if (layer = geoJsonLayer) {
+          if (layer == geoJsonLayer) {
             this.selectedLayer = key;
             this.emitSelection();
           }
