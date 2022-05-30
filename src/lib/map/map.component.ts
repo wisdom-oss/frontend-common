@@ -72,6 +72,12 @@ export class MapComponent implements OnInit, AfterViewInit {
   /** Zoom level of the map, defaults to 7. */
   zoom = 7;
 
+  /**
+   * Input for the option if the map should scroll zoom on mouse scroll.
+   * If "center" is passed, the map will always zoom onto the center.
+   */
+  @Input("scrollWheelZoom") inputScrollWheelZoom: boolean | "center" = true;
+
   /** Input for a hex code for unselected shapes. */
   @Input("unselectedColor") unselectedColor = "#1f5aec";
   /** Input for a hex code selected shapes. */
@@ -195,6 +201,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     const nativeMapElement = this.mapElement.nativeElement;
 
     const map = L.map(nativeMapElement, {
+      scrollWheelZoom: this.inputScrollWheelZoom,
       center: this.center
         .split(", ")
         .map(str => parseFloat(str)) as [number, number],
