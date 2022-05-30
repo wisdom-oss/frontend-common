@@ -234,6 +234,15 @@ export class MapComponent implements OnInit, AfterViewInit {
         let selectedShapes = this.selectedShapes[key] = new Set();
         // use for every layer a new geoJSON layer
         let geoJsonLayer = L.geoJSON(undefined, {
+          attribution: `
+            <a target="_blank" href='https://gdz.bkg.bund.de/index.php/default/open-data/verwaltungsgebiete-1-5-000-000-ebenen-stand-01-01-vg5000-ebenen-01-01.html'>
+              📐 © GeoBasis-DE / BKG 2022
+            </a>
+            |
+            <a target="_blank" href="http://www.govdata.de/dl-de/by-2-0">
+              🔖 dl-de/by-2-0
+            </a>
+          `,
           style: {color: this.unselectedColor},
           onEachFeature: (feature, layer) => {
             // used properties are injected later into the feature
