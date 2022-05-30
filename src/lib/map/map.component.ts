@@ -266,7 +266,7 @@ export class MapComponent implements OnInit, AfterViewInit {
             layers.push(layer);
           }
         });
-        for (let shape of data) {
+        for (let shape of data.shapes) {
           geoJsonLayer.addData(Object.assign(shape.geoJson, {properties: {
             name: shape.name,
             key: shape.key
@@ -275,6 +275,10 @@ export class MapComponent implements OnInit, AfterViewInit {
             geoJsonLayer.addTo(map);
             displayLayer = false;
             this.selectedLayer = key;
+            map.fitBounds([
+              data.box[0],
+              data.box[2]
+            ]);
           }
         }
         layersControl.addBaseLayer(geoJsonLayer, this.layerNames[key]);
@@ -288,7 +292,6 @@ export class MapComponent implements OnInit, AfterViewInit {
       if (Object.keys(layerData).length > 1) layersControl.addTo(map);
 
       if (this.inputLayerSelectable) {
-        console.log("show lx");
         if (invertSelectionControl) map.removeControl(invertSelectionControl);
         invertSelectionControl = LX.control.invertSelection(() => {
           for (let layer of layers) {

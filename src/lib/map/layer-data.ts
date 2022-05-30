@@ -13,6 +13,9 @@ export interface ShapeData {
   geoJson: GeoJsonObject
 };
 
-export type LayerData = ShapeData[];
+export interface LayerData {
+  box: [[number, number], [number, number], [number, number], [number, number]],
+  shapes: ShapeData[]
+};
 
 export default LayerData;
