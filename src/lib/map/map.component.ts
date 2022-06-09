@@ -8,16 +8,17 @@ import {
   Output,
   ElementRef
 } from "@angular/core";
-import {BehaviorSubject} from "rxjs";
+import {BehaviorSubject, Subject} from "rxjs";
 
 import * as L from "leaflet";
+import "leaflet.markercluster";
 
 import {MapService} from "./map.service";
 import LayerData from "./layer-data";
 import {Resolution} from "./resolution";
 
 import * as LX from "./invert-selection";
-import {Layer} from "leaflet";
+import {Marker} from "./marker";
 
 /**
  * GeoJSON data type used by Leaflet.
@@ -139,6 +140,12 @@ export class MapComponent implements OnInit, AfterViewInit {
   /** Should the layers be selectable. */
   @Input("layerSelectable") inputLayerSelectable: boolean = true;
 
+  /** Markers that should be displayed on the map. */
+  @Input("markers") set inputMarkers(markers: Marker[]) {
+    this.markers.next(markers);
+  };
+  private markers = new BehaviorSubject<Marker[]>([]);
+
   /** The leaflet map that is displayed here. */
   map?: L.Map;
 
@@ -155,7 +162,7 @@ export class MapComponent implements OnInit, AfterViewInit {
    */
   private selectedLayer?: LayerKey;
   /** The currently selected geo json layer. */
-  private selectedGeoJsonLayer?: Layer;
+  private selectedGeoJsonLayer?: L.Layer;
 
   /** Outputs the currently selected shapes. */
   @Output() selected = new EventEmitter<{
@@ -307,6 +314,20 @@ export class MapComponent implements OnInit, AfterViewInit {
         });
         invertSelectionControl.addTo(map);
       }
+    });
+
+    let markerLayer = L.markerClusterGroup();
+    this.markers.subscribe(markers => {
+      markerLayer.removeFrom(map);
+      markerLayer = L.markerClusterGroup();
+      for (let marker of markers) {
+        let lMarker = L.marker(marker.coordinates);
+        if (marker.icon) lMarker.setIcon(marker.icon);
+        if (marker.tooltip) lMarker.bindTooltip(marker.tooltip);
+        if (marker.onClick) lMarker.on("click", marker.onClick)
+        lMarker.addTo(markerLayer);
+      }
+      markerLayer.addTo(map);
     });
   }
 
