@@ -48,9 +48,6 @@ type LayerConfig = Record<LayerKey, [string, Resolution | null, string[] | null]
 })
 export class MapComponent implements OnInit, AfterViewInit {
 
-  /** Reexport of the {@link Resolution} enum. */
-  static Resolution = Resolution;
-
   /** The ref to the map html element. */
   @ViewChild("map") private mapElement!: ElementRef<HTMLDivElement>;
 
