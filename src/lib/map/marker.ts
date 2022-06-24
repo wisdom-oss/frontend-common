@@ -1,4 +1,5 @@
-import {Content, Layer, LeafletMouseEvent, Tooltip} from "leaflet";
+import {Content, LeafletMouseEvent, Layer, Tooltip} from "leaflet";
+
 import * as L from "leaflet";
 
 export interface Marker {

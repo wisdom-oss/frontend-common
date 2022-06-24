@@ -8,8 +8,8 @@
  *
  * @returns A hex color code in the style of '#abc123'
  */
-import {TranslateService} from "@ngx-translate/core";
 import {Inject} from "@angular/core";
+import {TranslateService} from "@ngx-translate/core";
 
 export function stringToColor(str: string, map?: Record<string, string>): string {
   if (map && map[str]) {

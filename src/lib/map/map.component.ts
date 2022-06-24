@@ -8,17 +8,17 @@ import {
   Output,
   ElementRef
 } from "@angular/core";
+import "leaflet.markercluster";
 import {BehaviorSubject, Subject} from "rxjs";
 
 import * as L from "leaflet";
-import "leaflet.markercluster";
 
 import {MapService} from "./map.service";
 import LayerData from "./layer-data";
 import {Resolution} from "./resolution";
+import {Marker} from "./marker";
 
 import * as LX from "./invert-selection";
-import {Marker} from "./marker";
 
 /**
  * GeoJSON data type used by Leaflet.

@@ -6,13 +6,13 @@ import {
 } from "@angular/common/http";
 import {Injectable} from "@angular/core";
 import {openDB, DBSchema} from "idb";
+import {Layer} from "leaflet";
 import {firstValueFrom} from "rxjs";
 
 import {Resolution} from "./resolution";
 import {LayerData, ShapeData, GeoJsonObject} from "./layer-data";
 import {USE_API_URL} from "../http-context/use-api-url";
 import {USE_LOADER} from "../http-context/use-loader";
-import {Layer} from "leaflet";
 
 const API_URL = "geodata";
 const DB_NAME = "map-db";

@@ -1,9 +1,4 @@
-import {
-  HostBinding,
-  Directive,
-  Input,
-  HostListener
-} from "@angular/core";
+import {HostBinding, Directive, Input, HostListener} from "@angular/core";
 
 /**
  * Directive for making things toggleable with bulma.
