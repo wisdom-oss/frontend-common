@@ -12,6 +12,7 @@ export * from "./lib/bulma/bulma-is-toggleable.directive";
 export * from "./lib/http-context/use-api-url";
 export * from "./lib/http-context/use-base-url";
 export * from "./lib/http-context/use-cache";
+export * from "./lib/http-context/use-error-curtain";
 export * from "./lib/http-context/use-loader";
 
 export * from "./lib/util";
