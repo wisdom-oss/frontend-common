@@ -69,3 +69,16 @@ export function translateObject<T>(service: TranslateService, obj: T): T {
   }
   return internalTranslate(obj);
 }
+
+/**
+ * Utility function to swap the values of a tuple.
+ *
+ * Useful if coordinates are in the wrong order.
+ * (e.g. geojson to leaflet)
+ *
+ * @param tuple Tuple of two values
+ * @return Tuple with swapped values
+ */
+export function tupleSwap<L, R>(tuple: [L, R]): [R, L] {
+  return [tuple[1], tuple[0]];
+}
