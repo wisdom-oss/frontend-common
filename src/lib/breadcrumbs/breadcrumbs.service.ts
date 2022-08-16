@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {ActivatedRouteSnapshot, Params, UrlTree} from "@angular/router";
-import {Observable, Subject} from "rxjs";
+import {BehaviorSubject, Observable, Subject} from "rxjs";
 
 export interface Breadcrumb {
   icon?: string,
@@ -14,7 +14,8 @@ export interface Breadcrumb {
 })
 export class BreadcrumbsService {
   fragments: Breadcrumb[] = [];
-  private subject:Subject<Breadcrumb[]> = new Subject();
+  private subject: BehaviorSubject<Breadcrumb[]>
+    = new BehaviorSubject<Breadcrumb[]>([]);
 
   set(index: number, value: Breadcrumb) {
     this.fragments.length = index + 1;
