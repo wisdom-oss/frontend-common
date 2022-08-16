@@ -4,13 +4,16 @@
  * Every wisdom module must provide such an object implementing this interface.
  * The object must be exported under the name "wisdomInterface".
  */
+import {Route} from "@angular/router";
+
 export interface WisdomInterface {
-  /** The path to the component displaying the module. */
-  path: string;
+  /**
+   * The route that leads to this module.
+   * This may also include guards but some guards will be automatically injected.
+   */
+  route: Route;
   /** The scopes required to see the component. */
   scopes: string[];
-  /** The entry component that should be displayed. */
-  entryComponent: any;
   /**
    * The translations the modules provides and uses.
    *
