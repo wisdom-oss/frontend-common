@@ -1,0 +1,21 @@
+<nav class="breadcrumb block" *ngIf="isAllSet()">
+  <ul>
+    <li
+      *ngFor="let fragment of fragments; last as isLast"
+      [class]="isLast ? 'is-active' : ''"
+    >
+      <a
+        *ngIf="fragment"
+        [routerLink]="fragment.link"
+        [queryParams]="fragment.query"
+      >
+        <span class="icon-text">
+          <span class="icon" *ngIf="fragment.icon">
+            <ion-icon [name]="fragment.icon"></ion-icon>
+          </span>
+          <span>{{fragment.text}}</span>
+        </span>
+      </a>
+    </li>
+  </ul>
+</nav>
