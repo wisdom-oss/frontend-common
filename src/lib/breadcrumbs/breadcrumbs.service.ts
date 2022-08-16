@@ -7,7 +7,7 @@ export interface Breadcrumb {
   text: string,
   link: string,
   query?: Params
-};
+}
 
 @Injectable({
   providedIn: 'root'
