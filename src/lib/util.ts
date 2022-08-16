@@ -10,6 +10,7 @@
  */
 import {Inject} from "@angular/core";
 import {TranslateService} from "@ngx-translate/core";
+import {ActivatedRouteSnapshot} from "@angular/router";
 
 export function stringToColor(str: string, map?: Record<string, string>): string {
   if (map && map[str]) {
@@ -81,4 +82,29 @@ export function translateObject<T>(service: TranslateService, obj: T): T {
  */
 export function tupleSwap<L, R>(tuple: [L, R]): [R, L] {
   return [tuple[1], tuple[0]];
+}
+
+/**
+ * Function to return a fully resolved url in a string from an activated route
+ * snapshot.
+ *
+ * Recreated by [this solution](https://stackoverflow.com/a/67232620/15800714) on StackOverflow.
+ *
+ * @param route Route snapshot of a component.
+ */
+export function getResolvedUrl(route: ActivatedRouteSnapshot): string {
+  let url = route.pathFromRoot.map(
+    v => v.url.map(
+      segment => segment.toString()
+    ).join("/")
+  ).join("/");
+  const queryParam = route.queryParamMap;
+  if (queryParam.keys.length) {
+    url += "?" + queryParam.keys.map(
+      key => queryParam.getAll(key).map(
+        value => `${key}=${value}`
+      ).join("&")
+    ).join("&");
+  }
+  return url;
 }
