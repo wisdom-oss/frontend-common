@@ -70,6 +70,13 @@
         </p>
 
 
+            <p class="comment">
+                <h3>Description</h3>
+            </p>
+            <p class="comment">
+                <p>Marker interface for creating custom markers on a <a href="../components/MapComponent.html">MapComponent</a>.</p>
+
+            </p>
 
 
         <section>
@@ -153,6 +160,12 @@
 
 
 
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-description"><p>Coordinates of the marker.</p>
+</div>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                     <table class="table table-sm table-bordered">
@@ -191,6 +204,12 @@
 
 
 
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-description"><p>Optional icon for the marker, if not set a default one will be used.</p>
+</div>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                     <table class="table table-sm table-bordered">
@@ -229,6 +248,12 @@
 
 
 
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-description"><p>Event handler for a click on the marker.</p>
+</div>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                     <table class="table table-sm table-bordered">
@@ -267,6 +292,12 @@
 
 
 
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-description"><p>Displayed tooltip when hovering the marker.</p>
+</div>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
             </section>
@@ -278,10 +309,15 @@
 
 import * as L from &quot;leaflet&quot;;
 
+/** Marker interface for creating custom markers on a {@link MapComponent}. */
 export interface Marker {
+  /** Coordinates of the marker. */
   coordinates: [number, number],
+  /** Displayed tooltip when hovering the marker. */
   tooltip?: Content | ((layer: Layer) &#x3D;&gt; Content) | Tooltip,
+  /** Event handler for a click on the marker. */
   onClick?: (evt: LeafletMouseEvent) &#x3D;&gt; void,
+  /** Optional icon for the marker, if not set a default one will be used. */
   icon?: L.Icon | L.DivIcon
 }
 </code></pre>

@@ -14,8 +14,11 @@ import {LayerData, ShapeData, GeoJsonObject} from "./layer-data";
 import {USE_API_URL} from "../http-context/use-api-url";
 import {USE_LOADER} from "../http-context/use-loader";
 
+/** API url for the map to request data from. */
 const API_URL = "geodata";
+/** Indexed DB name. */
 const DB_NAME = "map-db";
+/** Indexed DB schema version. */
 const SCHEMA_V = 2;
 
 /** The schema the map db uses. */

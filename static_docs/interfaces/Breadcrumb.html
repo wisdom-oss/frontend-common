@@ -70,6 +70,13 @@
         </p>
 
 
+            <p class="comment">
+                <h3>Description</h3>
+            </p>
+            <p class="comment">
+                <p>Breadcrumb fragment interface.</p>
+
+            </p>
 
 
         <section>
@@ -157,6 +164,13 @@
 
 
 
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-description"><p>Optional icon name to be displayed on the left of the fragment name.
+This will use an <a href="../components/IonIconComponent.html">IonIconComponent</a> for the icon.</p>
+</div>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                     <table class="table table-sm table-bordered">
@@ -190,6 +204,12 @@
 
 
 
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-description"><p>Router link to be set for the fragment.</p>
+</div>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                     <table class="table table-sm table-bordered">
@@ -228,6 +248,12 @@
 
 
 
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-description"><p>Optional query parameters for the router link.</p>
+</div>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                     <table class="table table-sm table-bordered">
@@ -261,6 +287,13 @@
 
 
 
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-description"><p>String or array of strings to be displayed as fragment.
+Every element will be passed to the <a href="TranslateService">TranslateService</a>.</p>
+</div>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
             </section>
@@ -268,31 +301,56 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable } from &#x27;@angular/core&#x27;;
-import {ActivatedRouteSnapshot, Params, UrlTree} from &quot;@angular/router&quot;;
-import {BehaviorSubject, Observable, Subject} from &quot;rxjs&quot;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {Injectable} from &quot;@angular/core&quot;;
+import {Params, ActivatedRouteSnapshot, UrlTree} from &quot;@angular/router&quot;;
+import {Observable, BehaviorSubject, Subject} from &quot;rxjs&quot;;
 
+/** Breadcrumb fragment interface. */
 export interface Breadcrumb {
+  /**
+   * Optional icon name to be displayed on the left of the fragment name.
+   * This will use an {@link IonIconComponent} for the icon.
+   */
   icon?: string,
+  /**
+   * String or array of strings to be displayed as fragment.
+   * Every element will be passed to the {@link TranslateService}.
+   */
   text: string | string[],
+  /** Router link to be set for the fragment. */
   link: string,
+  /** Optional query parameters for the router link. */
   query?: Params
 }
 
+/** Service collecting the breadcrumbs. */
 @Injectable({
   providedIn: &#x27;root&#x27;
 })
 export class BreadcrumbsService {
+  /** List of breadcrumbs. */
   fragments: Breadcrumb[] &#x3D; [];
+  /**
+   * {@link Subject} for the {@link Breadcrumb}s, to be used as
+   * {@link Observable}.
+   */
   private subject: BehaviorSubject&lt;Breadcrumb[]&gt;
     &#x3D; new BehaviorSubject&lt;Breadcrumb[]&gt;([]);
 
+  /**
+   * Set a new breadcrumb fragment.
+   *
+   * This removes all fragments with a higher index than the set one.
+   * @param index Index of the breadcrumb array
+   * @param value Breadcrumb fragment to display
+   */
   set(index: number, value: Breadcrumb) {
     this.fragments.length &#x3D; index + 1;
     this.fragments[index] &#x3D; value;
     this.subject.next(this.fragments);
   }
 
+  /** Observe the breadcrumb fragments. */
   observe(): Observable&lt;Breadcrumb[]&gt; {
     return this.subject.asObservable();
   }

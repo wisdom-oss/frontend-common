@@ -1,5 +1,9 @@
 import * as L from "leaflet";
 
+/**
+ * Custom control to invert the currently selected shapes on a
+ * {@link MapComponent}.
+ */
 export const control = {
   invertSelection: (callback: (arg0: MouseEvent) => void, options?: L.ControlOptions) => {
     let InvertSelection = L.Control.extend({

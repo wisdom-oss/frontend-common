@@ -250,17 +250,17 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {NgModule} from &quot;@angular/core&quot;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {CommonModule} from &quot;@angular/common&quot;;
+import {NgModule} from &quot;@angular/core&quot;;
+import {RouterModule} from &quot;@angular/router&quot;;
 import {TranslateModule} from &quot;@ngx-translate/core&quot;;
 
+import {BreadcrumbsComponent} from &quot;./breadcrumbs/breadcrumbs.component&quot;;
 import {
   BulmaIsToggleableDirective
 } from &quot;./bulma/bulma-is-toggleable.directive&quot;;
 import {IonIconComponent} from &quot;./ion-icon/ion-icon.component&quot;;
 import {MapComponent} from &quot;./map/map.component&quot;;
-import { BreadcrumbsComponent } from &#x27;./breadcrumbs/breadcrumbs.component&#x27;;
-import {CommonModule} from &quot;@angular/common&quot;;
-import {RouterModule} from &quot;@angular/router&quot;;
 
 @NgModule({
   declarations: [

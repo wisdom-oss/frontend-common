@@ -70,6 +70,13 @@
         </p>
 
 
+            <p class="comment">
+                <h3>Description</h3>
+            </p>
+            <p class="comment">
+                <p>Type to represent layer data received from the geo data server.</p>
+
+            </p>
 
 
         <section>
@@ -138,6 +145,12 @@
 
 
 
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-description"><p>Corner coordinates of a box containing all the shapes this displays.</p>
+</div>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                     <table class="table table-sm table-bordered">
@@ -171,6 +184,12 @@
 
 
 
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-description"><p>List of shapes.</p>
+</div>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
             </section>
@@ -185,18 +204,26 @@
  * @private
  */
 export type GeoJsonObject &#x3D; Parameters&lt;typeof L[&quot;geoJSON&quot;]&gt;[0];
-/** Type to represent layer data received from the geo data server. */
-export interface ShapeData {
-  name: string,
-  key: string,
-  nutsKey: string,
-  geoJson: GeoJsonObject
-};
 
+/** Type to represent a single shape with all of its metadata. */
+export interface ShapeData {
+  /** Name of the shape. */
+  name: string,
+  /** Key of the shape. */
+  key: string,
+  /** Nomenclature of Territorial Units code of the shape. */
+  nutsKey: string,
+  /** GeoJson representing the shape. */
+  geoJson: GeoJsonObject
+}
+
+/** Type to represent layer data received from the geo data server. */
 export interface LayerData {
+  /** Corner coordinates of a box containing all the shapes this displays. */
   box: [[number, number], [number, number], [number, number], [number, number]],
+  /** List of shapes. */
   shapes: ShapeData[]
-};
+}
 
 export default LayerData;
 </code></pre>

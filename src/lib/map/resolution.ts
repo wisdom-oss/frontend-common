@@ -1,3 +1,4 @@
+/** Resolutions the map may display. */
 export enum Resolution {
   STATE = "state",
   DISTRICT = "district",
@@ -6,6 +7,10 @@ export enum Resolution {
 }
 
 export namespace Resolution {
+  /**
+   * Transforms a {@link Resolution} into the key length.
+   * @param res Resolution to find key length
+   */
   export function toKeyLength(res: Resolution): number {
     switch (res) {
       case Resolution.STATE: return 2;
@@ -15,6 +20,11 @@ export namespace Resolution {
     }
   }
 
+  /**
+   * Get the Resolution from a key length.
+   * @param length Key length
+   * @returns Resolution if found, otherwise `undefined`
+   */
   export function toEnum(length: number): Resolution | undefined {
     switch (length) {
       case 2: return Resolution.STATE;

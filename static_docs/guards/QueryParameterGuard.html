@@ -123,7 +123,7 @@ and <code>queryParams</code> containing a string or an array of strings.</p>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="19" class="link-to-prism">src/lib/guards/query-parameter.guard.ts:19</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="25" class="link-to-prism">src/lib/guards/query-parameter.guard.ts:25</a></div>
                             </td>
                         </tr>
 
@@ -193,8 +193,8 @@ and <code>queryParams</code> containing a string or an array of strings.</p>
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="35"
-                            class="link-to-prism">src/lib/guards/query-parameter.guard.ts:35</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="41"
+                            class="link-to-prism">src/lib/guards/query-parameter.guard.ts:41</a></div>
                 </td>
             </tr>
 
@@ -271,9 +271,15 @@ and <code>queryParams</code> containing a string or an array of strings.</p>
 
 
         <div class="tab-pane fade  tab-source-code" id="c-source">
-            <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable } from &#x27;@angular/core&#x27;;
-import { ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot, UrlTree, Router } from &#x27;@angular/router&#x27;;
-import { Observable } from &#x27;rxjs&#x27;;
+            <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {Injectable} from &quot;@angular/core&quot;;
+import {
+  CanActivate,
+  Router,
+  ActivatedRouteSnapshot,
+  RouterStateSnapshot,
+  UrlTree
+} from &quot;@angular/router&quot;;
+import {Observable} from &quot;rxjs&quot;;
 
 /**
  * Guard to check if certain query parameters are set.

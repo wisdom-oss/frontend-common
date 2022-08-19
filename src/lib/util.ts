@@ -1,3 +1,6 @@
+import {ActivatedRouteSnapshot} from "@angular/router";
+import {TranslateService} from "@ngx-translate/core";
+
 /**
  * Generates deterministically a hex color code from any string.
  *
@@ -8,10 +11,6 @@
  *
  * @returns A hex color code in the style of '#abc123'
  */
-import {Inject} from "@angular/core";
-import {ActivatedRouteSnapshot} from "@angular/router";
-import {TranslateService} from "@ngx-translate/core";
-
 export function stringToColor(str: string, map?: Record<string, string>): string {
   if (map && map[str]) {
     return map[str];
