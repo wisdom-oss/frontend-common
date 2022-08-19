@@ -1,6 +1,12 @@
-import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot, UrlTree, Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import {Injectable} from "@angular/core";
+import {
+  CanActivate,
+  Router,
+  ActivatedRouteSnapshot,
+  RouterStateSnapshot,
+  UrlTree
+} from "@angular/router";
+import {Observable} from "rxjs";
 
 /**
  * Guard to check if certain query parameters are set.
@@ -18,8 +24,20 @@ import { Observable } from 'rxjs';
 })
 export class QueryParameterGuard implements CanActivate {
 
+  /**
+   * Constructor.
+   * @param router Router used to parse redirect entries
+   */
   constructor(private router: Router) {}
 
+  /**
+   * Whether the route can be activated.
+   *
+   * For more info check {@link QueryParameterGuard}.
+   *
+   * @param route Currently activated route snapshot
+   * @param state Current state of the router
+   */
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {

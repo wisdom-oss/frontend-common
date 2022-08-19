@@ -1,11 +1,11 @@
+import {Route} from "@angular/router";
+
 /**
  * Interface for the wisdom modules.
  *
  * Every wisdom module must provide such an object implementing this interface.
  * The object must be exported under the name "wisdomInterface".
  */
-import {Route} from "@angular/router";
-
 export interface WisdomInterface {
   /**
    * The route that leads to this module.

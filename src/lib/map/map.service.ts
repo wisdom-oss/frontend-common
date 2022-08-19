@@ -63,6 +63,7 @@ interface MapDB extends DBSchema {
 })
 export class MapService {
 
+  /** Indexed DB client. */
   private readonly idb;
 
   /**

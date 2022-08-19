@@ -131,8 +131,22 @@ export class MapComponent implements OnInit, AfterViewInit {
   set inputLayers(layerConfig: LayerConfig) {
     this.layerConfig.next(layerConfig);
   };
+  /**
+   * {@link Subject} of the {@link LayerConfig}, to be used as
+   * {@link Observable}.
+   * @private
+   */
   private layerConfig: BehaviorSubject<LayerConfig> = new BehaviorSubject({});
+  /**
+   * {@link Subject} of the pairs of {@link Layerkey} and {@link LayerData},
+   * to be used as {@link Observable}.
+   * @private
+   */
   private layerData: BehaviorSubject<Record<LayerKey, LayerData>> = new BehaviorSubject({});
+  /**
+   * {@link Subject} of the layer names mapped by the {@link LayerKey}.
+   * @private
+   */
   private layerNames: Record<LayerKey, string> = {};
 
   /** Should the layers be selectable. */
@@ -142,6 +156,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   @Input("markers") set inputMarkers(markers: Marker[]) {
     this.markers.next(markers);
   };
+  /** {@link Marker}s {@link Subject} to be used as {@link Observable}. */
   private markers = new BehaviorSubject<Marker[]>([]);
 
   /** The leaflet map that is displayed here. */

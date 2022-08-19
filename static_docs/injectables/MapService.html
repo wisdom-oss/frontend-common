@@ -131,7 +131,7 @@ lazily.</p>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="62" class="link-to-prism">src/lib/map/map.service.ts:62</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="67" class="link-to-prism">src/lib/map/map.service.ts:67</a></div>
                             </td>
                         </tr>
 
@@ -196,15 +196,15 @@ lazily.</p>
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>fetchLayerData(resolution: <a href="../miscellaneouss/Resolution.html" target="_self">Resolution | null | undefined</a>, keys?: string[] | null, force: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>)</code>
+                    <code>fetchLayerData(resolution: <a href="../undefineds/Resolution.html" target="_self">Resolution | null | undefined</a>, keys?: string[] | null, force: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="85"
-                            class="link-to-prism">src/lib/map/map.service.ts:85</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="94"
+                            class="link-to-prism">src/lib/map/map.service.ts:94</a></div>
                 </td>
             </tr>
 
@@ -290,7 +290,7 @@ lazily.</p>
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#LayerData" target="_self" >Promise&lt;LayerData&gt;</a></code>
+                        <b>Returns : </b>        <code><a href="../interfaces/LayerData.html" target="_self" >Promise&lt;LayerData&gt;</a></code>
 
                     </div>
                     <div class="io-description">
@@ -321,10 +321,16 @@ lazily.</p>
             </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="62" class="link-to-prism">src/lib/map/map.service.ts:62</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="67" class="link-to-prism">src/lib/map/map.service.ts:67</a></div>
                         </td>
                     </tr>
 
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Indexed DB client.</p>
+</div>
+                </td>
+            </tr>
 
         </tbody>
     </table>
@@ -342,6 +348,7 @@ lazily.</p>
 } from &quot;@angular/common/http&quot;;
 import {Injectable} from &quot;@angular/core&quot;;
 import {openDB, DBSchema} from &quot;idb&quot;;
+import {Layer} from &quot;leaflet&quot;;
 import {firstValueFrom} from &quot;rxjs&quot;;
 
 import {Resolution} from &quot;./resolution&quot;;
@@ -351,7 +358,7 @@ import {USE_LOADER} from &quot;../http-context/use-loader&quot;;
 
 const API_URL &#x3D; &quot;geodata&quot;;
 const DB_NAME &#x3D; &quot;map-db&quot;;
-const SCHEMA_V &#x3D; 1;
+const SCHEMA_V &#x3D; 2;
 
 /** The schema the map db uses. */
 interface MapDB extends DBSchema {
@@ -366,7 +373,10 @@ interface MapDB extends DBSchema {
    */
   queries: {
     key: [number, ...string[]],
-    value: string[]
+    value: {
+      box: LayerData[&quot;box&quot;],
+      shapes: string[]
+    }
   },
 
   /**
@@ -395,6 +405,7 @@ interface MapDB extends DBSchema {
 })
 export class MapService {
 
+  /** Indexed DB client. */
   private readonly idb;
 
   /**
@@ -403,7 +414,11 @@ export class MapService {
    */
   constructor(private http: HttpClient) {
     this.idb &#x3D; openDB&lt;MapDB&gt;(DB_NAME, SCHEMA_V, {
-      upgrade(db) {
+      upgrade(db, oldV) {
+        if (oldV) {
+          db.deleteObjectStore(&quot;queries&quot;);
+          db.deleteObjectStore(&quot;shapes&quot;);
+        }
         db.createObjectStore(&quot;queries&quot;);
         db.createObjectStore(&quot;shapes&quot;);
       }
@@ -430,20 +445,23 @@ export class MapService {
     let queryKey &#x3D; [resolutionNum, ...trimmedKeys] as [number, ...string[]];
 
     // check for cached keys or ignore if is force is true
-    let cachedKeys &#x3D; force ? undefined : await idb.get(&quot;queries&quot;, queryKey);
-    if (cachedKeys) {
+    let cachedQuery &#x3D; force ? undefined : await idb.get(&quot;queries&quot;, queryKey);
+    if (cachedQuery) {
       let tx &#x3D; idb.transaction(&quot;shapes&quot;, &quot;readonly&quot;);
       let store &#x3D; tx.objectStore(&quot;shapes&quot;);
       let shapes: ShapeData[] &#x3D; [];
       let operations &#x3D; [];
-      for (let key of cachedKeys) {
+      for (let key of cachedQuery.shapes) {
         operations.push(store.get(key).then(shape &#x3D;&gt; {
           if (shape) shapes.push(shape);
         }));
       }
       operations.push(tx.done);
       await Promise.all(operations);
-      return shapes;
+      return {
+        box: cachedQuery.box,
+        shapes
+      };
     }
 
     // if cachedKeys was empty, request data from the server
@@ -454,12 +472,15 @@ export class MapService {
       return k;
     })});
 
-    let layerData: LayerData &#x3D; (await firstValueFrom(this.http.get&lt;{
-      name: string,
-      key: string,
-      nuts_key: string,
-      geojson: GeoJsonObject
-    }[]&gt;(&#x60;${API_URL}/&#x60;, {
+    let rawLayerData &#x3D; await firstValueFrom(this.http.get&lt;{
+      box: LayerData[&quot;box&quot;],
+      shapes: {
+        name: ShapeData[&quot;name&quot;],
+        key: ShapeData[&quot;key&quot;],
+        nuts_key: ShapeData[&quot;nutsKey&quot;],
+        geojson: ShapeData[&quot;geoJson&quot;]
+      }[]
+    }&gt;(&#x60;${API_URL}/&#x60;, {
       headers: new HttpHeaders({
         &quot;Content-Type&quot;: &quot;application/json&quot;
       }),
@@ -467,24 +488,31 @@ export class MapService {
       responseType: &quot;json&quot;,
       context: new HttpContext()
         .set(USE_API_URL, true)
-        .set(USE_LOADER, &quot;fetching map data&quot;)
-    })) ?? []).map(rawShape &#x3D;&gt; ({
+        .set(USE_LOADER, true)
+    }));
+
+    rawLayerData.shapes &#x3D; rawLayerData.shapes.map(rawShape &#x3D;&gt; ({
       nutsKey: rawShape.nuts_key,
       geoJson: rawShape.geojson,
       ...rawShape
     }));
+
+    let layerData &#x3D; rawLayerData as unknown as LayerData;
 
     // store the requested data back into the db
     let tx &#x3D; idb.transaction([&quot;queries&quot;, &quot;shapes&quot;], &quot;readwrite&quot;);
     let operations &#x3D; [];
     let shapeStore &#x3D; tx.objectStore(&quot;shapes&quot;);
     let shapeKeys &#x3D; [];
-    for (let shape of layerData) {
+    for (let shape of layerData.shapes) {
       operations.push(shapeStore.put(shape, shape.key));
       shapeKeys.push(shape.key);
     }
     let queryStore &#x3D; tx.objectStore(&quot;queries&quot;);
-    operations.push(queryStore.put(shapeKeys, queryKey));
+    operations.push(queryStore.put({
+      box: layerData.box,
+      shapes: shapeKeys
+    }, queryKey));
     await Promise.all(operations);
 
     return layerData;
@@ -495,6 +523,7 @@ export class MapService {
     </div>
 
 </div>
+
 
 
 

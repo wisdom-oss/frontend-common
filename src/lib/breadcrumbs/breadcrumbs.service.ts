@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
-import {ActivatedRouteSnapshot, Params, UrlTree} from "@angular/router";
-import {BehaviorSubject, Observable, Subject} from "rxjs";
+import {Injectable} from "@angular/core";
+import {Params, ActivatedRouteSnapshot, UrlTree} from "@angular/router";
+import {Observable, BehaviorSubject, Subject} from "rxjs";
 
 export interface Breadcrumb {
   icon?: string,

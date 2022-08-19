@@ -135,10 +135,79 @@ To allow to use them here, this component adds the icons via js.</p>
 
 
 
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Accessors</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                    <a href="#name" >name</a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
         </tbody>
     </table>
 </section>
 
+    <section>
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(elRef: <a href="https://angular.io/api/core/ElementRef" target="_blank">ElementRef</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="12" class="link-to-prism">src/lib/ion-icon/ion-icon.component.ts:12</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div class="io-description"><p>Constructor.</p>
+</div>
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                                    <td>Description</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>elRef</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="https://angular.io/api/core/ElementRef" target="_blank" >ElementRef</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                        <td>
+                                                                <p>Element reference to itself</p>
+
+                                                        </td>
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
 
     <section>
     <h3 id="inputs">Inputs</h3>
@@ -158,7 +227,7 @@ To allow to use them here, this component adds the icons via js.</p>
                 </tr>
                         <tr>
                             <td class="col-md-2" colspan="2">
-                                    <div class="io-line">Defined in <a href="" data-line="22" class="link-to-prism">src/lib/ion-icon/ion-icon.component.ts:22</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="31" class="link-to-prism">src/lib/ion-icon/ion-icon.component.ts:31</a></div>
                             </td>
                         </tr>
                 <tr>
@@ -166,6 +235,8 @@ To allow to use them here, this component adds the icons via js.</p>
                         <div class="io-description"><p>The name of the icon.
 Is not used by angular but needed to render the correct icon and necessary
 so that angular stops complaining.</p>
+<p>This setter also directly modifies the native element to have the &quot;name&quot;
+directly as an attribute which is needed to make ion icons work.</p>
 <p>You can find the names at the official website
 <a href="https://ionic.io/ionicons">https://ionic.io/ionicons</a>.</p>
 </div>
@@ -179,11 +250,83 @@ so that angular stops complaining.</p>
 
 
 
+    <section>
+    <h3 id="accessors">
+        Accessors
+    </h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="name"></a>
+                        <span class="name"><b>name</b><a href="#name"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>set</b><code>name(name: string | undefined)</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="31" class="link-to-prism">src/lib/ion-icon/ion-icon.component.ts:31</a></div>
+                                </td>
+                            </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-description"><p>The name of the icon.
+Is not used by angular but needed to render the correct icon and necessary
+so that angular stops complaining.</p>
+<p>This setter also directly modifies the native element to have the &quot;name&quot;
+directly as an attribute which is needed to make ion icons work.</p>
+<p>You can find the names at the official website
+<a href="https://ionic.io/ionicons">https://ionic.io/ionicons</a>.</p>
+</div>
+
+                                <div class="io-description">
+                                        <b>Parameters :</b>
+                                        <table class="params">
+                                            <thead>
+                                                <tr>
+                                                    <td>Name</td>
+                                                        <td>Type</td>
+                                                    <td>Optional</td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                    <tr>
+                                                            <td>name</td>
+                                                    
+                                                            <td>
+                                                                        <code>string | undefined</code>
+                                                            </td>
+                                                    
+                                                        <td>
+                                                                No
+                                                        </td>
+                                                        
+                                                    </tr>
+                                            </tbody>
+                                        </table>
+                                </div>
+                                <div>
+                                </div>
+                                <div class="io-description">
+                                    <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                                </div>
+                        </td>
+                    </tr>
+            </tbody>
+        </table>
+</section>
 </div>
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {Component, Input} from &quot;@angular/core&quot;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {Component, ElementRef, Input} from &quot;@angular/core&quot;;
 
 /**
  * This component is used to inject the icons from IonIcons.
@@ -197,14 +340,25 @@ so that angular stops complaining.</p>
 export class IonIconComponent {
 
   /**
+   * Constructor.
+   * @param elRef Element reference to itself
+   */
+  constructor(private elRef: ElementRef) {}
+
+  /**
    * The name of the icon.
    * Is not used by angular but needed to render the correct icon and necessary
    * so that angular stops complaining.
    *
+   * This setter also directly modifies the native element to have the &quot;name&quot;
+   * directly as an attribute which is needed to make ion icons work.
+   *
    * You can find the names at the official website
    * {@link https://ionic.io/ionicons}.
    */
-  @Input() name: string | undefined;
+  @Input() set name(name: string | undefined) {
+    this.elRef.nativeElement?.setAttribute(&quot;name&quot;, name);
+  };
 
 }
 </code></pre>
@@ -238,11 +392,12 @@ export class IonIconComponent {
 <script src="../js/libs/deep-iterator.js"></script>
 <script>
         var COMPONENT_TEMPLATE = '<div></div>'
-    var COMPONENTS = [{'name': 'BarChartComponent', 'selector': 'bar-chart'},{'name': 'IonIconComponent', 'selector': 'ion-icon'},{'name': 'LineChartComponent', 'selector': 'line-chart'},{'name': 'MapComponent', 'selector': 'map'}];
+    var COMPONENTS = [{'name': 'BreadcrumbsComponent', 'selector': 'breadcrumbs'},{'name': 'IonIconComponent', 'selector': 'ion-icon'},{'name': 'MapComponent', 'selector': 'map'}];
     var DIRECTIVES = [{'name': 'BulmaIsToggleableDirective', 'selector': '.is-toggleable'}];
     var ACTUAL_COMPONENT = {'name': 'IonIconComponent'};
 </script>
 <script src="../js/tree.js"></script>
+
 
 
 

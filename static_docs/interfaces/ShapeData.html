@@ -278,12 +278,16 @@ export interface ShapeData {
   geoJson: GeoJsonObject
 };
 
-export type LayerData &#x3D; ShapeData[];
+export interface LayerData {
+  box: [[number, number], [number, number], [number, number], [number, number]],
+  shapes: ShapeData[]
+};
 
 export default LayerData;
 </code></pre>
     </div>
 </div>
+
 
 
 

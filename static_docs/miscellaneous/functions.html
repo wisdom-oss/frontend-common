@@ -48,6 +48,7 @@
 
 
 
+
 <ol class="breadcrumb">
   <li>Miscellaneous</li>
   <li>Functions</li>
@@ -60,6 +61,9 @@
             <tr>
                 <td class="col-md-4">
                     <ul class="index-list">
+                        <li>
+                            <a href="#getResolvedUrl" title="src/lib/util.ts" ><b>getResolvedUrl</b>&nbsp;&nbsp;&nbsp;(src/.../util.ts)</a>
+                        </li>
                         <li>
                             <a href="#prettyPrintNum" title="src/lib/util.ts" ><b>prettyPrintNum</b>&nbsp;&nbsp;&nbsp;(src/.../util.ts)</a>
                         </li>
@@ -75,6 +79,9 @@
                         <li>
                             <a href="#translateObject" title="src/lib/util.ts" ><b>translateObject</b>&nbsp;&nbsp;&nbsp;(src/.../util.ts)</a>
                         </li>
+                        <li>
+                            <a href="#tupleSwap" title="src/lib/util.ts" ><b>tupleSwap</b>&nbsp;&nbsp;&nbsp;(src/.../util.ts)</a>
+                        </li>
                     </ul>
                 </td>
             </tr>
@@ -85,6 +92,78 @@
     <h3>src/lib/util.ts</h3>
     <section>
     <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getResolvedUrl"></a>
+                    <span class="name">
+                        <span ><b>getResolvedUrl</b></span>
+                        <a href="#getResolvedUrl"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getResolvedUrl(route: <a href="https://angular.io/api/router/ActivatedRouteSnapshot" target="_blank">ActivatedRouteSnapshot</a>)</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Function to return a fully resolved url in a string from an activated route
+snapshot.</p>
+<p>Recreated by <a href="https://stackoverflow.com/a/67232620/15800714">this solution</a> on StackOverflow.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>route</td>
+                                    <td>
+                                                <code><a href="https://angular.io/api/router/ActivatedRouteSnapshot" target="_blank" >ActivatedRouteSnapshot</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Route snapshot of a component.</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
         <tbody>
             <tr>
                 <td class="col-md-4">
@@ -322,6 +401,67 @@ translate service.</p>
             </tr>
         </tbody>
     </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="tupleSwap"></a>
+                    <span class="name">
+                        <span ><b>tupleSwap</b></span>
+                        <a href="#tupleSwap"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>tupleSwap(tuple)</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Utility function to swap the values of a tuple.</p>
+<p>Useful if coordinates are in the wrong order.
+(e.g. geojson to leaflet)</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>tuple</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Tuple of two values</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </section>    <h3>src/lib/map/resolution.ts</h3>
     <section>
     <h3></h3>    <table class="table table-sm table-bordered">
@@ -400,7 +540,7 @@ translate service.</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>toKeyLength(res: <a href="../miscellaneouss/Resolution.html" target="_self">Resolution</a>)</code>
+<code>toKeyLength(res: <a href="../undefineds/Resolution.html" target="_self">Resolution</a>)</code>
                 </td>
             </tr>
 

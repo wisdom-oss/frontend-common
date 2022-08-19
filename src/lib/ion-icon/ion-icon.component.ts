@@ -1,4 +1,4 @@
-import {Component, ElementRef, Input} from "@angular/core";
+import {Component, Input, ElementRef} from "@angular/core";
 
 /**
  * This component is used to inject the icons from IonIcons.
@@ -11,12 +11,19 @@ import {Component, ElementRef, Input} from "@angular/core";
 })
 export class IonIconComponent {
 
+  /**
+   * Constructor.
+   * @param elRef Element reference to itself
+   */
   constructor(private elRef: ElementRef) {}
 
   /**
    * The name of the icon.
    * Is not used by angular but needed to render the correct icon and necessary
    * so that angular stops complaining.
+   *
+   * This setter also directly modifies the native element to have the "name"
+   * directly as an attribute which is needed to make ion icons work.
    *
    * You can find the names at the official website
    * {@link https://ionic.io/ionicons}.

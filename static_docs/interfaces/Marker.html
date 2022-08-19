@@ -48,7 +48,7 @@
   <li>Interfaces</li>
   <li
   >
-  WisdomInterface</li>
+  Marker</li>
 </ol>
 
 <ul class="nav nav-tabs" role="tablist">
@@ -66,19 +66,10 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>src/WisdomInterface.ts</code>
+            <code>src/lib/map/marker.ts</code>
         </p>
 
 
-            <p class="comment">
-                <h3>Description</h3>
-            </p>
-            <p class="comment">
-                <p>Interface for the wisdom modules.</p>
-<p>Every wisdom module must provide such an object implementing this interface.
-The object must be exported under the name &quot;wisdomInterface&quot;.</p>
-
-            </p>
 
 
         <section>
@@ -94,21 +85,30 @@ The object must be exported under the name &quot;wisdomInterface&quot;.</p>
                         <td class="col-md-4">
                             <ul class="index-list">
                                 <li>
-                                        <a href="#route" 
+                                        <a href="#coordinates" 
 >
-                                            route
+                                            coordinates
                                         </a>
                                 </li>
                                 <li>
-                                        <a href="#scopes" 
+                                            <span class="modifier">Optional</span>
+                                        <a href="#icon" 
 >
-                                            scopes
+                                            icon
                                         </a>
                                 </li>
                                 <li>
-                                        <a href="#translations" 
+                                            <span class="modifier">Optional</span>
+                                        <a href="#onClick" 
 >
-                                            translations
+                                            onClick
+                                        </a>
+                                </li>
+                                <li>
+                                            <span class="modifier">Optional</span>
+                                        <a href="#tooltip" 
+>
+                                            tooltip
                                         </a>
                                 </li>
                             </ul>
@@ -126,9 +126,9 @@ The object must be exported under the name &quot;wisdomInterface&quot;.</p>
                         <tbody>
                                 <tr>
                                     <td class="col-md-4">
-                                        <a name="route"></a>
-                                        <span class="name "><b>route</b>
-                                            <a href="#route">
+                                        <a name="coordinates"></a>
+                                        <span class="name "><b>coordinates</b>
+                                            <a href="#coordinates">
                                                 <span class="icon ion-ios-link"></span>
                                             </a>
                                         </span>
@@ -136,7 +136,7 @@ The object must be exported under the name &quot;wisdomInterface&quot;.</p>
                                 </tr>
                                 <tr>
                                     <td class="col-md-4">
-                                        <code>route:         <code><a href="https://angular.io/api/router/Route" target="_blank" >Route</a></code>
+                                        <code>coordinates:     <code>[number, number]</code>
 </code>
                                     </td>
                                 </tr>
@@ -144,7 +144,7 @@ The object must be exported under the name &quot;wisdomInterface&quot;.</p>
 
                                     <tr>
                                         <td class="col-md-4">
-                                            <i>Type : </i>        <code><a href="https://angular.io/api/router/Route" target="_blank" >Route</a></code>
+                                            <i>Type : </i>    <code>[number, number]</code>
 
                                         </td>
                                     </tr>
@@ -153,22 +153,15 @@ The object must be exported under the name &quot;wisdomInterface&quot;.</p>
 
 
 
-                            <tr>
-                                <td class="col-md-4">
-                                    <div class="io-description"><p>The route that leads to this module.
-This may also include guards but some guards will be automatically injected.</p>
-</div>
-                                </td>
-                            </tr>
                         </tbody>
                     </table>
                     <table class="table table-sm table-bordered">
                         <tbody>
                                 <tr>
                                     <td class="col-md-4">
-                                        <a name="scopes"></a>
-                                        <span class="name "><b>scopes</b>
-                                            <a href="#scopes">
+                                        <a name="icon"></a>
+                                        <span class="name "><b>icon</b>
+                                            <a href="#icon">
                                                 <span class="icon ion-ios-link"></span>
                                             </a>
                                         </span>
@@ -176,7 +169,7 @@ This may also include guards but some guards will be automatically injected.</p>
                                 </tr>
                                 <tr>
                                     <td class="col-md-4">
-                                        <code>scopes:     <code>string[]</code>
+                                        <code>icon:     <code>L.Icon | L.DivIcon</code>
 </code>
                                     </td>
                                 </tr>
@@ -184,30 +177,29 @@ This may also include guards but some guards will be automatically injected.</p>
 
                                     <tr>
                                         <td class="col-md-4">
-                                            <i>Type : </i>    <code>string[]</code>
+                                            <i>Type : </i>    <code>L.Icon | L.DivIcon</code>
 
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Optional</i>
                                         </td>
                                     </tr>
 
 
 
 
-
-                            <tr>
-                                <td class="col-md-4">
-                                    <div class="io-description"><p>The scopes required to see the component.</p>
-</div>
-                                </td>
-                            </tr>
                         </tbody>
                     </table>
                     <table class="table table-sm table-bordered">
                         <tbody>
                                 <tr>
                                     <td class="col-md-4">
-                                        <a name="translations"></a>
-                                        <span class="name "><b>translations</b>
-                                            <a href="#translations">
+                                        <a name="onClick"></a>
+                                        <span class="name "><b>onClick</b>
+                                            <a href="#onClick">
                                                 <span class="icon ion-ios-link"></span>
                                             </a>
                                         </span>
@@ -215,7 +207,7 @@ This may also include guards but some guards will be automatically injected.</p>
                                 </tr>
                                 <tr>
                                     <td class="col-md-4">
-                                        <code>translations:     <code>Record&lt;string | Record&lt;string, Record&lt;string, Record&lt;string, string&gt;&gt;&gt;&gt;</code>
+                                        <code>onClick:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
 </code>
                                     </td>
                                 </tr>
@@ -223,23 +215,58 @@ This may also include guards but some guards will be automatically injected.</p>
 
                                     <tr>
                                         <td class="col-md-4">
-                                            <i>Type : </i>    <code>Record&lt;string | Record&lt;string, Record&lt;string, Record&lt;string, string&gt;&gt;&gt;&gt;</code>
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
 
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Optional</i>
                                         </td>
                                     </tr>
 
 
 
 
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="tooltip"></a>
+                                        <span class="name "><b>tooltip</b>
+                                            <a href="#tooltip">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>tooltip:     <code>Content |  | Tooltip</code>
+</code>
+                                    </td>
+                                </tr>
 
-                            <tr>
-                                <td class="col-md-4">
-                                    <div class="io-description"><p>The translations the modules provides and uses.</p>
-<p>The top most entry should be the namespace, the following the component and
-in the component there should be keys for the translation keys.</p>
-</div>
-                                </td>
-                            </tr>
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>    <code>Content |  | Tooltip</code>
+
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Optional</i>
+                                        </td>
+                                    </tr>
+
+
+
+
                         </tbody>
                     </table>
             </section>
@@ -247,29 +274,15 @@ in the component there should be keys for the translation keys.</p>
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {Route} from &quot;@angular/router&quot;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {Content, LeafletMouseEvent, Layer, Tooltip} from &quot;leaflet&quot;;
 
-/**
- * Interface for the wisdom modules.
- *
- * Every wisdom module must provide such an object implementing this interface.
- * The object must be exported under the name &quot;wisdomInterface&quot;.
- */
-export interface WisdomInterface {
-  /**
-   * The route that leads to this module.
-   * This may also include guards but some guards will be automatically injected.
-   */
-  route: Route;
-  /** The scopes required to see the component. */
-  scopes: string[];
-  /**
-   * The translations the modules provides and uses.
-   *
-   * The top most entry should be the namespace, the following the component and
-   * in the component there should be keys for the translation keys.
-   */
-  translations: Record&lt;string, Record&lt;string, Record&lt;string, Record&lt;string, string&gt;&gt;&gt;&gt;
+import * as L from &quot;leaflet&quot;;
+
+export interface Marker {
+  coordinates: [number, number],
+  tooltip?: Content | ((layer: Layer) &#x3D;&gt; Content) | Tooltip,
+  onClick?: (evt: LeafletMouseEvent) &#x3D;&gt; void,
+  icon?: L.Icon | L.DivIcon
 }
 </code></pre>
     </div>
@@ -308,7 +321,7 @@ export interface WisdomInterface {
        <script>
             var COMPODOC_CURRENT_PAGE_DEPTH = 1;
             var COMPODOC_CURRENT_PAGE_CONTEXT = 'interface';
-            var COMPODOC_CURRENT_PAGE_URL = 'WisdomInterface.html';
+            var COMPODOC_CURRENT_PAGE_URL = 'Marker.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
 

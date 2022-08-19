@@ -1,7 +1,8 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Breadcrumb, BreadcrumbsService} from "./breadcrumbs.service";
+import {Component, OnDestroy, OnInit} from "@angular/core";
 import {ActivatedRouteSnapshot} from "@angular/router";
 import {takeWhile} from "rxjs";
+
+import {Breadcrumb, BreadcrumbsService} from "./breadcrumbs.service";
 
 let counter = 0;
 
