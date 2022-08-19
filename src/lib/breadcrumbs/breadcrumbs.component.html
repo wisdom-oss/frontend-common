@@ -9,11 +9,15 @@
         [routerLink]="fragment.link"
         [queryParams]="fragment.query"
       >
-        <span class="icon-text">
+        <span [class]="isLast ? 'icon-text' : 'icon-text has-text-primary has-hover-text-grey-light'">
           <span class="icon" *ngIf="fragment.icon">
             <ion-icon [name]="fragment.icon"></ion-icon>
           </span>
-          <span>{{fragment.text | translate}}</span>
+          <span>
+            <span *ngFor="let text of [fragment.text].flat()">
+              {{text | translate}}
+            </span>
+          </span>
         </span>
       </a>
     </li>

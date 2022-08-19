@@ -4,7 +4,7 @@ import {BehaviorSubject, Observable, Subject} from "rxjs";
 
 export interface Breadcrumb {
   icon?: string,
-  text: string,
+  text: string | string[],
   link: string,
   query?: Params
 }
