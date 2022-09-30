@@ -2,8 +2,8 @@
   "name": "common",
   "version": "0.0.1",
   "peerDependencies": {
-    "@angular/common": "^14.0.3",
-    "@angular/core": "^14.0.3"
+    "@angular/common": "^14.2.4",
+    "@angular/core": "^14.2.4"
   },
   "dependencies": {
     "tslib": "^2.4.0"
