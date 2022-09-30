@@ -1,10 +1,5 @@
 import * as L from "leaflet";
-
-/**
- * GeoJSON data type used by Leaflet.
- * @private
- */
-export type GeoJsonObject = Parameters<typeof L["geoJSON"]>[0];
+import {GeoJsonObject} from "geojson";
 
 /** Type to represent a single shape with all of its metadata. */
 export interface ShapeData {

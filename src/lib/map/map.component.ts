@@ -21,12 +21,6 @@ import * as LX from "./invert-selection";
 
 import "leaflet.markercluster";
 
-/**
- * GeoJSON data type used by Leaflet.
- * @private
- */
-type GeoJsonObject = Parameters<typeof L["geoJSON"]>[0];
-
 /** Type alias to enforce the meaning of the layer keys. */
 type LayerKey = string;
 

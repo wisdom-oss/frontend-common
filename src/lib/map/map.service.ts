@@ -10,7 +10,7 @@ import {Layer} from "leaflet";
 import {firstValueFrom} from "rxjs";
 
 import {Resolution} from "./resolution";
-import {LayerData, ShapeData, GeoJsonObject} from "./layer-data";
+import {LayerData, ShapeData} from "./layer-data";
 import {USE_API_URL} from "../http-context/use-api-url";
 import {USE_LOADER} from "../http-context/use-loader";
 
