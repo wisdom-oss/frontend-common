@@ -1,5 +1,7 @@
 export * from "./lib/wisdom.module";
 
+export * from "./lib/bim/bim.component";
+
 export * from "./lib/breadcrumbs/breadcrumbs.component";
 export * from "./lib/breadcrumbs/breadcrumbs.service";
 
