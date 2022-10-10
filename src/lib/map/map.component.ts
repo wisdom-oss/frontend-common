@@ -8,7 +8,7 @@ import {
   Output,
   ElementRef
 } from "@angular/core";
-import {BehaviorSubject, Subject} from "rxjs";
+import {BehaviorSubject, firstValueFrom, Subject} from "rxjs";
 
 import * as L from "leaflet";
 
@@ -20,6 +20,7 @@ import {Marker} from "./marker";
 import * as LX from "./invert-selection";
 
 import "leaflet.markercluster";
+import {TranslateService} from "@ngx-translate/core";
 
 /** Type alias to enforce the meaning of the layer keys. */
 type LayerKey = string;
@@ -87,7 +88,6 @@ export class MapComponent implements OnInit, AfterViewInit {
    *   <li>
    *     The name of the layer, this will be only used to display a name of
    *     the layer (may also be a translation key).
-   *     // TODO: actually implement translation here
    *   </li>
    *   <li>
    *     This should be the resolution to display the layer at, this may also
@@ -181,8 +181,12 @@ export class MapComponent implements OnInit, AfterViewInit {
   /**
    * Constructor.
    * @param service Service to interact with the server for geo data
+   * @param translate Translation service to update resolution names
    */
-  constructor(private service: MapService) {}
+  constructor(
+    private service: MapService,
+    private translate: TranslateService
+  ) {}
 
   /**
    * While init this sets the input values to the inner, private values.
@@ -236,7 +240,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     // TODO: make a clear type from this
     let invertSelectionControl: any;
 
-    this.layerData.subscribe(layerData => {
+    this.layerData.subscribe(async layerData => {
       let displayLayer = true;
 
       // reset selected data
@@ -244,6 +248,15 @@ export class MapComponent implements OnInit, AfterViewInit {
 
       if (layersControl) map.removeControl(layersControl);
       layersControl = L.control.layers();
+      // layer index to allow sorting by it
+      // this allows updating the names without having to worry about layer
+      // shuffling
+      let layerIndex = 0;
+      layersControl.options.sortLayers = true;
+      layersControl.options.sortFunction = (layerA, layerB) => {
+        // @ts-ignore these orders are injected here to allow fixed ordering
+        return layerA.options.order - layerB.options.order;
+      }
       let layers: L.Layer[] = [];
 
       if (this.selectedGeoJsonLayer) map.removeLayer(this.selectedGeoJsonLayer);
@@ -253,6 +266,9 @@ export class MapComponent implements OnInit, AfterViewInit {
         let selectedShapes = this.selectedShapes[key] = new Set();
         // use for every layer a new geoJSON layer
         let geoJsonLayer = L.geoJSON(undefined, {
+          // @ts-ignore insert order here to allow fixed ordering when updating
+          // translation
+          order: layerIndex++,
           attribution: `
             <a target="_blank" href='https://gdz.bkg.bund.de/index.php/default/open-data/verwaltungsgebiete-1-5-000-000-ebenen-stand-01-01-vg5000-ebenen-01-01.html'>
               📐 © GeoBasis-DE / BKG 2022
@@ -301,7 +317,17 @@ export class MapComponent implements OnInit, AfterViewInit {
             ]);
           }
         }
-        layersControl.addBaseLayer(geoJsonLayer, this.layerNames[key]);
+        this.translate.onLangChange.subscribe(() => {
+          layersControl.removeLayer(geoJsonLayer);
+          layersControl.addBaseLayer(
+            geoJsonLayer,
+            this.translate.instant(this.layerNames[key])
+          );
+        });
+        let layerName = await firstValueFrom(
+          this.translate.get(this.layerNames[key])
+        );
+        layersControl.addBaseLayer(geoJsonLayer, layerName);
         map.on("baselayerchange", ({layer}) => {
           if (layer == geoJsonLayer) {
             this.selectedGeoJsonLayer = layer;
