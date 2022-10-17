@@ -198,12 +198,7 @@
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import * as L from &quot;leaflet&quot;;
-
-/**
- * GeoJSON data type used by Leaflet.
- * @private
- */
-export type GeoJsonObject &#x3D; Parameters&lt;typeof L[&quot;geoJSON&quot;]&gt;[0];
+import {GeoJsonObject} from &quot;geojson&quot;;
 
 /** Type to represent a single shape with all of its metadata. */
 export interface ShapeData {
