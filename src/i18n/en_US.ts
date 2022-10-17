@@ -1,5 +1,8 @@
 export default {
   common: {
+    bim: {
+      loading: "Fetching BIM Models..."
+    },
     map: {
       resolution: {
         state: "State",

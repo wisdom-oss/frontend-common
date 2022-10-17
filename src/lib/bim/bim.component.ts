@@ -1,16 +1,22 @@
 import {
   AfterViewInit,
   Component,
-  ElementRef, EventEmitter,
-  Input, Output,
+  ElementRef,
+  EventEmitter,
+  Input,
+  Output,
   ViewChild
 } from '@angular/core';
 import {
   Viewer,
   ViewerInteractionEvent,
-  ViewerLoadedEvent, ViewerPointerLockChangedEvent,
+  ViewerLoadedEvent,
+  ViewerPointerLockChangedEvent,
   ViewType
 } from "@xbim/viewer";
+import {BimService} from "./bim.service";
+
+type ModelEntry = {url: string, visible: boolean, fixed: boolean};
 
 @Component({
   selector: 'bim',
@@ -26,7 +32,8 @@ export class BimComponent implements AfterViewInit {
   @ViewChild("bim") canvasRef!: ElementRef<HTMLCanvasElement>;
   viewer!: Viewer;
 
-  @Input("file") file?: string;
+  @Input() file?: string;
+  @Input() files?: Record<string, string | Partial<ModelEntry> & {url: string}>;
   @Input("aspect-ratio") aspectRatio: number = 16/9;
 
   @Output() click = new EventEmitter<ViewerInteractionEvent>();
@@ -72,9 +79,26 @@ export class BimComponent implements AfterViewInit {
   @Output() unloaded = new EventEmitter<ViewerLoadedEvent>();
   @Output() wheel = new EventEmitter<ViewerInteractionEvent>();
 
+  private models: Record<string, {blob: Blob, id?: number, fixed?: boolean}> = {};
   private resizeObserver!: ResizeObserver;
 
+  constructor(private service: BimService) {}
+
   ngAfterViewInit(): void {
+    // check what input was given
+    let files: Record<string, ModelEntry> = {};
+    if (!this.file && !this.files) return;
+    if (this.file && this.files) throw new Error("`file` and `files` are mutually exclusive");
+    if (this.file) files = {default: {url: this.file!, visible: true, fixed: true}}
+    if (this.files) for (let [k, v] of Object.entries(this.files)) {
+      if (typeof v === "string") files[k] = {url: v, fixed: false, visible: true}
+      else files[k] = {
+        url: v.url,
+        fixed: v.fixed ?? false,
+        visible: v.visible ?? true
+      }
+    }
+
     // TODO: make use of this
     console.log(Viewer.check());
     let containerElement = this.containerRef.nativeElement;
@@ -89,14 +113,47 @@ export class BimComponent implements AfterViewInit {
     });
     this.resizeObserver.observe(containerElement);
 
+    // start the viewer
     this.viewer.start();
-    if (!this.file) return;
-    this.viewer.load(this.file);
+    // this.viewer.show(ViewType.DEFAULT).catch(e => {
+    //   if (e) console.error(e);
+    // });
+
+    // store model ids to unload them in the future
     this.viewer.on("loaded", args => {
+      this.models[args.tag].id = args.model;
       this.viewer.show(ViewType.DEFAULT).catch(e => console.error(e));
     });
 
+    // fetch all models
+    for (let [k, {url, visible, fixed}] of Object.entries(files)) (async () => {
+      let blob = await this.service.fetchModel(url);
+      this.models[k] = {blob, fixed};
+      if (visible) this.viewer.load(blob, k);
+    })();
+
     this.hookEvents();
+  }
+
+  show(tag: string) {
+    if (!this.models[tag]) throw new Error(`Tag '${tag}' not found.`);
+    if (this.models[tag].id) {
+      console.warn(`Model '${tag}' already shown.`);
+      return;
+    }
+    this.viewer.load(this.models[tag].blob);
+  }
+
+  hide(tag: string) {
+    if (!this.models[tag]) throw new Error(`Tag '${tag}' not found.`);
+    if (!this.models[tag].fixed)
+      throw new Error(`Model '${tag}' is marked as fixed.`);
+    if (this.models[tag].id === undefined) {
+      console.warn(`Model '${tag}' already hidden.`);
+      return;
+    }
+    this.viewer.unload(this.models[tag].id!);
+    this.models[tag].id = undefined;
   }
 
   private hookEvents() {

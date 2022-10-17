@@ -1,5 +1,8 @@
 export default {
   common: {
+    bim: {
+      loading: "Lade BIM Modelle..."
+    },
     map: {
       resolution: {
         state: "Bundesland",
