@@ -12,7 +12,7 @@ export class BimService {
 
   fetchModel(fileLink: string): Promise<Blob> {
     let context = new HttpContext();
-    context.set(USE_LOADER, "common.bim.loading");
+    context.set(USE_LOADER, "common.bim.fetching");
     return firstValueFrom(this.http.get(fileLink, {
       responseType: "blob",
       context

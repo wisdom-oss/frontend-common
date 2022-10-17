@@ -1,7 +1,8 @@
 export default {
   common: {
     bim: {
-      loading: "Fetching BIM Models..."
+      fetching: "Fetching BIM Models...",
+      loading: "Loading BIM Models..."
     },
     map: {
       resolution: {

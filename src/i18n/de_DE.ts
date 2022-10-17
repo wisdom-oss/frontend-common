@@ -1,6 +1,7 @@
 export default {
   common: {
     bim: {
+      fetching: "Hole BIM Modelle...",
       loading: "Lade BIM Modelle..."
     },
     map: {

@@ -15,6 +15,7 @@ import {
   ViewType
 } from "@xbim/viewer";
 import {BimService} from "./bim.service";
+import {LoaderInjector} from "../loader/loader.injector";
 
 type ModelEntry = {url: string, visible: boolean, fixed: boolean};
 
@@ -82,7 +83,10 @@ export class BimComponent implements AfterViewInit {
   private models: Record<string, {blob: Blob, id?: number, fixed?: boolean}> = {};
   private resizeObserver!: ResizeObserver;
 
-  constructor(private service: BimService) {}
+  constructor(
+    private service: BimService,
+    private loader: LoaderInjector
+  ) {}
 
   ngAfterViewInit(): void {
     // check what input was given
@@ -129,7 +133,11 @@ export class BimComponent implements AfterViewInit {
     for (let [k, {url, visible, fixed}] of Object.entries(files)) (async () => {
       let blob = await this.service.fetchModel(url);
       this.models[k] = {blob, fixed};
-      if (visible) this.viewer.load(blob, k);
+      if (visible) {
+        let [loader, cb] = this.createLoader();
+        this.loader.addLoader(loader, "common.bim.loading");
+        this.viewer.loadAsync(blob, k, undefined, cb);
+      }
     })();
 
     this.hookEvents();
@@ -141,7 +149,7 @@ export class BimComponent implements AfterViewInit {
       console.warn(`Model '${tag}' already shown.`);
       return;
     }
-    this.viewer.load(this.models[tag].blob);
+    this.viewer.loadAsync(this.models[tag].blob, tag);
   }
 
   hide(tag: string) {
@@ -199,6 +207,16 @@ export class BimComponent implements AfterViewInit {
     this.viewer.on("touchstart", evt => this.touchstart.emit(evt));
     this.viewer.on("unloaded", evt => this.unloaded.emit(evt));
     this.viewer.on("wheel", evt => this.wheel.emit(evt));
+  }
+
+  private createLoader(): [Promise<void>, (m: {percent: number, phase: number}) => void] {
+    let resolve: Function;
+    let promise = new Promise<void>(r => resolve = r);
+    let fn = (m: {percent: number, phase: number}) => {
+      console.log(m);
+      if (m.phase === 2 && m.percent === 100) resolve();
+    };
+    return [promise, fn];
   }
 
 }
