@@ -23,6 +23,8 @@ export * from "./lib/http-context/use-cache";
 export * from "./lib/http-context/use-error-curtain";
 export * from "./lib/http-context/use-loader";
 
+export * from "./lib/loader/loader.injector";
+
 export * from "./lib/util";
 
 export {default as de_DELang} from "./i18n/de_DE";
