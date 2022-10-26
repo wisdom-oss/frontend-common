@@ -102,6 +102,7 @@ export class BimComponent implements AfterViewInit {
         visible: v.visible ?? true
       }
     }
+    console.log(this.models);
 
     // TODO: make use of this
     console.log(Viewer.check());
@@ -154,7 +155,7 @@ export class BimComponent implements AfterViewInit {
 
   hide(tag: string) {
     if (!this.models[tag]) throw new Error(`Tag '${tag}' not found.`);
-    if (!this.models[tag].fixed)
+    if (this.models[tag].fixed)
       throw new Error(`Model '${tag}' is marked as fixed.`);
     if (this.models[tag].id === undefined) {
       console.warn(`Model '${tag}' already hidden.`);
@@ -213,7 +214,6 @@ export class BimComponent implements AfterViewInit {
     let resolve: Function;
     let promise = new Promise<void>(r => resolve = r);
     let fn = (m: {percent: number, phase: number}) => {
-      console.log(m);
       if (m.phase === 2 && m.percent === 100) resolve();
     };
     return [promise, fn];
