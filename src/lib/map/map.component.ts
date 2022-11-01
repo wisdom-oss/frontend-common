@@ -324,9 +324,12 @@ export class MapComponent implements OnInit, AfterViewInit {
             this.translate.instant(this.layerNames[key])
           );
         });
-        let layerName = await firstValueFrom(
-          this.translate.get(this.layerNames[key])
-        );
+        let layerName: string;
+        if (this.layerNames[key].length) {
+          layerName = await firstValueFrom(
+            this.translate.get(this.layerNames[key])
+          );
+        } else layerName = "layer";
         layersControl.addBaseLayer(geoJsonLayer, layerName);
         map.on("baselayerchange", ({layer}) => {
           if (layer == geoJsonLayer) {
