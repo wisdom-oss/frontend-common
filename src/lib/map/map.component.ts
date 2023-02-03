@@ -178,6 +178,9 @@ export class MapComponent implements OnInit, AfterViewInit {
     keys: string[],
   }>();
 
+  /** Outputs the currently rendered keys, mapped to their names. */
+  @Output() keyNames = new EventEmitter<Record<string, string>>();
+
   /**
    * Constructor.
    * @param service Service to interact with the server for geo data
@@ -214,6 +217,9 @@ export class MapComponent implements OnInit, AfterViewInit {
       for (let [layerKey, data] of Object.entries(requests)) {
         fetched[layerKey] = await data;
       }
+      this.keyNames.next(Object.fromEntries(
+        fetched["shapes"].shapes.map(({key, name}) => [key, name])
+      ));
       this.layerData.next(fetched);
     });
   }
