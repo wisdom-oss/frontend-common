@@ -217,10 +217,15 @@ export class MapComponent implements OnInit, AfterViewInit {
       for (let [layerKey, data] of Object.entries(requests)) {
         fetched[layerKey] = await data;
       }
-      this.keyNames.next(Object.fromEntries(
-        fetched["shapes"].shapes.map(({key, name}) => [key, name])
-      ));
       this.layerData.next(fetched);
+
+      let keyNames = new Map();
+      for (let entry of Object.values(fetched)) {
+        for (let {name, key} of entry.shapes) {
+          keyNames.set(key, name);
+        }
+      }
+      this.keyNames.next(Object.fromEntries(keyNames));
     });
   }
 
