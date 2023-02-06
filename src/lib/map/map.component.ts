@@ -26,7 +26,7 @@ import {TranslateService} from "@ngx-translate/core";
 type LayerKey = string;
 
 /** A layer config for the input of {@link MapComponent.inputLayers}. */
-type LayerConfig = Record<LayerKey, [string, Resolution | null, string[] | null]>;
+type LayerConfig = Record<LayerKey, [string, Resolution | null, string | string[] | null]>;
 
 /**
  * Component for displaying maps.
@@ -210,7 +210,7 @@ export class MapComponent implements OnInit, AfterViewInit {
         this.layerNames[layerKey] = displayName;
         requests[layerKey] = this.service.fetchLayerData(
           resolution,
-          keys?.map(k => k.split(" ").join(""))
+          keys ? [keys].flat().map(k => k.split(" ").join("")) : null
         );
       }
       let fetched: Record<LayerKey, LayerData> = {};
