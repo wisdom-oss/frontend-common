@@ -1,4 +1,10 @@
-import {HostBinding, Directive, Input, HostListener} from "@angular/core";
+import {
+  HostBinding,
+  Directive,
+  Input,
+  HostListener,
+  ElementRef
+} from "@angular/core";
 
 /**
  * Directive for making things toggleable with bulma.
@@ -11,36 +17,11 @@ import {HostBinding, Directive, Input, HostListener} from "@angular/core";
 })
 export class BulmaIsToggleableDirective {
 
-  /** Is the host currently active. */
-  private isActive: boolean = false;
-  /** The classes of the host node. */
-  private classes: string[] = [];
+  constructor(private elementRef: ElementRef) {}
 
-  /** The classes of the host node. */
-  @Input("class")
-  @HostBinding("class")
-  get elementClasses(): string {
-    return this.classes.join(" ");
-  }
-  /** Set the classes of the host node. */
-  set elementClasses(classes: string) {
-    this.classes = classes.trim().split(/\s+/);
-  }
-
-  /**
-   * Function to be executed when the host is clicked.
-   *
-   * Will toggle the "is-active" class on the host node.
-   */
   @HostListener("click")
   toggle() {
-    this.isActive = !this.isActive;
-    if (this.isActive) this.classes.push("is-active")
-    else {
-      this.elementClasses = this.elementClasses
-        .split("is-active")
-        .join("");
-    }
+    this.elementRef.nativeElement.classList.toggle("is-active");
   }
 
 }
