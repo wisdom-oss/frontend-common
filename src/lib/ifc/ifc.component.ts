@@ -2,7 +2,7 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
-  Input,
+  Input, OnDestroy,
   ViewChild
 } from '@angular/core';
 import {IfcViewerAPI} from "web-ifc-viewer";
@@ -52,7 +52,7 @@ type ModelEntry = {
     </div>
   `,
 })
-export class IfcComponent implements AfterViewInit {
+export class IfcComponent implements AfterViewInit, OnDestroy {
 
   @Input()
   height = "70vh";
@@ -134,6 +134,11 @@ export class IfcComponent implements AfterViewInit {
 
   showModel(model: string) {
     this.viewer.context.scene.addModel(this.models[model].ifcModel);
+  }
+
+  ngOnDestroy(): void {
+    // TODO: destroy models to avoid memory leak
+    // https://ifcjs.github.io/info/docs/Guide/web-ifc-viewer/Tutorials/Memory
   }
 
 }
