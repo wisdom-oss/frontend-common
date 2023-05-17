@@ -9,7 +9,6 @@ import {
 } from "./bulma/bulma-is-toggleable.directive";
 import {IonIconComponent} from "./ion-icon/ion-icon.component";
 import {MapComponent} from "./map/map.component";
-import { BimComponent } from './bim/bim.component';
 import { IfcComponent } from './ifc/ifc.component';
 
 @NgModule({
@@ -18,7 +17,6 @@ import { IfcComponent } from './ifc/ifc.component';
     BulmaIsToggleableDirective,
     MapComponent,
     BreadcrumbsComponent,
-    BimComponent,
     IfcComponent
   ],
   imports: [
@@ -27,7 +25,6 @@ import { IfcComponent } from './ifc/ifc.component';
     RouterModule
   ],
   exports: [
-    BimComponent,
     IonIconComponent,
     IfcComponent,
     BulmaIsToggleableDirective,
