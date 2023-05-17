@@ -50,7 +50,7 @@ export class IfcComponent implements AfterViewInit {
 
   @Input("models")
   inputModels: Record<string, ModelEntry> = {};
-  models: Record<string, ModelEntry | {ifcModel: IFCModel}> = {}
+  models: Record<string, ModelEntry & {ifcModel: IFCModel}> = {}
 
   @ViewChild("viewerContainer")
   viewerContainer!: ElementRef<HTMLDivElement>;
@@ -86,6 +86,14 @@ export class IfcComponent implements AfterViewInit {
       if (visible === false) this.viewer.context.scene.removeModel(ifcModel);
       this.models[model] = {path, visible, fixed, ifcModel};
     }
+  }
+
+  hideModel(model: string) {
+    this.viewer.context.scene.removeModel(this.models[model].ifcModel);
+  }
+
+  showModel(model: string) {
+    this.viewer.context.scene.addModel(this.models[model].ifcModel);
   }
 
 }
