@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import {IfcViewerAPI} from "web-ifc-viewer";
 import {IFCModel} from "web-ifc-three/IFC/components/IFCModel";
+import {IfcService} from "./ifc.service";
 
 /**
  * Model entry.
@@ -32,7 +33,14 @@ type ModelEntry = {
    * This is recommended to be set only for one model.
    * This is optional, with the model not fitting to frame by default.
    */
-  fitToFrame?: boolean
+  fitToFrame?: boolean,
+
+  /**
+   * Decides whether to use caching on this model.
+   * This is recommended for static models with static paths.
+   * This is optional, caching is enabled by default.
+   */
+  cache?: boolean
 };
 
 @Component({
@@ -60,6 +68,8 @@ export class IfcComponent implements AfterViewInit {
 
   viewer!: IfcViewerAPI;
 
+  constructor(private service: IfcService) {}
+
   async ngAfterViewInit(): Promise<void> {
     const container = this.viewerContainer.nativeElement;
     this.viewer = new IfcViewerAPI({ container });
@@ -74,7 +84,7 @@ export class IfcComponent implements AfterViewInit {
 
     let first = true;
     for (
-      let [model, {path, visible, fixed, fitToFrame}]
+      let [model, {path, visible, fixed, fitToFrame, cache}]
       of Object.entries(this.inputModels)
     ) {
       await this.viewer.IFC.loader.ifcManager.applyWebIfcConfig({
@@ -82,7 +92,8 @@ export class IfcComponent implements AfterViewInit {
         COORDINATE_TO_ORIGIN: first
       });
       first = false;
-      const ifcModel = await this.viewer.IFC.loadIfcUrl(path, fitToFrame);
+      const ifcFile = await this.service.fetchModel(path, cache === false);
+      const ifcModel = await this.viewer.IFC.loadIfc(ifcFile, fitToFrame);
       if (visible === false) this.viewer.context.scene.removeModel(ifcModel);
       this.models[model] = {path, visible, fixed, ifcModel};
     }

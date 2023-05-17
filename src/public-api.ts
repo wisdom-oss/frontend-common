@@ -22,6 +22,7 @@ export * from "./lib/http-context/use-error-curtain";
 export * from "./lib/http-context/use-loader";
 
 export * from "./lib/ifc/ifc.component";
+export * from "./lib/ifc/ifc.service";
 
 export * from "./lib/loader/loader.injector";
 
