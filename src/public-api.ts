@@ -24,6 +24,8 @@ export * from "./lib/http-context/use-cache";
 export * from "./lib/http-context/use-error-curtain";
 export * from "./lib/http-context/use-loader";
 
+export * from "./lib/ifc/ifc.component";
+
 export * from "./lib/loader/loader.injector";
 
 export * from "./lib/util";

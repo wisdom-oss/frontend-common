@@ -10,6 +10,7 @@ import {
 import {IonIconComponent} from "./ion-icon/ion-icon.component";
 import {MapComponent} from "./map/map.component";
 import { BimComponent } from './bim/bim.component';
+import { IfcComponent } from './ifc/ifc.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { BimComponent } from './bim/bim.component';
     BulmaIsToggleableDirective,
     MapComponent,
     BreadcrumbsComponent,
-    BimComponent
+    BimComponent,
+    IfcComponent
   ],
   imports: [
     TranslateModule,
@@ -27,6 +29,7 @@ import { BimComponent } from './bim/bim.component';
   exports: [
     BimComponent,
     IonIconComponent,
+    IfcComponent,
     BulmaIsToggleableDirective,
     MapComponent,
     BreadcrumbsComponent
