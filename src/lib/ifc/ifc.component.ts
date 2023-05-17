@@ -8,6 +8,7 @@ import {
 import {IfcViewerAPI} from "web-ifc-viewer";
 import {IFCModel} from "web-ifc-three/IFC/components/IFCModel";
 import {IfcService} from "./ifc.service";
+import {LoaderInjector} from "../loader/loader.injector";
 
 /**
  * Model entry.
@@ -68,35 +69,63 @@ export class IfcComponent implements AfterViewInit {
 
   viewer!: IfcViewerAPI;
 
-  constructor(private service: IfcService) {}
+  constructor(private service: IfcService, private loader: LoaderInjector) {}
 
-  async ngAfterViewInit(): Promise<void> {
-    const container = this.viewerContainer.nativeElement;
-    this.viewer = new IfcViewerAPI({ container });
-    await this.viewer.IFC.loader.ifcManager.useWebWorkers(true, "IFCWorker.js");
+  ngAfterViewInit(): Promise<void> {
+    const loadAll: Promise<void> = new Promise(async loadDone => {
+      // initialize ifc viewer
+      const container = this.viewerContainer.nativeElement;
+      this.viewer = new IfcViewerAPI({ container });
+      await this.viewer.IFC.loader.ifcManager.useWebWorkers(true, "IFCWorker.js");
 
-    const observer = new ResizeObserver(entries => {
-      container.style.width = entries[0].contentRect.width + "px";
-      container.style.height = entries[0].contentRect.height + "px";
-      this.viewer.context.updateAspect();
-    });
-    observer.observe(this.resizeContainer.nativeElement);
-
-    let first = true;
-    for (
-      let [model, {path, visible, fixed, fitToFrame, cache}]
-      of Object.entries(this.inputModels)
-    ) {
-      await this.viewer.IFC.loader.ifcManager.applyWebIfcConfig({
-        USE_FAST_BOOLS: true,
-        COORDINATE_TO_ORIGIN: first
+      // initialize observer to automatically resize ifc viewer
+      const observer = new ResizeObserver(entries => {
+        container.style.width = entries[0].contentRect.width + "px";
+        container.style.height = entries[0].contentRect.height + "px";
+        this.viewer.context.updateAspect();
       });
-      first = false;
-      const ifcFile = await this.service.fetchModel(path, cache === false);
-      const ifcModel = await this.viewer.IFC.loadIfc(ifcFile, fitToFrame);
-      if (visible === false) this.viewer.context.scene.removeModel(ifcModel);
-      this.models[model] = {path, visible, fixed, ifcModel};
-    }
+      observer.observe(this.resizeContainer.nativeElement);
+
+      // fetch models from path or local db
+      let fetchModels = [];
+      for (let [model, opts] of Object.entries(this.inputModels)) {
+        let {path, cache} = opts;
+        fetchModels.push(
+          this.service.fetchModel(path, cache === false)
+            .then(file => [model, Object.assign({}, opts, { file })])
+        );
+      }
+      let fetchedInput: Record<string, ModelEntry & {file: File}> =
+        Object.fromEntries(await Promise.all(fetchModels));
+
+      // render models
+      let first = true;
+      let modelIter = Object.entries(fetchedInput);
+      let count = modelIter.length;
+      for (let i in modelIter) {
+        let [model, opts] = modelIter[i];
+        let renderPromise: Promise<void> = new Promise(async renderDone => {
+          const {file, fitToFrame, visible, path, fixed} = opts;
+          await this.viewer.IFC.loader.ifcManager.applyWebIfcConfig({
+            USE_FAST_BOOLS: true,
+            COORDINATE_TO_ORIGIN: first
+          });
+          first = false;
+          const ifcModel = await this.viewer.IFC.loadIfc(file, fitToFrame);
+          if (visible === false) this.viewer.context.scene.removeModel(ifcModel);
+          this.models[model] = {path, visible, fixed, ifcModel};
+          renderDone();
+        });
+        // TODO: add translation text here
+        this.loader.addLoader(renderPromise, `rendering models [${+i + 1}/${count}]`);
+        await renderPromise;
+      }
+
+      loadDone();
+    });
+
+    this.loader.addLoader(loadAll);
+    return loadAll;
   }
 
   hideModel(model: string) {
