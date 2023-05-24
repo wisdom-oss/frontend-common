@@ -129,8 +129,7 @@ export class IfcComponent implements AfterViewInit, OnDestroy {
       for (let i in modelIter) {
         let loading = loadModel(modelIter[i], first);
         first = false;
-        let settled = false;
-        loading.then(() => settled = true);
+        // TODO: clean this translation up
         let translated = this.translate.instant("common.ifc.loading");
         this.loader.addLoader(loading, `${translated} [${+i + 1}/${count}]`);
         await loading;
