@@ -177,12 +177,7 @@ export class IfcComponent implements AfterViewInit, OnDestroy {
 
   async ngOnDestroy(): Promise<void> {
     this.resizeObserver.disconnect();
-    // FIXME: check out how to fix this dispose
     await this.viewer.dispose();
-    //@ts-ignore dispose this
-    this.viewer = null;
-    this.viewer = new IfcViewerAPI({container: this.viewerContainer.nativeElement});
-    await this.viewer.IFC.setWasmPath("");
   }
 
 }
