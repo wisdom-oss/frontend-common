@@ -66,6 +66,7 @@ export class IfcComponent implements AfterViewInit, OnDestroy {
 
   @ViewChild("resizeContainer")
   resizeContainer!: ElementRef<HTMLDivElement>;
+  resizeObserver!: ResizeObserver;
 
   viewer!: IfcViewerAPI;
 
@@ -127,12 +128,12 @@ export class IfcComponent implements AfterViewInit, OnDestroy {
       await loadModels;
 
       // initialize observer to automatically resize ifc viewer
-      const observer = new ResizeObserver(entries => {
+      this.resizeObserver = new ResizeObserver(entries => {
         container.style.width = entries[0].contentRect.width + "px";
         container.style.height = entries[0].contentRect.height + "px";
         this.viewer.context.updateAspect();
       });
-      observer.observe(this.resizeContainer.nativeElement);
+      this.resizeObserver.observe(this.resizeContainer.nativeElement);
 
       // everything is loaded, allow curtain to rise
       allLoaded();
@@ -150,9 +151,10 @@ export class IfcComponent implements AfterViewInit, OnDestroy {
     this.viewer.context.scene.addModel(this.models[model].ifcModel);
   }
 
-  ngOnDestroy(): void {
-    // TODO: destroy models to avoid memory leak
-    // https://ifcjs.github.io/info/docs/Guide/web-ifc-viewer/Tutorials/Memory
+  async ngOnDestroy(): Promise<void> {
+    this.resizeObserver.disconnect();
+    // FIXME: check out how to fix this dispose
+    await this.viewer.IFC.dispose();
   }
 
 }
