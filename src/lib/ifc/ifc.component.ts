@@ -1,14 +1,15 @@
 import {
   AfterViewInit,
   Component,
-  ElementRef,
-  Input, OnDestroy,
+  ElementRef, EventEmitter,
+  Input, OnDestroy, Output,
   ViewChild
 } from '@angular/core';
 import {IfcViewerAPI} from "web-ifc-viewer";
 import {IFCModel} from "web-ifc-three/IFC/components/IFCModel";
 import {IfcService} from "./ifc.service";
 import {LoaderInjector} from "../loader/loader.injector";
+import {JSONObject} from "web-ifc-three/IFC/BaseDefinitions";
 
 /**
  * Model entry.
@@ -60,6 +61,9 @@ export class IfcComponent implements AfterViewInit, OnDestroy {
   @Input("models")
   inputModels: Record<string, ModelEntry> = {};
   models: Record<string, ModelEntry & {ifcModel: IFCModel}> = {}
+
+  @Output("selected")
+  selectedModel: EventEmitter<JSONObject> = new EventEmitter();
 
   @ViewChild("viewerContainer")
   viewerContainer!: ElementRef<HTMLDivElement>;
@@ -137,6 +141,19 @@ export class IfcComponent implements AfterViewInit, OnDestroy {
 
       // everything is loaded, allow curtain to rise
       allLoaded();
+
+      // add events
+      this.viewerContainer.nativeElement.onmousemove = () => {
+        this.viewer.IFC.selector.prePickIfcItem();
+      }
+
+      this.viewerContainer.nativeElement.onclick = async () => {
+        const picked = await this.viewer.IFC.selector.pickIfcItem();
+        if (!picked) return;
+        const {modelID, id} = picked;
+        const props = await this.viewer.IFC.getProperties(modelID, id, true, true);
+        this.selectedModel.emit(props);
+      }
     });
 
     this.loader.addLoader(loadAll);
