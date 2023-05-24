@@ -1,8 +1,8 @@
 export default {
   common: {
     ifc: {
-      fetching: "Fetching BIM Models...",
-      loading: "Loading BIM Models..."
+      fetching: "Fetching IFC Models...",
+      loading: "Loading IFC Models..."
     },
     map: {
       resolution: {

@@ -1,8 +1,8 @@
 export default {
   common: {
     ifc: {
-      fetching: "Hole BIM Modelle...",
-      loading: "Lade BIM Modelle..."
+      fetching: "Hole IFC Modelle...",
+      loading: "Lade IFC Modelle..."
     },
     map: {
       resolution: {
