@@ -11,41 +11,44 @@ import {IfcService} from "./ifc.service";
 import {LoaderInjector} from "../loader/loader.injector";
 import {JSONObject} from "web-ifc-three/IFC/BaseDefinitions";
 import {TranslateService} from "@ngx-translate/core";
-import {takeWhile} from "rxjs";
 
-/**
- * Model entry.
- */
-type ModelEntry = {
-  /** Specifies the path to the IFC model file. */
-  path: string,
-
+export namespace IfcComponent {
   /**
-   * Indicates whether the model should be displayed after loading.
-   * This is optional, with the model being visible by default.
+   * Model entry.
    */
-  visible?: boolean,
+  export type ModelEntry = {
+    /** Specifies the path to the IFC model file. */
+    path: string,
 
-  /**
-   * Denotes whether this model's visibility can be altered.
-   * This is optional, with the model being disable-able by default.
-   */
-  fixed?: boolean,
+    /**
+     * Indicates whether the model should be displayed after loading.
+     * This is optional, with the model being visible by default.
+     */
+    visible?: boolean,
 
-  /**
-   * Decides whether this model should be adjusted to fit within the frame.
-   * This is recommended to be set only for one model.
-   * This is optional, with the model not fitting to frame by default.
-   */
-  fitToFrame?: boolean,
+    /**
+     * Denotes whether this model's visibility can be altered.
+     * This is optional, with the model being disable-able by default.
+     */
+    fixed?: boolean,
 
-  /**
-   * Decides whether to use caching on this model.
-   * This is recommended for static models with static paths.
-   * This is optional, caching is enabled by default.
-   */
-  cache?: boolean
-};
+    /**
+     * Decides whether this model should be adjusted to fit within the frame.
+     * This is recommended to be set only for one model.
+     * This is optional, with the model not fitting to frame by default.
+     */
+    fitToFrame?: boolean,
+
+    /**
+     * Decides whether to use caching on this model.
+     * This is recommended for static models with static paths.
+     * This is optional, caching is enabled by default.
+     */
+    cache?: boolean
+  };
+}
+
+type ModelEntry = IfcComponent.ModelEntry;
 
 @Component({
   selector: 'ifc',
