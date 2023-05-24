@@ -10,6 +10,8 @@ import {IFCModel} from "web-ifc-three/IFC/components/IFCModel";
 import {IfcService} from "./ifc.service";
 import {LoaderInjector} from "../loader/loader.injector";
 import {JSONObject} from "web-ifc-three/IFC/BaseDefinitions";
+import {TranslateService} from "@ngx-translate/core";
+import {takeWhile} from "rxjs";
 
 /**
  * Model entry.
@@ -51,7 +53,7 @@ type ModelEntry = {
     <div #resizeContainer style="width: 100%; height: {{height}}">
       <div #viewerContainer style="position: absolute"></div>
     </div>
-  `,
+  `
 })
 export class IfcComponent implements AfterViewInit, OnDestroy {
 
@@ -60,7 +62,7 @@ export class IfcComponent implements AfterViewInit, OnDestroy {
 
   @Input("models")
   inputModels: Record<string, ModelEntry> = {};
-  models: Record<string, ModelEntry & {ifcModel: IFCModel}> = {}
+  models: Record<string, ModelEntry & {ifcModel: IFCModel}> = {};
 
   @Output("selected")
   selectedModel: EventEmitter<JSONObject> = new EventEmitter();
@@ -74,11 +76,16 @@ export class IfcComponent implements AfterViewInit, OnDestroy {
 
   viewer!: IfcViewerAPI;
 
-  constructor(private service: IfcService, private loader: LoaderInjector) {}
+  constructor(
+    private service: IfcService,
+    private loader: LoaderInjector,
+    private translate: TranslateService
+  ) {}
 
   ngAfterViewInit(): Promise<void> {
     const loadAll: Promise<void> = new Promise(async allLoaded => {
-      // @ts-ignore the models do not have the ifcModel at this point, but this is fine
+      // @ts-ignore the models do not have the ifcModel at this point, but this
+      // is fine
       this.models = this.inputModels;
       const container = this.viewerContainer.nativeElement;
 
@@ -88,7 +95,7 @@ export class IfcComponent implements AfterViewInit, OnDestroy {
       container.style.height = "500px";
 
       // initialize ifc viewer
-      this.viewer = new IfcViewerAPI({ container });
+      this.viewer = new IfcViewerAPI({container});
       await this.viewer.IFC.loader.ifcManager.useWebWorkers(true, "IFCWorker.js");
 
       // fetch models from path or local db
@@ -97,7 +104,7 @@ export class IfcComponent implements AfterViewInit, OnDestroy {
         let {path, cache} = opts;
         fetchModels.push(
           this.service.fetchModel(path, cache === false)
-            .then(file => [model, Object.assign({}, opts, { file })])
+            .then(file => [model, Object.assign({}, opts, {file})])
         );
       }
       let fetchedInput: Record<string, ModelEntry & {file: File}> =
@@ -105,11 +112,7 @@ export class IfcComponent implements AfterViewInit, OnDestroy {
 
       // load models
       let modelIter = Object.entries(fetchedInput);
-      modelIter.sort(([_a, a], [_b, b]) => a.file.size - b.file.size);
-      let smallest = modelIter[0];
-      let rest = modelIter.slice(1);
-
-      const loadModel = async (modelEntry: typeof smallest, first: boolean) => {
+      const loadModel = async (modelEntry: typeof modelIter[0], first: boolean) => {
         const [model, opts] = modelEntry;
         const {file, fitToFrame, visible, path, fixed} = opts;
         await this.viewer.IFC.loader.ifcManager.applyWebIfcConfig({
@@ -119,17 +122,19 @@ export class IfcComponent implements AfterViewInit, OnDestroy {
         const ifcModel = await this.viewer.IFC.loadIfc(file, fitToFrame);
         if (visible === false) this.viewer.context.scene.removeModel(ifcModel);
         this.models[model].ifcModel = ifcModel;
-      }
+      };
 
-      let loadModels = new Promise<void>(async loaded => {
-        await loadModel(smallest, true);
-        let others = [];
-        for (let r of rest.reverse()) others.push(loadModel(r, false));
-        await Promise.all(others);
-        loaded();
-      });
-      this.loader.addLoader(loadModels, "loading models");
-      await loadModels;
+      let first = true;
+      let count = modelIter.length;
+      for (let i in modelIter) {
+        let loading = loadModel(modelIter[i], first);
+        first = false;
+        let settled = false;
+        loading.then(() => settled = true);
+        let translated = this.translate.instant("common.ifc.loading");
+        this.loader.addLoader(loading, `${translated} [${+i + 1}/${count}]`);
+        await loading;
+      }
 
       // initialize observer to automatically resize ifc viewer
       this.resizeObserver = new ResizeObserver(entries => {
@@ -145,15 +150,16 @@ export class IfcComponent implements AfterViewInit, OnDestroy {
       // add events
       this.viewerContainer.nativeElement.onmousemove = () => {
         this.viewer.IFC.selector.prePickIfcItem();
-      }
+      };
 
       this.viewerContainer.nativeElement.onclick = async () => {
         const picked = await this.viewer.IFC.selector.pickIfcItem();
         if (!picked) return;
         const {modelID, id} = picked;
+        // TODO: preprocess the json and put it in indexedDB
         const props = await this.viewer.IFC.getProperties(modelID, id, true, true);
         this.selectedModel.emit(props);
-      }
+      };
     });
 
     this.loader.addLoader(loadAll);
@@ -161,6 +167,7 @@ export class IfcComponent implements AfterViewInit, OnDestroy {
   }
 
   hideModel(model: string) {
+    if (this.models[model].fixed) return;
     this.viewer.context.scene.removeModel(this.models[model].ifcModel);
   }
 
@@ -171,7 +178,11 @@ export class IfcComponent implements AfterViewInit, OnDestroy {
   async ngOnDestroy(): Promise<void> {
     this.resizeObserver.disconnect();
     // FIXME: check out how to fix this dispose
-    await this.viewer.IFC.dispose();
+    await this.viewer.dispose();
+    //@ts-ignore dispose this
+    this.viewer = null;
+    this.viewer = new IfcViewerAPI({container: this.viewerContainer.nativeElement});
+    await this.viewer.IFC.setWasmPath("");
   }
 
 }

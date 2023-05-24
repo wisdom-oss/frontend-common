@@ -37,8 +37,7 @@ export class IfcService {
     if (dbBlob) return new File([dbBlob], path);
     let res = await firstValueFrom(this.http.get(path, {
       responseType: "blob",
-      // TODO: add translation text here
-      context: new HttpContext().set(USE_LOADER, "fetching model files")
+      context: new HttpContext().set(USE_LOADER, "common.ifc.fetching")
     }));
     await idb.put("models", res, path);
     return new File([res], path);

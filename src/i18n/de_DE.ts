@@ -1,6 +1,6 @@
 export default {
   common: {
-    bim: {
+    ifc: {
       fetching: "Hole BIM Modelle...",
       loading: "Lade BIM Modelle..."
     },
