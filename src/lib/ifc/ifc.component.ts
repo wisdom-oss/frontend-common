@@ -73,6 +73,8 @@ export class IfcComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): Promise<void> {
     const loadAll: Promise<void> = new Promise(async allLoaded => {
+      // @ts-ignore the models do not have the ifcModel at this point, but this is fine
+      this.models = this.inputModels;
       const container = this.viewerContainer.nativeElement;
 
       // set initial width and height to properly render, after load is done,
@@ -96,29 +98,33 @@ export class IfcComponent implements AfterViewInit, OnDestroy {
       let fetchedInput: Record<string, ModelEntry & {file: File}> =
         Object.fromEntries(await Promise.all(fetchModels));
 
-      // render models
-      let first = true;
+      // load models
       let modelIter = Object.entries(fetchedInput);
-      let count = modelIter.length;
-      for (let i in modelIter) {
-        // TODO: make this parallel first the smallest solo first
-        let [model, opts] = modelIter[i];
-        let renderPromise: Promise<void> = new Promise(async ifcLoaded => {
-          const {file, fitToFrame, visible, path, fixed} = opts;
-          await this.viewer.IFC.loader.ifcManager.applyWebIfcConfig({
-            USE_FAST_BOOLS: true,
-            COORDINATE_TO_ORIGIN: first
-          });
-          first = false;
-          const ifcModel = await this.viewer.IFC.loadIfc(file, fitToFrame);
-          if (visible === false) this.viewer.context.scene.removeModel(ifcModel);
-          this.models[model] = {path, visible, fixed, ifcModel};
-          ifcLoaded();
+      modelIter.sort(([_a, a], [_b, b]) => a.file.size - b.file.size);
+      let smallest = modelIter[0];
+      let rest = modelIter.slice(1);
+
+      const loadModel = async (modelEntry: typeof smallest, first: boolean) => {
+        const [model, opts] = modelEntry;
+        const {file, fitToFrame, visible, path, fixed} = opts;
+        await this.viewer.IFC.loader.ifcManager.applyWebIfcConfig({
+          USE_FAST_BOOLS: true,
+          COORDINATE_TO_ORIGIN: first
         });
-        // TODO: add translation text here
-        this.loader.addLoader(renderPromise, `rendering models [${+i + 1}/${count}]`);
-        await renderPromise;
+        const ifcModel = await this.viewer.IFC.loadIfc(file, fitToFrame);
+        if (visible === false) this.viewer.context.scene.removeModel(ifcModel);
+        this.models[model].ifcModel = ifcModel;
       }
+
+      let loadModels = new Promise<void>(async loaded => {
+        await loadModel(smallest, true);
+        let others = [];
+        for (let r of rest.reverse()) others.push(loadModel(r, false));
+        await Promise.all(others);
+        loaded();
+      });
+      this.loader.addLoader(loadModels, "loading models");
+      await loadModels;
 
       // initialize observer to automatically resize ifc viewer
       const observer = new ResizeObserver(entries => {
