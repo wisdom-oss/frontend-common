@@ -158,8 +158,8 @@ export class IfcComponent implements AfterViewInit, OnDestroy {
         const picked = await this.viewer.IFC.selector.pickIfcItem();
         if (!picked) return;
         const {modelID, id} = picked;
-        // TODO: preprocess the json and put it in indexedDB
-        const props = await this.viewer.IFC.getProperties(modelID, id, true, true);
+        // TODO: make recursive an input
+        const props = await this.viewer.IFC.getProperties(modelID, id, true, false);
         this.selectedModel.emit(props);
       };
     });
