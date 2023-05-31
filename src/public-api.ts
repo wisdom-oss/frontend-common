@@ -18,7 +18,7 @@ export * from "./lib/http-context/send-auth";
 export * from "./lib/http-context/use-api-url";
 export * from "./lib/http-context/use-base-url";
 export * from "./lib/http-context/use-cache";
-export * from "./lib/http-context/use-error-curtain";
+export * from "./lib/http-context/use-error-handler";
 export * from "./lib/http-context/use-loader";
 
 export * from "./lib/ifc/ifc.component";
