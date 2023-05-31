@@ -17,8 +17,15 @@ import {
 })
 export class BulmaIsToggleableDirective {
 
+  /**
+   * Constructor.
+   * @param elementRef Reference to element this is applied to
+   */
   constructor(private elementRef: ElementRef) {}
 
+  /**
+   * Toggles the visibility of a bulma element by toggling `is-active` css class.
+   */
   @HostListener("click")
   toggle() {
     this.elementRef.nativeElement.classList.toggle("is-active");
