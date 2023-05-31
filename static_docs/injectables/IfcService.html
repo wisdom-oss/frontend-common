@@ -29,7 +29,7 @@
                    <compodoc-menu mode="normal"></compodoc-menu>
                </div>
                <!-- START CONTENT -->
-               <div class="content directive">
+               <div class="content injectable">
                    <div class="content-data">
 
 
@@ -38,9 +38,10 @@
 
 
 
+
 <ol class="breadcrumb">
-  <li>Directives</li>
-  <li >BulmaIsToggleableDirective</li>
+  <li>Injectables</li>
+  <li >IfcService</li>
 </ol>
 
 <ul class="nav nav-tabs" role="tablist">
@@ -58,7 +59,7 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>src/lib/bulma/bulma-is-toggleable.directive.ts</code>
+            <code>src/lib/ifc/ifc.service.ts</code>
         </p>
 
 
@@ -66,33 +67,33 @@
                 <h3>Description</h3>
             </p>
             <p class="comment">
-                <p>Directive for making things toggleable with bulma.</p>
-<p>Clicking on the node that has this directive will toggle the &quot;is-active&quot;
-class.</p>
+                <p>Service to lazily fetch IFC models.
+The fetch will try to load from the local indexed db first.</p>
 
             </p>
 
 
 
-
-        <section>
-            <h3>Metadata</h3>
-            <table class="table table-sm table-hover metadata">
-                <tbody>
-
-                    <tr>
-                        <td class="col-md-3">Selector</td>
-                        <td class="col-md-9"><code>.is-toggleable</code></td>
-                    </tr>
-
-                </tbody>
-            </table>
-        </section>
-
             <section>
     <h3 id="index">Index</h3>
     <table class="table table-sm table-bordered index-table">
         <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#idb" >idb</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
 
                 <tr>
                     <td class="col-md-4">
@@ -103,7 +104,8 @@ class.</p>
                     <td class="col-md-4">
                         <ul class="index-list">
                             <li>
-                                <a href="#toggle" >toggle</a>
+                                    <span class="modifier">Async</span>
+                                <a href="#fetchModel" >fetchModel</a>
                             </li>
                         </ul>
                     </td>
@@ -112,20 +114,6 @@ class.</p>
 
 
 
-                <tr>
-                    <td class="col-md-4">
-                        <h6><b>HostListeners</b></h6>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <ul class="index-list">
-                            <li>
-                                <a href="#click" >click</a>
-                            </li>
-                        </ul>
-                    </td>
-                </tr>
 
         </tbody>
     </table>
@@ -137,12 +125,12 @@ class.</p>
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(elementRef: <a href="https://angular.io/api/core/ElementRef" target="_blank">ElementRef</a>)</code>
+<code>constructor(http: <a href="https://angular.io/api/common/http/HttpClient" target="_blank">HttpClient</a>)</code>
                     </td>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="18" class="link-to-prism">src/lib/bulma/bulma-is-toggleable.directive.ts:18</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="38" class="link-to-prism">src/lib/ifc/ifc.service.ts:38</a></div>
                             </td>
                         </tr>
 
@@ -163,10 +151,10 @@ class.</p>
                                         </thead>
                                         <tbody>
                                                 <tr>
-                                                        <td>elementRef</td>
+                                                        <td>http</td>
                                                   
                                                         <td>
-                                                                        <code><a href="https://angular.io/api/core/ElementRef" target="_blank" >ElementRef</a></code>
+                                                                        <code><a href="https://angular.io/api/common/http/HttpClient" target="_blank" >HttpClient</a></code>
                                                         </td>
                                                   
                                                     <td>
@@ -174,7 +162,7 @@ class.</p>
                                                     </td>
                                                     
                                                         <td>
-                                                                <p>Reference to element this is applied to</p>
+                                                                <p>Client to request geo data</p>
 
                                                         </td>
                                                 </tr>
@@ -187,43 +175,6 @@ class.</p>
         </table>
 </section>
 
-
-
-
-            <section>
-    <h3>HostListeners</h3>    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="click"></a>
-                    <span class="name">
-                        <b>
-                            click
-                        </b>
-                        <a href="#click"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="30"
-                            class="link-to-prism">src/lib/bulma/bulma-is-toggleable.directive.ts:30</a></div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-description"><p>Toggles the visibility of a bulma element by toggling <code>is-active</code> css class.</p>
-</div>
-
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</section>
             <section>
     
     <h3 id="methods">
@@ -233,94 +184,218 @@ class.</p>
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="toggle"></a>
+                    <a name="fetchModel"></a>
                     <span class="name">
-                        <span ><b>toggle</b></span>
-                        <a href="#toggle"><span class="icon ion-ios-link"></span></a>
+                        <span class="modifier">Async</span>
+                        <span ><b>fetchModel</b></span>
+                        <a href="#fetchModel"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>toggle()</code>
-                </td>
-            </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <b>Decorators : </b>
-                    <br />
-                    <code>@HostListener(&#x27;click&#x27;)<br /></code>
-                </td>
-            </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="30"
-                            class="link-to-prism">src/lib/bulma/bulma-is-toggleable.directive.ts:30</a></div>
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>fetchModel(path: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, force: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-description"><p>Toggles the visibility of a bulma element by toggling <code>is-active</code> css class.</p>
+                    <div class="io-line">Defined in <a href="" data-line="60"
+                            class="link-to-prism">src/lib/ifc/ifc.service.ts:60</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Asynchronously fetch IFC models.</p>
+<p>Will only fetch data if not already stored in the indexedDB.</p>
 </div>
 
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Default value</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>path</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
 
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                    </td>
+
+                                    <td>
+                                        <p>The path where to download model from, will also be the cache key</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>force</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                        <code>false</code>
+                                    </td>
+
+                                    <td>
+                                        <p>If true, this will ignore the cache and request everything</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;File&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
                     </div>
                 </td>
             </tr>
         </tbody>
     </table>
 </section>
+            <section>
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="idb"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>idb</b></span>
+                        <a href="#idb"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="38" class="link-to-prism">src/lib/ifc/ifc.service.ts:38</a></div>
+                        </td>
+                    </tr>
 
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Indexed DB client.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</section>
 
     </div>
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {
-  HostBinding,
-  Directive,
-  Input,
-  HostListener,
-  ElementRef
-} from &quot;@angular/core&quot;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable } from &#x27;@angular/core&#x27;;
+import {DBSchema, openDB} from &quot;idb&quot;;
+import {HttpClient, HttpContext} from &quot;@angular/common/http&quot;;
+import {USE_LOADER} from &quot;../http-context/use-loader&quot;;
+import {firstValueFrom} from &quot;rxjs&quot;;
+
+/** Indexed DB name. */
+const DB_NAME &#x3D; &quot;ifc-db&quot;;
+
+/** Indexed DB schema version. */
+const SCHEMA_V &#x3D; 1;
+
+/** The schema the ifc db uses. */
+interface IfcDB extends DBSchema {
+  /**
+   * Cached IFC models.
+   *
+   * The key is the path where the model is found.
+   *
+   * The value is the raw bytes of the model stored as a Blob.
+   */
+  models: {
+    key: string,
+    value: Blob
+  }
+}
 
 /**
- * Directive for making things toggleable with bulma.
- *
- * Clicking on the node that has this directive will toggle the &quot;is-active&quot;
- * class.
+ * Service to lazily fetch IFC models.
+ * The fetch will try to load from the local indexed db first.
  */
-@Directive({
-  selector: &quot;.is-toggleable&quot;
+@Injectable({
+  providedIn: &#x27;root&#x27;
 })
-export class BulmaIsToggleableDirective {
+export class IfcService {
+
+  /** Indexed DB client. */
+  private readonly idb;
 
   /**
    * Constructor.
-   * @param elementRef Reference to element this is applied to
+   * @param http Client to request geo data
    */
-  constructor(private elementRef: ElementRef) {}
-
-  /**
-   * Toggles the visibility of a bulma element by toggling &#x60;is-active&#x60; css class.
-   */
-  @HostListener(&quot;click&quot;)
-  toggle() {
-    this.elementRef.nativeElement.classList.toggle(&quot;is-active&quot;);
+  constructor(private http: HttpClient) {
+    this.idb &#x3D; openDB&lt;IfcDB&gt;(DB_NAME, SCHEMA_V, {
+      upgrade(db, oldV) {
+        if (oldV) db.deleteObjectStore(&quot;models&quot;);
+        db.createObjectStore(&quot;models&quot;);
+      }
+    });
   }
 
+  /**
+   * Asynchronously fetch IFC models.
+   *
+   * Will only fetch data if not already stored in the indexedDB.
+   * @param path The path where to download model from, will also be the cache key
+   * @param force If true, this will ignore the cache and request everything
+   */
+  async fetchModel(path: string, force: boolean &#x3D; false): Promise&lt;File&gt; {
+    const idb &#x3D; await this.idb;
+    let dbBlob &#x3D; force ? undefined : await idb.get(&quot;models&quot;, path);
+    if (dbBlob) return new File([dbBlob], path);
+    let res &#x3D; await firstValueFrom(this.http.get(path, {
+      responseType: &quot;blob&quot;,
+      context: new HttpContext().set(USE_LOADER, &quot;common.ifc.fetching&quot;)
+    }));
+    await idb.put(&quot;models&quot;, res, path);
+    return new File([res], path);
+  }
 }
 </code></pre>
     </div>
 
 </div>
-
 
 
 
@@ -359,8 +434,8 @@ export class BulmaIsToggleableDirective {
 
        <script>
             var COMPODOC_CURRENT_PAGE_DEPTH = 1;
-            var COMPODOC_CURRENT_PAGE_CONTEXT = 'directive';
-            var COMPODOC_CURRENT_PAGE_URL = 'BulmaIsToggleableDirective.html';
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'injectable';
+            var COMPODOC_CURRENT_PAGE_URL = 'IfcService.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
 

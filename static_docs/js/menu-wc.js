@@ -54,18 +54,18 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="modules/WisdomModule.html" data-type="entity-link" >WisdomModule</a>
                                     <li class="chapter inner">
                                         <div class="simple menu-toggler" data-toggle="collapse" ${ isNormalMode ?
-                                            'data-target="#components-links-module-WisdomModule-b721a8306650ecce80e2110815d69a07c0d178490dee9b36f01cd315d33a66313c044aed190afaed3479e51421581f3952de7ce5d27f109be52337aff3edc9ce"' : 'data-target="#xs-components-links-module-WisdomModule-b721a8306650ecce80e2110815d69a07c0d178490dee9b36f01cd315d33a66313c044aed190afaed3479e51421581f3952de7ce5d27f109be52337aff3edc9ce"' }>
+                                            'data-target="#components-links-module-WisdomModule-393e7c4ff0cb769869c17d9d95f560fa8ff23dc752d8066e27bcb3b1d4b461649010d554d8db2be4402143f883e5ab58698539bdfe197d779117d826f843d195"' : 'data-target="#xs-components-links-module-WisdomModule-393e7c4ff0cb769869c17d9d95f560fa8ff23dc752d8066e27bcb3b1d4b461649010d554d8db2be4402143f883e5ab58698539bdfe197d779117d826f843d195"' }>
                                             <span class="icon ion-md-cog"></span>
                                             <span>Components</span>
                                             <span class="icon ion-ios-arrow-down"></span>
                                         </div>
-                                        <ul class="links collapse" ${ isNormalMode ? 'id="components-links-module-WisdomModule-b721a8306650ecce80e2110815d69a07c0d178490dee9b36f01cd315d33a66313c044aed190afaed3479e51421581f3952de7ce5d27f109be52337aff3edc9ce"' :
-                                            'id="xs-components-links-module-WisdomModule-b721a8306650ecce80e2110815d69a07c0d178490dee9b36f01cd315d33a66313c044aed190afaed3479e51421581f3952de7ce5d27f109be52337aff3edc9ce"' }>
-                                            <li class="link">
-                                                <a href="components/BimComponent.html" data-type="entity-link" data-context="sub-entity" data-context-id="modules" >BimComponent</a>
-                                            </li>
+                                        <ul class="links collapse" ${ isNormalMode ? 'id="components-links-module-WisdomModule-393e7c4ff0cb769869c17d9d95f560fa8ff23dc752d8066e27bcb3b1d4b461649010d554d8db2be4402143f883e5ab58698539bdfe197d779117d826f843d195"' :
+                                            'id="xs-components-links-module-WisdomModule-393e7c4ff0cb769869c17d9d95f560fa8ff23dc752d8066e27bcb3b1d4b461649010d554d8db2be4402143f883e5ab58698539bdfe197d779117d826f843d195"' }>
                                             <li class="link">
                                                 <a href="components/BreadcrumbsComponent.html" data-type="entity-link" data-context="sub-entity" data-context-id="modules" >BreadcrumbsComponent</a>
+                                            </li>
+                                            <li class="link">
+                                                <a href="components/IfcComponent.html" data-type="entity-link" data-context="sub-entity" data-context-id="modules" >IfcComponent</a>
                                             </li>
                                             <li class="link">
                                                 <a href="components/IonIconComponent.html" data-type="entity-link" data-context="sub-entity" data-context-id="modules" >IonIconComponent</a>
@@ -77,13 +77,13 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                     </li>
                                 <li class="chapter inner">
                                     <div class="simple menu-toggler" data-toggle="collapse" ${ isNormalMode ?
-                                        'data-target="#directives-links-module-WisdomModule-b721a8306650ecce80e2110815d69a07c0d178490dee9b36f01cd315d33a66313c044aed190afaed3479e51421581f3952de7ce5d27f109be52337aff3edc9ce"' : 'data-target="#xs-directives-links-module-WisdomModule-b721a8306650ecce80e2110815d69a07c0d178490dee9b36f01cd315d33a66313c044aed190afaed3479e51421581f3952de7ce5d27f109be52337aff3edc9ce"' }>
+                                        'data-target="#directives-links-module-WisdomModule-393e7c4ff0cb769869c17d9d95f560fa8ff23dc752d8066e27bcb3b1d4b461649010d554d8db2be4402143f883e5ab58698539bdfe197d779117d826f843d195"' : 'data-target="#xs-directives-links-module-WisdomModule-393e7c4ff0cb769869c17d9d95f560fa8ff23dc752d8066e27bcb3b1d4b461649010d554d8db2be4402143f883e5ab58698539bdfe197d779117d826f843d195"' }>
                                         <span class="icon ion-md-code-working"></span>
                                         <span>Directives</span>
                                         <span class="icon ion-ios-arrow-down"></span>
                                     </div>
-                                    <ul class="links collapse" ${ isNormalMode ? 'id="directives-links-module-WisdomModule-b721a8306650ecce80e2110815d69a07c0d178490dee9b36f01cd315d33a66313c044aed190afaed3479e51421581f3952de7ce5d27f109be52337aff3edc9ce"' :
-                                        'id="xs-directives-links-module-WisdomModule-b721a8306650ecce80e2110815d69a07c0d178490dee9b36f01cd315d33a66313c044aed190afaed3479e51421581f3952de7ce5d27f109be52337aff3edc9ce"' }>
+                                    <ul class="links collapse" ${ isNormalMode ? 'id="directives-links-module-WisdomModule-393e7c4ff0cb769869c17d9d95f560fa8ff23dc752d8066e27bcb3b1d4b461649010d554d8db2be4402143f883e5ab58698539bdfe197d779117d826f843d195"' :
+                                        'id="xs-directives-links-module-WisdomModule-393e7c4ff0cb769869c17d9d95f560fa8ff23dc752d8066e27bcb3b1d4b461649010d554d8db2be4402143f883e5ab58698539bdfe197d779117d826f843d195"' }>
                                         <li class="link">
                                             <a href="directives/BulmaIsToggleableDirective.html" data-type="entity-link" data-context="sub-entity" data-context-id="modules" >BulmaIsToggleableDirective</a>
                                         </li>
@@ -101,10 +101,13 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                             </div>
                             <ul class="links collapse " ${ isNormalMode ? 'id="injectables-links"' : 'id="xs-injectables-links"' }>
                                 <li class="link">
-                                    <a href="injectables/BimService.html" data-type="entity-link" >BimService</a>
+                                    <a href="injectables/BreadcrumbsService.html" data-type="entity-link" >BreadcrumbsService</a>
                                 </li>
                                 <li class="link">
-                                    <a href="injectables/BreadcrumbsService.html" data-type="entity-link" >BreadcrumbsService</a>
+                                    <a href="injectables/IfcService.html" data-type="entity-link" >IfcService</a>
+                                </li>
+                                <li class="link">
+                                    <a href="injectables/LoaderInjector.html" data-type="entity-link" >LoaderInjector</a>
                                 </li>
                                 <li class="link">
                                     <a href="injectables/MapService.html" data-type="entity-link" >MapService</a>
@@ -134,6 +137,9 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                         <ul class="links collapse " ${ isNormalMode ? ' id="interfaces-links"' : 'id="xs-interfaces-links"' }>
                             <li class="link">
                                 <a href="interfaces/Breadcrumb.html" data-type="entity-link" >Breadcrumb</a>
+                            </li>
+                            <li class="link">
+                                <a href="interfaces/IfcDB.html" data-type="entity-link" >IfcDB</a>
                             </li>
                             <li class="link">
                                 <a href="interfaces/LayerData.html" data-type="entity-link" >LayerData</a>

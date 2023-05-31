@@ -570,7 +570,7 @@ export class BreadcrumbsComponent implements OnInit, OnDestroy {
 <script src="../js/libs/deep-iterator.js"></script>
 <script>
         var COMPONENT_TEMPLATE = '<div><nav class="breadcrumb block" *ngIf="isAllSet()">  <ul>    <li      *ngFor="let fragment of fragments; last as isLast"      [class]="isLast ? \'is-active\' : \'\'"    >      <a        *ngIf="fragment"        [routerLink]="fragment.link"        [queryParams]="fragment.query"      >        <span [class]="isLast ? \'icon-text\' : \'icon-text has-text-primary has-hover-text-grey-light\'">          <span class="icon" *ngIf="fragment.icon">            <ion-icon [name]="fragment.icon"></ion-icon>          </span>          <span>            <span *ngFor="let text of [fragment.text].flat()">              {{text | translate}}            </span>          </span>        </span>      </a>    </li>  </ul></nav></div>'
-    var COMPONENTS = [{'name': 'BimComponent', 'selector': 'bim'},{'name': 'BreadcrumbsComponent', 'selector': 'breadcrumbs'},{'name': 'IonIconComponent', 'selector': 'ion-icon'},{'name': 'MapComponent', 'selector': 'map'}];
+    var COMPONENTS = [{'name': 'BreadcrumbsComponent', 'selector': 'breadcrumbs'},{'name': 'IfcComponent', 'selector': 'ifc'},{'name': 'IonIconComponent', 'selector': 'ion-icon'},{'name': 'MapComponent', 'selector': 'map'}];
     var DIRECTIVES = [{'name': 'BulmaIsToggleableDirective', 'selector': '.is-toggleable'}];
     var ACTUAL_COMPONENT = {'name': 'BreadcrumbsComponent'};
 </script>
