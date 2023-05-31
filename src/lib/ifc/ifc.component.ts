@@ -75,9 +75,11 @@ export class IfcComponent implements AfterViewInit, OnDestroy {
 
   @ViewChild("resizeContainer")
   resizeContainer!: ElementRef<HTMLDivElement>;
-  resizeObserver!: ResizeObserver;
+  resizeObserver?: ResizeObserver;
 
   viewer!: IfcViewerAPI;
+
+  private isDestroyed: boolean = false;
 
   constructor(
     private service: IfcService,
@@ -87,6 +89,9 @@ export class IfcComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): Promise<void> {
     const loadAll: Promise<void> = new Promise(async allLoaded => {
+      // make code clearer by this alias
+      const abort = allLoaded;
+
       // @ts-ignore the models do not have the ifcModel at this point, but this
       // is fine
       this.models = this.inputModels;
@@ -118,11 +123,16 @@ export class IfcComponent implements AfterViewInit, OnDestroy {
       const loadModel = async (modelEntry: typeof modelIter[0], first: boolean) => {
         const [model, opts] = modelEntry;
         const {file, fitToFrame, visible, path, fixed} = opts;
+
+        // COORDINATE_TO_ORIGIN sets the origin of the model
+        // only first run should align this, the other should use same system
         await this.viewer.IFC.loader.ifcManager.applyWebIfcConfig({
           USE_FAST_BOOLS: true,
           COORDINATE_TO_ORIGIN: first
         });
         const ifcModel = await this.viewer.IFC.loadIfc(file, fitToFrame);
+
+        // this just hides model from scene
         if (visible === false) this.viewer.context.scene.removeModel(ifcModel);
         this.models[model].ifcModel = ifcModel;
       };
@@ -130,6 +140,9 @@ export class IfcComponent implements AfterViewInit, OnDestroy {
       let first = true;
       let count = modelIter.length;
       for (let i in modelIter) {
+        // do not load another model if this component is destroyed
+        if (this.isDestroyed) return abort();
+
         let loading = loadModel(modelIter[i], first);
         first = false;
         // TODO: clean this translation up
@@ -178,7 +191,8 @@ export class IfcComponent implements AfterViewInit, OnDestroy {
   }
 
   async ngOnDestroy(): Promise<void> {
-    this.resizeObserver.disconnect();
+    this.isDestroyed = true;
+    if (this.resizeObserver) this.resizeObserver.disconnect();
     await this.viewer.dispose();
   }
 
