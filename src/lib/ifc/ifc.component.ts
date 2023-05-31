@@ -67,6 +67,9 @@ export class IfcComponent implements AfterViewInit, OnDestroy {
   inputModels: Record<string, ModelEntry> = {};
   models: Record<string, ModelEntry & {ifcModel: IFCModel}> = {};
 
+  @Input()
+  recursive: boolean = false;
+
   @Output("selected")
   selectedModel: EventEmitter<JSONObject> = new EventEmitter();
 
@@ -171,8 +174,7 @@ export class IfcComponent implements AfterViewInit, OnDestroy {
         const picked = await this.viewer.IFC.selector.pickIfcItem();
         if (!picked) return;
         const {modelID, id} = picked;
-        // TODO: make recursive an input
-        const props = await this.viewer.IFC.getProperties(modelID, id, true, false);
+        const props = await this.viewer.IFC.getProperties(modelID, id, true, this.recursive);
         this.selectedModel.emit(props);
       };
     });
