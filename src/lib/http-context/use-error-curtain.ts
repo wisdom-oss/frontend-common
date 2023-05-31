@@ -37,7 +37,7 @@ class ErrorHttpContextToken extends HttpContextToken<ErrorHandler> {
    * Re-export of the {@link ErrorHandler} enum for accessing it via the
    * {@link USE_ERROR_HANDLER} token.
    */
-  static handler = ErrorHandler;
+  readonly handler = ErrorHandler;
 }
 
 /**
