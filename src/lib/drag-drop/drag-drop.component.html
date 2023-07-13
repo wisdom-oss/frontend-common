@@ -1,0 +1,54 @@
+<div
+  [style]="{height, overflow: filesSelected ? 'auto' : 'hidden'}"
+  style="margin-bottom: 0"
+  class="box"
+  dragDropDirective
+  (fileDropped)="submitCheck($event)"
+>
+  <div *ngIf="!filesSelected">
+    <div
+      [style]="{height}"
+      class="content has-text-centered"
+      (click)="fileField.click()"
+    >
+      <div
+        class="is-flex is-align-items-center is-justify-content-center"
+        style="height: 100%"
+      >
+        <span>Choose a file or drag here</span>
+      </div>
+      <input
+        type="file"
+        name="csv"
+        #fileField
+        (change)="submitCheck($event)"
+        hidden
+        multiple
+      />
+    </div>
+  </div>
+
+  <div *ngIf="filesSelected">
+    <div class="content">
+      <div class="notification" *ngFor="let file of fileArr; let i = index">
+        <div class="columns is-vcentered">
+          <div class="column">{{ file.name }}</div>
+          <div class="column is-narrow">
+            <button class="button is-danger" (click)="deleteFile(i)">
+              Del
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="box has-text-centered"
+  style="border-radius: 0; box-shadow: none !important"
+>
+  <button class="button is-info" [disabled]="!filesSelected" (click)="upload()">
+    Submit
+  </button>
+</div>

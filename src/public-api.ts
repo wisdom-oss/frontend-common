@@ -3,6 +3,9 @@ export * from "./lib/wisdom.module";
 export * from "./lib/breadcrumbs/breadcrumbs.component";
 export * from "./lib/breadcrumbs/breadcrumbs.service";
 
+export * from "./lib/drag-drop/drag-drop.component";
+export * from "./lib/drag-drop/drag-drop.directive";
+
 export * from "./lib/guards/query-parameter.guard";
 
 export * from "./lib/ion-icon/ion-icon.component";
