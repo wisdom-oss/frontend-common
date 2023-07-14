@@ -1,5 +1,6 @@
 import { Component, Input } from "@angular/core";
 import { DragDropService } from "./drag-drop.service";
+import { HttpContext } from "@angular/common/http";
 
 @Component({
   selector: "drag-drop",
@@ -16,7 +17,10 @@ export class DragDropComponent {
 
   // set the url of the api to reach
   @Input("api-url")
-  apiUrl: string = "";
+  apiUrl: string = "/takeCsv";
+
+  @Input("http-context")
+  httpContext: HttpContext | undefined;
 
   // set the valueName for the request to the api
   @Input("value-name")
@@ -108,11 +112,14 @@ export class DragDropComponent {
 
   // tries to upload a List of Files and subscribes to them
   upload() {
+    console.log(this.httpContext);
+
     // create a value holding the return status of the post request
     const upload = this.dragdropService.postFiles(
       this.fileArr,
       this.apiUrl,
-      this.valueName
+      this.valueName,
+      this.httpContext
     );
 
     // subscribe to the value to finish the request
