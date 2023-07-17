@@ -4,38 +4,52 @@ import {
   Output,
   HostListener,
   HostBinding,
-} from '@angular/core';
+} from "@angular/core";
 
 @Directive({
-  selector: '[dragDropDirective]',
+  selector: "[dragDropDirective]",
 })
 
 //imports drag and drop functionality
 export class DragDropDirective {
-  // Outputs an EventEmitter to use
+  /**
+   * outputs a new event emitter
+   */
   @Output() fileDropped = new EventEmitter<Object>();
 
-  @HostBinding('style.background-color') private background = '#ffffff';
+  /**
+   * sets the style of the background to white
+   */
+  @HostBinding("style.background-color") private background = "#ffffff";
 
-  // Dragover Event
-  @HostListener('dragover', ['$event']) dragOver(event: any) {
+  /**
+   * overwrites the dragover event, coloring the box in light blue
+   * @param event var to observe the dragover
+   */
+  @HostListener("dragover", ["$event"]) dragOver(event: any) {
     event.preventDefault();
     event.stopPropagation();
-    this.background = '#e2eefd';
+    this.background = "#e2eefd";
   }
 
-  // Dragleave Event
-  @HostListener('dragleave', ['$event']) dragLeave(event: any) {
+  /**
+   * overwrites dragleave event, coloring box back in white
+   * @param event to track the leave
+   */
+  @HostListener("dragleave", ["$event"]) dragLeave(event: any) {
     event.preventDefault();
     event.stopPropagation();
-    this.background = '#ffffff';
+    this.background = "#ffffff";
   }
 
-  // Drop Event
-  @HostListener('drop', ['$event']) drop(event: any) {
+  /**
+   * drop event, to register if any files got dropped into the container
+   * @param event contains the files being dropped and gets send to component
+   */
+  @HostListener("drop", ["$event"]) drop(event: any) {
     event.preventDefault();
     event.stopPropagation();
-    this.background = '#ffffff';
+    this.background = "#ffffff";
 
     this.fileDropped.emit(event);
   }

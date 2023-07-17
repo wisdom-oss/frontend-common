@@ -2,7 +2,6 @@ import { Injectable } from "@angular/core";
 import { HttpClient, HttpContext } from "@angular/common/http";
 import { USE_API_URL } from "../http-context/use-api-url";
 import { USE_LOADER } from "../http-context/use-loader";
-import { USE_BASE_URL } from "../http-context/use-base-url";
 
 @Injectable({
   providedIn: "root",
@@ -10,30 +9,48 @@ import { USE_BASE_URL } from "../http-context/use-base-url";
 export class DragDropService {
   constructor(private http: HttpClient) {}
 
-  /* 
-  adds all files to a formdata object, sends post request and returns res
-  @param files: a list of files to be uploaded
-  @param api_urL: the URL where to upload the files to
-  @param listName: name of the fileList to identify it at the server side
-  */
+  /**
+   * httpContext with base values, in order to prevent the request from having no context at all.
+   */
+  httpBaseContext: HttpContext = new HttpContext()
+    .set(USE_API_URL, true)
+    .set(USE_LOADER, true);
+
+  /**
+   * adds all files to a formdata object, sends post request and returns response
+   * @param files array of files to be uploaded
+   * @param apiUrl URL where to upload the files to
+   * @param valueName name of the value to identify it at the server side
+   * @param httpContext extra context to control interceptor behavior
+   * @returns
+   */
   postFiles(
     files: File[],
-    api_url: string,
-    listName: string,
+    apiUrl: string,
+    valueName: string,
     httpContext?: HttpContext
   ) {
     let formData: FormData = new FormData();
 
     for (let file of files) {
-      formData.append(listName, file);
+      formData.append(valueName, file);
     }
 
-    let ctx = new HttpContext().set(USE_API_URL, true).set(USE_LOADER, true);
+    let ctx;
 
-    let res = this.http.post(api_url, formData, {
+    // decide if a new context was given or base context gets used
+    if (httpContext) {
+      ctx = httpContext;
+    } else {
+      ctx = this.httpBaseContext;
+    }
+
+    // send post request, alter responsetype and use a context
+    let res = this.http.post(apiUrl, formData, {
       responseType: "text",
       context: ctx,
     });
+
     return res;
   }
 }
