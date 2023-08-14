@@ -25,6 +25,7 @@ export class DragDropService {
   @param files: a list of files to be uploaded
   @param api_urL: the URL where to upload the files to
   @param listName: name of the fileList to identify it at the server side
+  @param httpContext: a context for extra functionality regarding the http-context component in common
   */
   postFiles(files: File[], api_url: string, listName: string, httpContext?: HttpContext) {
 
