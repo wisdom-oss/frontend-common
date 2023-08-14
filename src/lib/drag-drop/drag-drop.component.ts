@@ -1,5 +1,6 @@
 import { Component, Input } from "@angular/core";
 import { DragDropService } from "./drag-drop.service";
+import { HttpContext } from "@angular/common/http";
 
 @Component({
   selector: "drag-drop",
@@ -14,7 +15,11 @@ export class DragDropComponent {
   @Input("file-limit")
   fileLimit: number = 5;
 
-  // set the url of the api to reach
+  /**
+   * set the url-end of the api-service to reach. 
+   * Because of the httpcontext, adjust the webpack.config.ts, 
+   * if you want to add another (local) environment.
+   */
   @Input("api-url")
   apiUrl: string = "";
 
@@ -22,7 +27,15 @@ export class DragDropComponent {
   @Input("value-name")
   valueName: string = "";
 
-  constructor(public dragdropService: DragDropService) {}
+  /**
+   * send extra information regarding the http context with the request
+   * @Input http-context new http context with self defined flags
+   */
+  @Input("http-context")
+  httpContext: HttpContext | undefined;
+
+
+  constructor(public dragdropService: DragDropService) { }
 
   // Array of files being displayed
   fileArr: File[] = [];
@@ -112,19 +125,18 @@ export class DragDropComponent {
     const upload = this.dragdropService.postFiles(
       this.fileArr,
       this.apiUrl,
-      this.valueName
+      this.valueName,
+      this.httpContext
     );
 
     // subscribe to the value to finish the request
     upload.subscribe({
       next: (response) => {
-        console.log(response);
         alert(response);
         this.cleanUp();
       },
       error: (error) => {
         console.log(error);
-        alert("Data submission failed");
       },
     });
   }
