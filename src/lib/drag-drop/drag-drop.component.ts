@@ -21,11 +21,11 @@ export class DragDropComponent {
    * if you want to add another (local) environment.
    */
   @Input("api-url")
-  apiUrl: string = "";
+  apiUrl: string | undefined;
 
   // set the valueName for the request to the api
   @Input("value-name")
-  valueName: string = "";
+  valueName: string | undefined;
 
   /**
    * send extra information regarding the http context with the request

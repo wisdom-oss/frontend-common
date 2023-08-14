@@ -3,6 +3,7 @@ import { HttpClient, HttpContext } from "@angular/common/http";
 import { USE_API_URL } from "../http-context/use-api-url";
 import { USE_LOADER } from "../http-context/use-loader";
 import { USE_ERROR_HANDLER } from "../http-context/use-error-handler";
+import { Observable } from 'rxjs';
 
 
 @Injectable({
@@ -23,32 +24,54 @@ export class DragDropService {
   /* 
   adds all files to a formdata object, sends post request and returns res
   @param files: a list of files to be uploaded
-  @param api_urL: the URL where to upload the files to
+  @param apiUrL: the URL where to upload the files to
   @param listName: name of the fileList to identify it at the server side
   @param httpContext: a context for extra functionality regarding the http-context component in common
   */
-  postFiles(files: File[], api_url: string, listName: string, httpContext?: HttpContext) {
+  postFiles(files: File[], apiUrl?: string, listName?: string, httpContext?: HttpContext): Observable<any> {
 
     let formData: FormData = new FormData();
 
-    for (let file of files) {
-      formData.append(listName, file);
+    if (!files) {
+      return this.handleError("There are no files to upload");
+    }
+
+    if (!apiUrl) {
+      return this.handleError("No URL provided");
+    }
+
+    if (!listName) {
+      return this.handleError("No name provided for the list of files");
+    } else {
+      for (let file of files) {
+        formData.append(listName, file);
+      }
     }
 
     let ctx;
-
-    // decide if a new context was given or base context gets used
-    if (httpContext) {
-      ctx = httpContext;
-    } else {
+    if (!httpContext) {
       ctx = this.httpBaseContext;
+      console.log("BaseHttpContext provided automatically")
+    } else {
+      ctx = httpContext;
     }
 
-    let res = this.http.post(api_url, formData, {
+    return this.http.post(apiUrl, formData, {
       responseType: "text",
       context: ctx
     });
 
-    return res;
+  }
+
+  /**
+     * creates an Observable with an error to subscribe to it and logs the information in the console.
+     * @param msg error meesage
+     * @returns observable with contained error.
+     */
+  handleError(msg: string): Observable<any> {
+
+    return new Observable((observer) => {
+      observer.error(new Error(msg));
+    });
   }
 }
