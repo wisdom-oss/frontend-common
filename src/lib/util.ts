@@ -107,3 +107,19 @@ export function getResolvedUrl(route: ActivatedRouteSnapshot): string {
   }
   return url;
 }
+
+export function getBulmaPrimaryColors() {
+  let v = (p: string) => getComputedStyle(document.documentElement)
+    .getPropertyValue(`--bulma-primary-${p}`);
+
+  return {
+    primary: v("primary"),
+    link: v("link"),
+    info: v("info"),
+    success: v("success"),
+    warning: v("warning"),
+    danger: v("danger"),
+    dark: v("dark"),
+    text: v("text"),
+  }
+}
