@@ -1,9 +1,10 @@
-import { Injectable } from "@angular/core";
-import { HttpClient, HttpContext } from "@angular/common/http";
-import { USE_API_URL } from "../http-context/use-api-url";
-import { USE_LOADER } from "../http-context/use-loader";
-import { USE_ERROR_HANDLER } from "../http-context/use-error-handler";
-import { Observable } from 'rxjs';
+import {HttpClient, HttpContext} from "@angular/common/http";
+import {Injectable} from "@angular/core";
+import {Observable} from "rxjs";
+
+import {USE_API_URL} from "../http-context/use-api-url";
+import {USE_LOADER} from "../http-context/use-loader";
+import {USE_ERROR_HANDLER} from "../http-context/use-error-handler";
 
 
 @Injectable({

@@ -1,16 +1,21 @@
 import {
-  AfterViewInit,
+  ViewChild,
   Component,
-  ElementRef, EventEmitter,
-  Input, OnDestroy, OnInit, Output,
-  ViewChild
-} from '@angular/core';
-import {IfcViewerAPI} from "web-ifc-viewer";
+  OnDestroy,
+  EventEmitter,
+  OnInit,
+  AfterViewInit,
+  Input,
+  Output,
+  ElementRef
+} from "@angular/core";
+import {TranslateService} from "@ngx-translate/core";
+import {JSONObject} from "web-ifc-three/IFC/BaseDefinitions";
 import {IFCModel} from "web-ifc-three/IFC/components/IFCModel";
+import {IfcViewerAPI} from "web-ifc-viewer";
+
 import {IfcService} from "./ifc.service";
 import {LoaderInjector} from "../loader/loader.injector";
-import {JSONObject} from "web-ifc-three/IFC/BaseDefinitions";
-import {TranslateService} from "@ngx-translate/core";
 
 export namespace IfcComponent {
   /**

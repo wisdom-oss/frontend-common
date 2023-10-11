@@ -1,10 +1,10 @@
 import {
+  HostBinding,
   Directive,
   EventEmitter,
-  Output,
   HostListener,
-  HostBinding,
-} from '@angular/core';
+  Output
+} from "@angular/core";
 
 @Directive({
   selector: '[dragDropDirective]',

@@ -1,5 +1,10 @@
 import {Injectable} from "@angular/core";
-import { Router, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree } from "@angular/router";
+import {
+  Router,
+  ActivatedRouteSnapshot,
+  RouterStateSnapshot,
+  UrlTree
+} from "@angular/router";
 import {Observable} from "rxjs";
 
 /**

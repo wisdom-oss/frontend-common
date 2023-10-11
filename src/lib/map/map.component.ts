@@ -8,7 +8,8 @@ import {
   Output,
   ElementRef
 } from "@angular/core";
-import {BehaviorSubject, firstValueFrom, Subject} from "rxjs";
+import {TranslateService} from "@ngx-translate/core";
+import {firstValueFrom, BehaviorSubject, Subject} from "rxjs";
 
 import * as L from "leaflet";
 
@@ -20,7 +21,6 @@ import {Marker} from "./marker";
 import * as LX from "./invert-selection";
 
 import "leaflet.markercluster";
-import {TranslateService} from "@ngx-translate/core";
 
 /** Type alias to enforce the meaning of the layer keys. */
 type LayerKey = string;

@@ -1,6 +1,7 @@
-import { Component, Input } from "@angular/core";
-import { DragDropService } from "./drag-drop.service";
-import { HttpContext } from "@angular/common/http";
+import {HttpContext} from "@angular/common/http";
+import {Component, Input} from "@angular/core";
+
+import {DragDropService} from "./drag-drop.service";
 
 @Component({
   selector: "drag-drop",

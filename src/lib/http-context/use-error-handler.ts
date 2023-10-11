@@ -1,4 +1,4 @@
-import { HttpContextToken } from "@angular/common/http";
+import {HttpContextToken} from "@angular/common/http";
 
 /**
  * Variants of the error handler.

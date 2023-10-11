@@ -1,5 +1,6 @@
-import * as L from "leaflet";
 import {GeoJsonObject} from "geojson";
+
+import * as L from "leaflet";
 
 /** Type to represent a single shape with all of its metadata. */
 export interface ShapeData {

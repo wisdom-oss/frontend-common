@@ -1,8 +1,9 @@
-import { Injectable } from '@angular/core';
-import {DBSchema, openDB} from "idb";
 import {HttpClient, HttpContext} from "@angular/common/http";
-import {USE_LOADER} from "../http-context/use-loader";
+import {Injectable} from "@angular/core";
+import {openDB, DBSchema} from "idb";
 import {firstValueFrom} from "rxjs";
+
+import {USE_LOADER} from "../http-context/use-loader";
 
 /** Indexed DB name. */
 const DB_NAME = "ifc-db";
