@@ -16,6 +16,7 @@ export * from "./lib/map/marker";
 export * from "./lib/map/resolution";
 
 export * from "./lib/bulma/bulma-is-toggleable.directive";
+export * from "./lib/bulma/bulma-calendar.directive";
 
 export * from "./lib/http-context/send-auth";
 export * from "./lib/http-context/use-api-url";

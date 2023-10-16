@@ -12,6 +12,7 @@ import {DragDropDirective} from "./drag-drop/drag-drop.directive";
 import {IfcComponent} from "./ifc/ifc.component";
 import {IonIconComponent} from "./ion-icon/ion-icon.component";
 import {MapComponent} from "./map/map.component";
+import { BulmaCalendarDirective } from './bulma/bulma-calendar.directive';
 
 @NgModule({
   declarations: [
@@ -22,11 +23,13 @@ import {MapComponent} from "./map/map.component";
     IfcComponent,
     DragDropComponent,
     DragDropDirective,
+    BulmaCalendarDirective,
   ],
   imports: [TranslateModule, CommonModule, RouterModule],
   exports: [
     IonIconComponent,
     IfcComponent,
+    BulmaCalendarDirective,
     BulmaIsToggleableDirective,
     MapComponent,
     BreadcrumbsComponent,
