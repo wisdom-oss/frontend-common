@@ -102,25 +102,25 @@ export class BulmaCalendarDirective implements OnInit {
    * Show the calendar date picker.
    * (not available with "inline" display style)
    */
-  show = this.calendar.show;
+  show = () => this.calendar.show();
 
   /**
    * Close the date picker.
    * (not available with "inline" display style)
    */
-  hide = this.calendar.hide;
+  hide = () => this.calendar.hide();
 
   /**
    * Check if the date picker is open or not.
    * @return {boolean} True if date picker is open, otherwise False.
    */
-  isOpen = this.calendar.isOpen;
+  isOpen = (): boolean => this.calendar.isOpen();
 
   /**
    * Check if the current instance is a range date picker.
    * @return {boolean} True if the instance is a range date picker.
    */
-  isRange = this.calendar.isRange;
+  isRange = (): boolean => this.calendar.isRange();
 
   /**
    * Get the date picker value as a formatted string if no parameter,
@@ -129,19 +129,19 @@ export class BulmaCalendarDirective implements OnInit {
    * @return {Object} Date picker selected date. If not a range calendar,
    *   endDate is undefined.
    */
-  value = this.calendar.value;
+  value = (value: string | null): Object => this.calendar.value();
 
   /** Force calendar refresh. */
-  refresh = this.calendar.refresh;
+  refresh = () => this.calendar.refresh();
 
   /** Force to set calendar data into UI inputs. */
-  save = this.calendar.save;
+  save = () => this.calendar.save();
 
   /**
    * Clear date selection.
    * Both startDate and endDate are set to undefined.
    */
-  clear = this.calendar.clear;
+  clear = () => this.calendar.clear();
 
 
   /** Get component instance ID. */
