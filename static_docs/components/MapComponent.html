@@ -14,7 +14,7 @@
     </head>
     <body>
 
-        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+        <div class="navbar navbar-default navbar-fixed-top d-block d-sm-none">
             <a href="../" class="navbar-brand">common documentation</a>
             <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
         </div>
@@ -36,29 +36,33 @@
 
 
 <ol class="breadcrumb">
-  <li>Components</li>
-  <li
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
   >
   MapComponent</li>
 </ol>
 
 <ul class="nav nav-tabs" role="tablist">
-        <li class="active">
-            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
         </li>
-        <li >
-            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
         </li>
-        <li >
-            <a href="#styleData" role="tab" id="styleData-tab" data-toggle="tab" data-link="style">Styles</a>
+        <li class="nav-item">
+            <a href="#styleData" class="nav-link"
+                role="tab" id="styleData-tab" data-bs-toggle="tab" data-link="style">Styles</a>
         </li>
-        <li >
-            <a href="#tree" role="tab" id="tree-tab" data-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
         </li>
 </ul>
 
 <div class="tab-content">
-    <div class="tab-pane fade active in" id="c-info"><p class="comment">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
     <h3>File</h3>
 </p>
 <p class="comment">
@@ -79,15 +83,16 @@
         <h3>Implements</h3>
     </p>
     <p class="comment">
-                    <code><a href="https://angular.io/api/core/OnInit" target="_blank" >OnInit</a></code>
-                    <code><a href="https://angular.io/api/core/AfterViewInit" target="_blank" >AfterViewInit</a></code>
+                <code>OnInit</code>
+                <code>AfterViewInit</code>
     </p>
 
 
-<section>
+<section data-compodoc="block-metadata">
     <h3>Metadata</h3>
     <table class="table table-sm table-hover metadata">
         <tbody>
+
 
 
 
@@ -103,6 +108,8 @@
                 <td class="col-md-3">selector</td>
                 <td class="col-md-9"><code>map</code></td>
             </tr>
+
+
 
             <tr>
                 <td class="col-md-3">styleUrls</td>
@@ -130,7 +137,7 @@
     </table>
 </section>
 
-    <section>
+    <section data-compodoc="block-index">
     <h3 id="index">Index</h3>
     <table class="table table-sm table-bordered index-table">
         <tbody>
@@ -165,6 +172,7 @@
                                 <a href="#map" >map</a>
                             </li>
                             <li>
+                                    <span class="modifier"></span>
                                     <span class="modifier">Private</span>
                                 <a href="#mapElement" >mapElement</a>
                             </li>
@@ -301,7 +309,7 @@
     </table>
 </section>
 
-    <section>
+    <section data-compodoc="block-constructor">
     <h3 id="constructor">Constructor</h3>
         <table class="table table-sm table-bordered">
             <tbody>
@@ -373,7 +381,7 @@
         </table>
 </section>
 
-    <section>
+    <section data-compodoc="block-inputs">
     <h3 id="inputs">Inputs</h3>
         <table class="table table-sm table-bordered">
             <tbody>
@@ -703,7 +711,7 @@ If &quot;center&quot; is passed, the map will always zoom onto the center.</p>
             </tbody>
         </table>
 </section>
-    <section>
+    <section data-compodoc="block-outputs">
     <h3 id="outputs">Outputs</h3>
         <table class="table table-sm table-bordered">
             <tbody>
@@ -715,7 +723,7 @@ If &quot;center&quot; is passed, the map will always zoom onto the center.</p>
                 </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="https://angular.io/api/core/EventEmitter" target="_blank" >EventEmitter</a></code>
+                        <i>Type : </i>    <code>EventEmitter</code>
 
                     </td>
                 </tr>
@@ -742,7 +750,7 @@ If &quot;center&quot; is passed, the map will always zoom onto the center.</p>
                 </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="https://angular.io/api/core/EventEmitter" target="_blank" >EventEmitter</a></code>
+                        <i>Type : </i>    <code>EventEmitter</code>
 
                     </td>
                 </tr>
@@ -762,7 +770,7 @@ If &quot;center&quot; is passed, the map will always zoom onto the center.</p>
 </section>
 
 
-    <section>
+    <section data-compodoc="block-methods">
     
     <h3 id="methods">
         Methods
@@ -893,7 +901,7 @@ If &quot;center&quot; is passed, the map will always zoom onto the center.</p>
         </tbody>
     </table>
 </section>
-    <section>
+    <section data-compodoc="block-properties">
     
     <h3 id="inputs">
         Properties
@@ -1127,6 +1135,7 @@ to be used as <a href="Observable">Observable</a>.</p>
                 <td class="col-md-4">
                     <a name="mapElement"></a>
                     <span class="name">
+                            <span class="modifier"></span>
                             <span class="modifier">Private</span>
                         <span ><b>mapElement</b></span>
                         <a href="#mapElement"><span class="icon ion-ios-link"></span></a>
@@ -1378,7 +1387,7 @@ to be used as <a href="Observable">Observable</a>.</p>
     </table>
 </section>
 
-    <section>
+    <section data-compodoc="block-accessors">
     <h3 id="accessors">
         Accessors
     </h3>
@@ -1472,7 +1481,7 @@ See <a href="https://wisdom04.vlba.uni-oldenburg.de/repos/service-geo-data-rest/
                                 <div>
                                         <b>Example :</b>
                                             <div>
-                                                <pre class="line-numbers"><code class="language-html">&lt;pre&gt;&lt;code class=&quot;language-html&quot;&gt;&amp;lt;map
+                                                <pre class="line-numbers"><code class="language-html">&lt;div&gt;&lt;pre class=&quot;line-numbers&quot;&gt;&lt;code class=&quot;language-html&quot;&gt;&amp;lt;map
   height=&amp;quot;70vh&amp;quot;
   [layers]=&amp;quot;{
     full_res: [&amp;#39;All of municipal resolution&amp;#39;, Resolution.MUNICIPAL, null],
@@ -1480,9 +1489,7 @@ See <a href="https://wisdom04.vlba.uni-oldenburg.de/repos/service-geo-data-rest/
     mixed: [&amp;#39;Show district resolution&amp;#39;, Resolution.DISTRICT, [&amp;#39;01&amp;#39;,
   &amp;#39;034030000000&amp;#39;]]
   }&amp;quot;
-&amp;gt;&amp;lt;/map&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;// TODO: update link when geo data docs update</code></pre>
+&amp;gt;&amp;lt;/map&amp;gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;// TODO: update link when geo data docs update</code></pre>
                                             </div>
                                 </div>
                                 <div class="io-description">
@@ -1558,7 +1565,7 @@ See <a href="https://wisdom04.vlba.uni-oldenburg.de/repos/service-geo-data-rest/
 </div>
 
 
-    <div class="tab-pane fade  tab-source-code" id="c-source">
+    <div class="tab-pane fade  tab-source-code" id="source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {
   ViewChild,
   Component,
@@ -1569,7 +1576,8 @@ See <a href="https://wisdom04.vlba.uni-oldenburg.de/repos/service-geo-data-rest/
   Output,
   ElementRef
 } from &quot;@angular/core&quot;;
-import {BehaviorSubject, firstValueFrom, Subject} from &quot;rxjs&quot;;
+import {TranslateService} from &quot;@ngx-translate/core&quot;;
+import {firstValueFrom, BehaviorSubject, Subject} from &quot;rxjs&quot;;
 
 import * as L from &quot;leaflet&quot;;
 
@@ -1581,7 +1589,6 @@ import {Marker} from &quot;./marker&quot;;
 import * as LX from &quot;./invert-selection&quot;;
 
 import &quot;leaflet.markercluster&quot;;
-import {TranslateService} from &quot;@ngx-translate/core&quot;;
 
 /** Type alias to enforce the meaning of the layer keys. */
 type LayerKey &#x3D; string;
@@ -1959,7 +1966,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     </div>
 
 
-    <div class="tab-pane fade " id="c-styleData">
+    <div class="tab-pane fade " id="styleData">
                 <p class="comment">
                     <code>./map.component.css</code>
                 </p>
@@ -1972,7 +1979,7 @@ export class MapComponent implements OnInit, AfterViewInit {
 </code></pre>
     </div>
 
-    <div class="tab-pane fade " id="c-tree">
+    <div class="tab-pane fade " id="tree">
         <div id="tree-container"></div>
         <div class="tree-legend">
             <div class="title">
@@ -1998,8 +2005,8 @@ export class MapComponent implements OnInit, AfterViewInit {
 <script src="../js/libs/deep-iterator.js"></script>
 <script>
         var COMPONENT_TEMPLATE = '<div><div class="map-container" [style.height]="height">  <div #map class="map"></div></div></div>'
-    var COMPONENTS = [{'name': 'BreadcrumbsComponent', 'selector': 'breadcrumbs'},{'name': 'IfcComponent', 'selector': 'ifc'},{'name': 'IonIconComponent', 'selector': 'ion-icon'},{'name': 'MapComponent', 'selector': 'map'}];
-    var DIRECTIVES = [{'name': 'BulmaIsToggleableDirective', 'selector': '.is-toggleable'}];
+    var COMPONENTS = [{'name': 'BreadcrumbsComponent', 'selector': 'breadcrumbs'},{'name': 'DragDropComponent', 'selector': 'drag-drop'},{'name': 'IfcComponent', 'selector': 'ifc'},{'name': 'IonIconComponent', 'selector': 'ion-icon'},{'name': 'MapComponent', 'selector': 'map'}];
+    var DIRECTIVES = [{'name': 'BulmaCalendarDirective', 'selector': '[type&#x3D;&quot;date&quot;]'},{'name': 'BulmaIsToggleableDirective', 'selector': '.is-toggleable'},{'name': 'DragDropDirective', 'selector': '[dragDropDirective]'}];
     var ACTUAL_COMPONENT = {'name': 'MapComponent'};
 </script>
 <script src="../js/tree.js"></script>

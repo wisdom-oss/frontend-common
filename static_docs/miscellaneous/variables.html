@@ -14,7 +14,7 @@
     </head>
     <body>
 
-        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+        <div class="navbar navbar-default navbar-fixed-top d-block d-sm-none">
             <a href="../" class="navbar-brand">common documentation</a>
             <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
         </div>
@@ -50,11 +50,11 @@
 
 
 <ol class="breadcrumb">
-  <li>Miscellaneous</li>
-  <li>Variables</li>
+  <li class="breadcrumb-item">Miscellaneous</li>
+  <li class="breadcrumb-item">Variables</li>
 </ol>
 
-<section>
+<section data-compodoc="block-index">
     <h3 id="index">Index</h3>
     <table class="table table-sm table-bordered index-table">
         <tbody>
@@ -92,7 +92,7 @@
                             <a href="#USE_CACHE" title="src/lib/http-context/use-cache.ts" ><b>USE_CACHE</b>&nbsp;&nbsp;&nbsp;(src/.../use-cache.ts)</a>
                         </li>
                         <li>
-                            <a href="#USE_ERROR_CURTAIN" title="src/lib/http-context/use-error-curtain.ts" ><b>USE_ERROR_CURTAIN</b>&nbsp;&nbsp;&nbsp;(src/.../use-error-curtain.ts)</a>
+                            <a href="#USE_ERROR_HANDLER" title="src/lib/http-context/use-error-handler.ts" ><b>USE_ERROR_HANDLER</b>&nbsp;&nbsp;&nbsp;(src/.../use-error-handler.ts)</a>
                         </li>
                         <li>
                             <a href="#USE_LOADER" title="src/lib/http-context/use-loader.ts" ><b>USE_LOADER</b>&nbsp;&nbsp;&nbsp;(src/.../use-loader.ts)</a>
@@ -105,7 +105,7 @@
 </section>
 
     <h3>src/lib/map/map.service.ts</h3>
-    <section>
+    <section data-compodoc="block-properties">
     <h3></h3>    <table class="table table-sm table-bordered">
         <tbody>
             <tr>
@@ -204,7 +204,7 @@
     </table>
 </section>
     <h3>src/lib/map/invert-selection.ts</h3>
-    <section>
+    <section data-compodoc="block-properties">
     <h3></h3>    <table class="table table-sm table-bordered">
         <tbody>
             <tr>
@@ -281,7 +281,7 @@
     </table>
 </section>
     <h3>src/lib/ifc/ifc.service.ts</h3>
-    <section>
+    <section data-compodoc="block-properties">
     <h3></h3>    <table class="table table-sm table-bordered">
         <tbody>
             <tr>
@@ -348,7 +348,7 @@
     </table>
 </section>
     <h3>src/lib/http-context/send-auth.ts</h3>
-    <section>
+    <section data-compodoc="block-properties">
     <h3></h3>    <table class="table table-sm table-bordered">
         <tbody>
             <tr>
@@ -381,7 +381,7 @@ be sent.</p>
     </table>
 </section>
     <h3>src/lib/http-context/use-api-url.ts</h3>
-    <section>
+    <section data-compodoc="block-properties">
     <h3></h3>    <table class="table table-sm table-bordered">
         <tbody>
             <tr>
@@ -420,7 +420,7 @@ header.</p>
     </table>
 </section>
     <h3>src/lib/http-context/use-base-url.ts</h3>
-    <section>
+    <section data-compodoc="block-properties">
     <h3></h3>    <table class="table table-sm table-bordered">
         <tbody>
             <tr>
@@ -450,7 +450,7 @@ header.</p>
     </table>
 </section>
     <h3>src/lib/http-context/use-cache.ts</h3>
-    <section>
+    <section data-compodoc="block-properties">
     <h3></h3>    <table class="table table-sm table-bordered">
         <tbody>
             <tr>
@@ -479,31 +479,47 @@ header.</p>
         </tbody>
     </table>
 </section>
-    <h3>src/lib/http-context/use-error-curtain.ts</h3>
-    <section>
+    <h3>src/lib/http-context/use-error-handler.ts</h3>
+    <section data-compodoc="block-properties">
     <h3></h3>    <table class="table table-sm table-bordered">
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="USE_ERROR_CURTAIN"></a>
+                    <a name="USE_ERROR_HANDLER"></a>
                     <span class="name">
-                        <span ><b>USE_ERROR_CURTAIN</b></span>
-                        <a href="#USE_ERROR_CURTAIN"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>USE_ERROR_HANDLER</b></span>
+                        <a href="#USE_ERROR_HANDLER"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Default value : </i><code>new HttpContextToken&lt;string | boolean&gt;(() &#x3D;&gt; true)</code>
+                        <i>Type : </i>    <code>miscellaneous</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new ErrorHttpContextToken(() &#x3D;&gt; ErrorHandler.CURTAIN)</code>
                     </td>
                 </tr>
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-description"><p><a href="HttpContextToken">HttpContextToken</a> used to determine if requests that error should show
-the error message on curtain covering the whole main container.</p>
-<p>Disable this if you want to handle errors yourself.</p>
-<p>Defaults to <code>true</code>.</p>
+                    <div class="io-description"><p><a href="HttpContextToken">HttpContextToken</a> used to determine how HTTP errors should be handled.</p>
+<p>The enum associated with this token has three variants that define the behavior
+when an error occurs:</p>
+<ul>
+<li><p><code>CURTAIN</code>: Raise a curtain displaying the error message and covering the
+ entire main container.</p>
+</li>
+<li><p><code>TOAST</code>: Display a small toast notification showing the error and allowing
+ continued use of the main container.</p>
+</li>
+<li><p><code>CUSTOM</code>: The error is passed through and should be handled by the implementor.</p>
+</li>
+</ul>
+<p>This token defaults to <a href="ErrorHandler.CURTAIN">ErrorHandler.CURTAIN</a>.</p>
 </div>
                 </td>
             </tr>
@@ -512,7 +528,7 @@ the error message on curtain covering the whole main container.</p>
     </table>
 </section>
     <h3>src/lib/http-context/use-loader.ts</h3>
-    <section>
+    <section data-compodoc="block-properties">
     <h3></h3>    <table class="table table-sm table-bordered">
         <tbody>
             <tr>

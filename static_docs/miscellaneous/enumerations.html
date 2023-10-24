@@ -14,7 +14,7 @@
     </head>
     <body>
 
-        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+        <div class="navbar navbar-default navbar-fixed-top d-block d-sm-none">
             <a href="../" class="navbar-brand">common documentation</a>
             <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
         </div>
@@ -50,17 +50,20 @@
 
 
 <ol class="breadcrumb">
-  <li>Miscellaneous</li>
-  <li>Enumerations</li>
+  <li class="breadcrumb-item">Miscellaneous</li>
+  <li class="breadcrumb-item">Enumerations</li>
 </ol>
 
-<section>
+<section data-compodoc="block-index">
     <h3 id="index">Index</h3>
     <table class="table table-sm table-bordered index-table">
         <tbody>
             <tr>
                 <td class="col-md-4">
                     <ul class="index-list">
+                        <li>
+                            <a href="#ErrorHandler" title="src/lib/http-context/use-error-handler.ts" ><b>ErrorHandler</b>&nbsp;&nbsp;&nbsp;(src/.../use-error-handler.ts)</a>
+                        </li>
                         <li>
                             <a href="#Resolution" title="src/lib/map/resolution.ts" ><b>Resolution</b>&nbsp;&nbsp;&nbsp;(src/.../resolution.ts)</a>
                         </li>
@@ -71,8 +74,43 @@
     </table>
 </section>
 
+    <h3>src/lib/http-context/use-error-handler.ts</h3>
+    <section data-compodoc="block-enums">
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="ErrorHandler"></a>
+                        <span class="name "><b>ErrorHandler</b><a href="#ErrorHandler"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-description"><p>Variants of the error handler.</p>
+<p>This enum is exposed via the <a href="USE_ERROR_HANDLER.handler">USE_ERROR_HANDLER.handler</a> property.</p>
+</div>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;CURTAIN
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;TOAST
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;CUSTOM
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
     <h3>src/lib/map/resolution.ts</h3>
-    <section>
+    <section data-compodoc="block-enums">
         <table class="table table-sm table-bordered">
             <tbody>
                 <tr>

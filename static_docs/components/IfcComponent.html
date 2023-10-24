@@ -14,7 +14,7 @@
     </head>
     <body>
 
-        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+        <div class="navbar navbar-default navbar-fixed-top d-block d-sm-none">
             <a href="../" class="navbar-brand">common documentation</a>
             <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
         </div>
@@ -36,26 +36,29 @@
 
 
 <ol class="breadcrumb">
-  <li>Components</li>
-  <li
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
   >
   IfcComponent</li>
 </ol>
 
 <ul class="nav nav-tabs" role="tablist">
-        <li class="active">
-            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
         </li>
-        <li >
-            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
         </li>
-        <li >
-            <a href="#tree" role="tab" id="tree-tab" data-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
         </li>
 </ul>
 
 <div class="tab-content">
-    <div class="tab-pane fade active in" id="c-info"><p class="comment">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
     <h3>File</h3>
 </p>
 <p class="comment">
@@ -76,16 +79,17 @@
         <h3>Implements</h3>
     </p>
     <p class="comment">
-                    <code><a href="https://angular.io/api/core/AfterViewInit" target="_blank" >AfterViewInit</a></code>
-                    <code><a href="https://angular.io/api/core/OnDestroy" target="_blank" >OnDestroy</a></code>
-                    <code><a href="https://angular.io/api/core/OnInit" target="_blank" >OnInit</a></code>
+                <code>AfterViewInit</code>
+                <code>OnDestroy</code>
+                <code>OnInit</code>
     </p>
 
 
-<section>
+<section data-compodoc="block-metadata">
     <h3>Metadata</h3>
     <table class="table table-sm table-hover metadata">
         <tbody>
+
 
 
 
@@ -101,6 +105,8 @@
                 <td class="col-md-3">selector</td>
                 <td class="col-md-9"><code>ifc</code></td>
             </tr>
+
+
 
 
 
@@ -124,7 +130,7 @@
     </table>
 </section>
 
-    <section>
+    <section data-compodoc="block-index">
     <h3 id="index">Index</h3>
     <table class="table table-sm table-bordered index-table">
         <tbody>
@@ -156,6 +162,7 @@
                                 <a href="#models" >models</a>
                             </li>
                             <li>
+                                    <span class="modifier"></span>
                                     <span class="modifier">Private</span>
                                 <a href="#resizeContainer" >resizeContainer</a>
                             </li>
@@ -169,6 +176,7 @@
                                 <a href="#viewer" >viewer</a>
                             </li>
                             <li>
+                                    <span class="modifier"></span>
                                     <span class="modifier">Private</span>
                                 <a href="#viewerContainer" >viewerContainer</a>
                             </li>
@@ -249,7 +257,7 @@
     </table>
 </section>
 
-    <section>
+    <section data-compodoc="block-constructor">
     <h3 id="constructor">Constructor</h3>
         <table class="table table-sm table-bordered">
             <tbody>
@@ -260,7 +268,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="165" class="link-to-prism">src/lib/ifc/ifc.component.ts:165</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="170" class="link-to-prism">src/lib/ifc/ifc.component.ts:170</a></div>
                             </td>
                         </tr>
 
@@ -337,7 +345,7 @@
         </table>
 </section>
 
-    <section>
+    <section data-compodoc="block-inputs">
     <h3 id="inputs">Inputs</h3>
         <table class="table table-sm table-bordered">
             <tbody>
@@ -360,7 +368,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-2" colspan="2">
-                                    <div class="io-line">Defined in <a href="" data-line="74" class="link-to-prism">src/lib/ifc/ifc.component.ts:74</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="79" class="link-to-prism">src/lib/ifc/ifc.component.ts:79</a></div>
                             </td>
                         </tr>
                 <tr>
@@ -395,7 +403,7 @@ The width is dynamically inferred.</p>
                 </tr>
                         <tr>
                             <td class="col-md-2" colspan="2">
-                                    <div class="io-line">Defined in <a href="" data-line="96" class="link-to-prism">src/lib/ifc/ifc.component.ts:96</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="101" class="link-to-prism">src/lib/ifc/ifc.component.ts:101</a></div>
                             </td>
                         </tr>
                 <tr>
@@ -437,7 +445,7 @@ record.</p>
                 </tr>
                         <tr>
                             <td class="col-md-2" colspan="2">
-                                    <div class="io-line">Defined in <a href="" data-line="100" class="link-to-prism">src/lib/ifc/ifc.component.ts:100</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="105" class="link-to-prism">src/lib/ifc/ifc.component.ts:105</a></div>
                             </td>
                         </tr>
                 <tr>
@@ -469,7 +477,7 @@ record.</p>
                 </tr>
                         <tr>
                             <td class="col-md-2" colspan="2">
-                                    <div class="io-line">Defined in <a href="" data-line="104" class="link-to-prism">src/lib/ifc/ifc.component.ts:104</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="109" class="link-to-prism">src/lib/ifc/ifc.component.ts:109</a></div>
                             </td>
                         </tr>
                 <tr>
@@ -481,7 +489,7 @@ record.</p>
             </tbody>
         </table>
 </section>
-    <section>
+    <section data-compodoc="block-outputs">
     <h3 id="outputs">Outputs</h3>
         <table class="table table-sm table-bordered">
             <tbody>
@@ -499,7 +507,7 @@ record.</p>
                 </tr>
                         <tr>
                             <td class="col-md-2" colspan="2">
-                                    <div class="io-line">Defined in <a href="" data-line="115" class="link-to-prism">src/lib/ifc/ifc.component.ts:115</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="120" class="link-to-prism">src/lib/ifc/ifc.component.ts:120</a></div>
                             </td>
                         </tr>
                 <tr>
@@ -517,7 +525,7 @@ inferred by other means.</p>
 </section>
 
 
-    <section>
+    <section data-compodoc="block-methods">
     
     <h3 id="methods">
         Methods
@@ -542,8 +550,8 @@ inferred by other means.</p>
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="314"
-                            class="link-to-prism">src/lib/ifc/ifc.component.ts:314</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="319"
+                            class="link-to-prism">src/lib/ifc/ifc.component.ts:319</a></div>
                 </td>
             </tr>
 
@@ -628,8 +636,8 @@ instead of hiding them manually via the <a href="viewer">viewer</a>.</p>
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="198"
-                            class="link-to-prism">src/lib/ifc/ifc.component.ts:198</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="203"
+                            class="link-to-prism">src/lib/ifc/ifc.component.ts:203</a></div>
                 </td>
             </tr>
 
@@ -674,8 +682,8 @@ and loads all the models for <a href="loadedModels">loadedModels</a>.</p>
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="340"
-                            class="link-to-prism">src/lib/ifc/ifc.component.ts:340</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="345"
+                            class="link-to-prism">src/lib/ifc/ifc.component.ts:345</a></div>
                 </td>
             </tr>
 
@@ -716,8 +724,8 @@ component is destroyed.</p>
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="180"
-                            class="link-to-prism">src/lib/ifc/ifc.component.ts:180</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="185"
+                            class="link-to-prism">src/lib/ifc/ifc.component.ts:185</a></div>
                 </td>
             </tr>
 
@@ -755,8 +763,8 @@ component is destroyed.</p>
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="329"
-                            class="link-to-prism">src/lib/ifc/ifc.component.ts:329</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="334"
+                            class="link-to-prism">src/lib/ifc/ifc.component.ts:334</a></div>
                 </td>
             </tr>
 
@@ -816,7 +824,7 @@ To avoid race conditions, await the <a href="loadedModels">loadedModels</a> prom
         </tbody>
     </table>
 </section>
-    <section>
+    <section data-compodoc="block-properties">
     
     <h3 id="inputs">
         Properties
@@ -846,7 +854,7 @@ To avoid race conditions, await the <a href="loadedModels">loadedModels</a> prom
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="165" class="link-to-prism">src/lib/ifc/ifc.component.ts:165</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="170" class="link-to-prism">src/lib/ifc/ifc.component.ts:170</a></div>
                         </td>
                     </tr>
 
@@ -878,7 +886,7 @@ To avoid race conditions, await the <a href="loadedModels">loadedModels</a> prom
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="140" class="link-to-prism">src/lib/ifc/ifc.component.ts:140</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="145" class="link-to-prism">src/lib/ifc/ifc.component.ts:145</a></div>
                         </td>
                     </tr>
 
@@ -915,7 +923,7 @@ the models.</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="162" class="link-to-prism">src/lib/ifc/ifc.component.ts:162</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="167" class="link-to-prism">src/lib/ifc/ifc.component.ts:167</a></div>
                         </td>
                     </tr>
 
@@ -948,7 +956,7 @@ the models.</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="160" class="link-to-prism">src/lib/ifc/ifc.component.ts:160</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="165" class="link-to-prism">src/lib/ifc/ifc.component.ts:165</a></div>
                         </td>
                     </tr>
 
@@ -986,7 +994,7 @@ the models.</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="157" class="link-to-prism">src/lib/ifc/ifc.component.ts:157</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="162" class="link-to-prism">src/lib/ifc/ifc.component.ts:162</a></div>
                         </td>
                     </tr>
 
@@ -1005,6 +1013,7 @@ the models.</p>
                 <td class="col-md-4">
                     <a name="resizeContainer"></a>
                     <span class="name">
+                            <span class="modifier"></span>
                             <span class="modifier">Private</span>
                         <span ><b>resizeContainer</b></span>
                         <a href="#resizeContainer"><span class="icon ion-ios-link"></span></a>
@@ -1028,7 +1037,7 @@ the models.</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="148" class="link-to-prism">src/lib/ifc/ifc.component.ts:148</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="153" class="link-to-prism">src/lib/ifc/ifc.component.ts:153</a></div>
                         </td>
                     </tr>
 
@@ -1062,7 +1071,7 @@ the models.</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="154" class="link-to-prism">src/lib/ifc/ifc.component.ts:154</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="159" class="link-to-prism">src/lib/ifc/ifc.component.ts:159</a></div>
                         </td>
                     </tr>
 
@@ -1096,7 +1105,7 @@ the size of the <a href="viewerContainer">viewerContainer</a>.</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="130" class="link-to-prism">src/lib/ifc/ifc.component.ts:130</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="135" class="link-to-prism">src/lib/ifc/ifc.component.ts:135</a></div>
                         </td>
                     </tr>
 
@@ -1122,6 +1131,7 @@ Most important interactions are available via the <a href="loadedModels">loadedM
                 <td class="col-md-4">
                     <a name="viewerContainer"></a>
                     <span class="name">
+                            <span class="modifier"></span>
                             <span class="modifier">Private</span>
                         <span ><b>viewerContainer</b></span>
                         <a href="#viewerContainer"><span class="icon ion-ios-link"></span></a>
@@ -1145,7 +1155,7 @@ Most important interactions are available via the <a href="loadedModels">loadedM
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="144" class="link-to-prism">src/lib/ifc/ifc.component.ts:144</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="149" class="link-to-prism">src/lib/ifc/ifc.component.ts:149</a></div>
                         </td>
                     </tr>
 
@@ -1163,20 +1173,25 @@ Most important interactions are available via the <a href="loadedModels">loadedM
 </div>
 
 
-    <div class="tab-pane fade  tab-source-code" id="c-source">
+    <div class="tab-pane fade  tab-source-code" id="source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {
-  AfterViewInit,
+  ViewChild,
   Component,
-  ElementRef, EventEmitter,
-  Input, OnDestroy, OnInit, Output,
-  ViewChild
-} from &#x27;@angular/core&#x27;;
-import {IfcViewerAPI} from &quot;web-ifc-viewer&quot;;
+  OnDestroy,
+  EventEmitter,
+  OnInit,
+  AfterViewInit,
+  Input,
+  Output,
+  ElementRef
+} from &quot;@angular/core&quot;;
+import {TranslateService} from &quot;@ngx-translate/core&quot;;
+import {JSONObject} from &quot;web-ifc-three/IFC/BaseDefinitions&quot;;
 import {IFCModel} from &quot;web-ifc-three/IFC/components/IFCModel&quot;;
+import {IfcViewerAPI} from &quot;web-ifc-viewer&quot;;
+
 import {IfcService} from &quot;./ifc.service&quot;;
 import {LoaderInjector} from &quot;../loader/loader.injector&quot;;
-import {JSONObject} from &quot;web-ifc-three/IFC/BaseDefinitions&quot;;
-import {TranslateService} from &quot;@ngx-translate/core&quot;;
 
 export namespace IfcComponent {
   /**
@@ -1515,7 +1530,7 @@ export class IfcComponent implements AfterViewInit, OnDestroy, OnInit {
 
 
 
-    <div class="tab-pane fade " id="c-tree">
+    <div class="tab-pane fade " id="tree">
         <div id="tree-container"></div>
         <div class="tree-legend">
             <div class="title">
@@ -1541,8 +1556,8 @@ export class IfcComponent implements AfterViewInit, OnDestroy, OnInit {
 <script src="../js/libs/deep-iterator.js"></script>
 <script>
         var COMPONENT_TEMPLATE = '<div><div #resizeContainer style="width: 100%; height: {{height}}">  <div #viewerContainer style="position: absolute"></div></div></div>'
-    var COMPONENTS = [{'name': 'BreadcrumbsComponent', 'selector': 'breadcrumbs'},{'name': 'IfcComponent', 'selector': 'ifc'},{'name': 'IonIconComponent', 'selector': 'ion-icon'},{'name': 'MapComponent', 'selector': 'map'}];
-    var DIRECTIVES = [{'name': 'BulmaIsToggleableDirective', 'selector': '.is-toggleable'}];
+    var COMPONENTS = [{'name': 'BreadcrumbsComponent', 'selector': 'breadcrumbs'},{'name': 'DragDropComponent', 'selector': 'drag-drop'},{'name': 'IfcComponent', 'selector': 'ifc'},{'name': 'IonIconComponent', 'selector': 'ion-icon'},{'name': 'MapComponent', 'selector': 'map'}];
+    var DIRECTIVES = [{'name': 'BulmaCalendarDirective', 'selector': '[type&#x3D;&quot;date&quot;]'},{'name': 'BulmaIsToggleableDirective', 'selector': '.is-toggleable'},{'name': 'DragDropDirective', 'selector': '[dragDropDirective]'}];
     var ACTUAL_COMPONENT = {'name': 'IfcComponent'};
 </script>
 <script src="../js/tree.js"></script>

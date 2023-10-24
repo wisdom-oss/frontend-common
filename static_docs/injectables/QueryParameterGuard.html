@@ -29,7 +29,7 @@
                    <compodoc-menu mode="normal"></compodoc-menu>
                </div>
                <!-- START CONTENT -->
-               <div class="content directive">
+               <div class="content injectable">
                    <div class="content-data">
 
 
@@ -38,9 +38,10 @@
 
 
 
+
 <ol class="breadcrumb">
-  <li class="breadcrumb-item">Directives</li>
-  <li class="breadcrumb-item" >BulmaIsToggleableDirective</li>
+  <li class="breadcrumb-item">Injectables</li>
+  <li class="breadcrumb-item" >QueryParameterGuard</li>
 </ol>
 
 <ul class="nav nav-tabs" role="tablist">
@@ -64,7 +65,7 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>src/lib/bulma/bulma-is-toggleable.directive.ts</code>
+            <code>src/lib/guards/query-parameter.guard.ts</code>
         </p>
 
 
@@ -72,31 +73,19 @@
                 <h3>Description</h3>
             </p>
             <p class="comment">
-                <p>Directive for making things toggleable with bulma.</p>
-<p>Clicking on the node that has this directive will toggle the &quot;is-active&quot;
-class.</p>
+                <p>Guard to check if certain query parameters are set.</p>
+<p>In the <code>data</code> attribute of route it expects an optional <code>redirectTo</code>
+containing an <a href="Observable">Observable</a>, a <a href="Promise">Promise</a> or a direct
+<a href="UrlTree">UrlTree</a> or a string that will be passed to <a href="Router#parseUrl">Router#parseUrl</a>
+and <code>queryParams</code> containing a string or an array of strings.</p>
+<ul>
+<li><code>redirect</code> will be used when the check fails.</li>
+<li><code>queryParams</code> will be iterated to check for the keys</li>
+</ul>
 
             </p>
 
 
-
-
-        <section data-compodoc="block-metadata">
-            <h3>Metadata</h3>
-            <table class="table table-sm table-hover metadata">
-                <tbody>
-
-                    <tr>
-                        <td class="col-md-3">Selector</td>
-                        <td class="col-md-9"><code>.is-toggleable</code></td>
-                    </tr>
-
-
-
-
-                </tbody>
-            </table>
-        </section>
 
             <section data-compodoc="block-index">
     <h3 id="index">Index</h3>
@@ -112,8 +101,7 @@ class.</p>
                     <td class="col-md-4">
                         <ul class="index-list">
                             <li>
-                                    <span class="modifier"></span>
-                                <a href="#toggle" >toggle</a>
+                                <a href="#canActivate" >canActivate</a>
                             </li>
                         </ul>
                     </td>
@@ -122,20 +110,6 @@ class.</p>
 
 
 
-                <tr>
-                    <td class="col-md-4">
-                        <h6><b>HostListeners</b></h6>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <ul class="index-list">
-                            <li>
-                                <a href="#click" >click</a>
-                            </li>
-                        </ul>
-                    </td>
-                </tr>
 
         </tbody>
     </table>
@@ -147,12 +121,12 @@ class.</p>
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(elementRef: ElementRef)</code>
+<code>constructor(router: Router)</code>
                     </td>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="18" class="link-to-prism">src/lib/bulma/bulma-is-toggleable.directive.ts:18</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="24" class="link-to-prism">src/lib/guards/query-parameter.guard.ts:24</a></div>
                             </td>
                         </tr>
 
@@ -173,10 +147,10 @@ class.</p>
                                         </thead>
                                         <tbody>
                                                 <tr>
-                                                        <td>elementRef</td>
+                                                        <td>router</td>
                                                   
                                                         <td>
-                                                                    <code>ElementRef</code>
+                                                                    <code>Router</code>
                                                         </td>
                                                   
                                                     <td>
@@ -184,7 +158,7 @@ class.</p>
                                                     </td>
                                                     
                                                         <td>
-                                                                <p>Reference to element this is applied to</p>
+                                                                <p>Router used to parse redirect entries</p>
 
                                                         </td>
                                                 </tr>
@@ -197,43 +171,6 @@ class.</p>
         </table>
 </section>
 
-
-
-
-            <section data-compodoc="block-host-listener">
-    <h3>HostListeners</h3>    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="click"></a>
-                    <span class="name">
-                        <b>
-                            click
-                        </b>
-                        <a href="#click"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="30"
-                            class="link-to-prism">src/lib/bulma/bulma-is-toggleable.directive.ts:30</a></div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-description"><p>Toggles the visibility of a bulma element by toggling <code>is-active</code> css class.</p>
-</div>
-
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</section>
             <section data-compodoc="block-methods">
     
     <h3 id="methods">
@@ -243,45 +180,90 @@ class.</p>
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="toggle"></a>
+                    <a name="canActivate"></a>
                     <span class="name">
-                        <span class="modifier"></span>
-                        <span ><b>toggle</b></span>
-                        <a href="#toggle"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>canActivate</b></span>
+                        <a href="#canActivate"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>toggle()</code>
-                </td>
-            </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <b>Decorators : </b>
-                    <br />
-                    <code>@HostListener(&#x27;click&#x27;)<br /></code>
-                </td>
-            </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="30"
-                            class="link-to-prism">src/lib/bulma/bulma-is-toggleable.directive.ts:30</a></div>
+<code>canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-description"><p>Toggles the visibility of a bulma element by toggling <code>is-active</code> css class.</p>
+                    <div class="io-line">Defined in <a href="" data-line="40"
+                            class="link-to-prism">src/lib/guards/query-parameter.guard.ts:40</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Whether the route can be activated.</p>
+<p>For more info check <a href="../injectables/QueryParameterGuard.html">QueryParameterGuard</a>.</p>
 </div>
 
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>route</td>
+                                    <td>
+                                            <code>ActivatedRouteSnapshot</code>
+                                    </td>
 
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Currently activated route snapshot</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>state</td>
+                                    <td>
+                                            <code>RouterStateSnapshot</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Current state of the router</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Observable | Promise | boolean | UrlTree</code>
+
+                    </div>
+                    <div class="io-description">
+                        
                     </div>
                 </td>
             </tr>
@@ -289,42 +271,58 @@ class.</p>
     </table>
 </section>
 
-
     </div>
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {
-  HostBinding,
-  Directive,
-  Input,
-  HostListener,
-  ElementRef
-} from &quot;@angular/core&quot;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {Injectable} from &quot;@angular/core&quot;;
+import {
+  Router,
+  ActivatedRouteSnapshot,
+  RouterStateSnapshot,
+  UrlTree
+} from &quot;@angular/router&quot;;
+import {Observable} from &quot;rxjs&quot;;
 
 /**
- * Directive for making things toggleable with bulma.
+ * Guard to check if certain query parameters are set.
  *
- * Clicking on the node that has this directive will toggle the &quot;is-active&quot;
- * class.
+ * In the &#x60;data&#x60; attribute of route it expects an optional &#x60;redirectTo&#x60;
+ * containing an {@link Observable}, a {@link Promise} or a direct
+ * {@link UrlTree} or a string that will be passed to {@link Router#parseUrl}
+ * and &#x60;queryParams&#x60; containing a string or an array of strings.
+ *
+ * - &#x60;redirect&#x60; will be used when the check fails.
+ * - &#x60;queryParams&#x60; will be iterated to check for the keys
  */
-@Directive({
-  selector: &quot;.is-toggleable&quot;
+@Injectable({
+  providedIn: &#x27;root&#x27;
 })
-export class BulmaIsToggleableDirective {
+export class QueryParameterGuard  {
 
   /**
    * Constructor.
-   * @param elementRef Reference to element this is applied to
+   * @param router Router used to parse redirect entries
    */
-  constructor(private elementRef: ElementRef) {}
+  constructor(private router: Router) {}
 
   /**
-   * Toggles the visibility of a bulma element by toggling &#x60;is-active&#x60; css class.
+   * Whether the route can be activated.
+   *
+   * For more info check {@link QueryParameterGuard}.
+   *
+   * @param route Currently activated route snapshot
+   * @param state Current state of the router
    */
-  @HostListener(&quot;click&quot;)
-  toggle() {
-    this.elementRef.nativeElement.classList.toggle(&quot;is-active&quot;);
+  canActivate(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot): Observable&lt;boolean | UrlTree&gt; | Promise&lt;boolean | UrlTree&gt; | boolean | UrlTree {
+    let redirect  &#x3D; route.data[&quot;redirect&quot;] ?? false;
+    if (typeof redirect &#x3D;&#x3D;&#x3D; &quot;string&quot;) redirect &#x3D; this.router.parseUrl(redirect);
+    for (let param of [route.data[&quot;queryParams&quot;] ?? []].flat()) {
+      if (route.queryParams[param] &#x3D;&#x3D;&#x3D; undefined) return redirect;
+    }
+    return true;
   }
 
 }
@@ -332,7 +330,6 @@ export class BulmaIsToggleableDirective {
     </div>
 
 </div>
-
 
 
 
@@ -371,8 +368,8 @@ export class BulmaIsToggleableDirective {
 
        <script>
             var COMPODOC_CURRENT_PAGE_DEPTH = 1;
-            var COMPODOC_CURRENT_PAGE_CONTEXT = 'directive';
-            var COMPODOC_CURRENT_PAGE_URL = 'BulmaIsToggleableDirective.html';
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'injectable';
+            var COMPODOC_CURRENT_PAGE_URL = 'QueryParameterGuard.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
 

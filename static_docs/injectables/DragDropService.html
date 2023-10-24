@@ -41,7 +41,7 @@
 
 <ol class="breadcrumb">
   <li class="breadcrumb-item">Injectables</li>
-  <li class="breadcrumb-item" >IfcService</li>
+  <li class="breadcrumb-item" >DragDropService</li>
 </ol>
 
 <ul class="nav nav-tabs" role="tablist">
@@ -65,18 +65,10 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>src/lib/ifc/ifc.service.ts</code>
+            <code>src/lib/drag-drop/drag-drop.service.ts</code>
         </p>
 
 
-            <p class="comment">
-                <h3>Description</h3>
-            </p>
-            <p class="comment">
-                <p>Service to lazily fetch IFC models.
-The fetch will try to load from the local indexed db first.</p>
-
-            </p>
 
 
 
@@ -93,9 +85,7 @@ The fetch will try to load from the local indexed db first.</p>
                     <td class="col-md-4">
                         <ul class="index-list">
                             <li>
-                                    <span class="modifier">Private</span>
-                                    <span class="modifier">Readonly</span>
-                                <a href="#idb" >idb</a>
+                                <a href="#httpBaseContext" >httpBaseContext</a>
                             </li>
                         </ul>
                     </td>
@@ -110,8 +100,10 @@ The fetch will try to load from the local indexed db first.</p>
                     <td class="col-md-4">
                         <ul class="index-list">
                             <li>
-                                    <span class="modifier">Async</span>
-                                <a href="#fetchModel" >fetchModel</a>
+                                <a href="#handleError" >handleError</a>
+                            </li>
+                            <li>
+                                <a href="#postFiles" >postFiles</a>
                             </li>
                         </ul>
                     </td>
@@ -136,14 +128,12 @@ The fetch will try to load from the local indexed db first.</p>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="39" class="link-to-prism">src/lib/ifc/ifc.service.ts:39</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="13" class="link-to-prism">src/lib/drag-drop/drag-drop.service.ts:13</a></div>
                             </td>
                         </tr>
 
                 <tr>
                     <td class="col-md-4">
-                            <div class="io-description"><p>Constructor.</p>
-</div>
                             <div>
                                     <b>Parameters :</b>
                                     <table class="params">
@@ -152,7 +142,6 @@ The fetch will try to load from the local indexed db first.</p>
                                                 <td>Name</td>
                                                     <td>Type</td>
                                                 <td>Optional</td>
-                                                    <td>Description</td>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -167,10 +156,6 @@ The fetch will try to load from the local indexed db first.</p>
                                                             No
                                                     </td>
                                                     
-                                                        <td>
-                                                                <p>Client to request geo data</p>
-
-                                                        </td>
                                                 </tr>
                                         </tbody>
                                     </table>
@@ -190,34 +175,31 @@ The fetch will try to load from the local indexed db first.</p>
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="fetchModel"></a>
+                    <a name="handleError"></a>
                     <span class="name">
-                        <span class="modifier">Async</span>
-                        <span ><b>fetchModel</b></span>
-                        <a href="#fetchModel"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>handleError</b></span>
+                        <a href="#handleError"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>fetchModel(path: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, force: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>)</code>
+<code>handleError(msg: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="61"
-                            class="link-to-prism">src/lib/ifc/ifc.service.ts:61</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="72"
+                            class="link-to-prism">src/lib/drag-drop/drag-drop.service.ts:72</a></div>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-description"><p>Asynchronously fetch IFC models.</p>
-<p>Will only fetch data if not already stored in the indexedDB.</p>
+                    <div class="io-description"><p>creates an Observable with an error to subscribe to it and logs the information in the console.</p>
 </div>
 
                     <div class="io-description">
@@ -229,13 +211,12 @@ The fetch will try to load from the local indexed db first.</p>
                                     <td>Name</td>
                                     <td>Type</td>
                                     <td>Optional</td>
-                                    <td>Default value</td>
                                     <td>Description</td>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>path</td>
+                                    <td>msg</td>
                                     <td>
                                                 <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
                                     </td>
@@ -244,30 +225,9 @@ The fetch will try to load from the local indexed db first.</p>
                                         No
                                     </td>
 
-                                    <td>
-                                    </td>
 
                                     <td>
-                                        <p>The path where to download model from, will also be the cache key</p>
-
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>force</td>
-                                    <td>
-                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-                                    <td>
-                                        <code>false</code>
-                                    </td>
-
-                                    <td>
-                                        <p>If true, this will ignore the cache and request everything</p>
+                                        <p>error meesage</p>
 
                                     </td>
                                 </tr>
@@ -277,7 +237,113 @@ The fetch will try to load from the local indexed db first.</p>
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>Promise&lt;File&gt;</code>
+                        <b>Returns : </b>    <code>Observable&lt;any&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>observable with contained error.</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="postFiles"></a>
+                    <span class="name">
+                        <span ><b>postFiles</b></span>
+                        <a href="#postFiles"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>postFiles(files: File[], apiUrl?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, listName?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, httpContext?: HttpContext)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="32"
+                            class="link-to-prism">src/lib/drag-drop/drag-drop.service.ts:32</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>files</td>
+                                    <td>
+                                            <code>File[]</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>apiUrl</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        Yes
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>listName</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        Yes
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>httpContext</td>
+                                    <td>
+                                            <code>HttpContext</code>
+                                    </td>
+
+                                    <td>
+                                        Yes
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Observable&lt;any&gt;</code>
 
                     </div>
                     <div class="io-description">
@@ -297,24 +363,36 @@ The fetch will try to load from the local indexed db first.</p>
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="idb"></a>
+                    <a name="httpBaseContext"></a>
                     <span class="name">
-                            <span class="modifier">Private</span>
-                            <span class="modifier">Readonly</span>
-                        <span ><b>idb</b></span>
-                        <a href="#idb"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>httpBaseContext</b></span>
+                        <a href="#httpBaseContext"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>HttpContext</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new HttpContext()
+    .set(USE_API_URL, true)
+    .set(USE_LOADER, false)
+    .set(USE_ERROR_HANDLER, 1)</code>
+                    </td>
+                </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="39" class="link-to-prism">src/lib/ifc/ifc.service.ts:39</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="19" class="link-to-prism">src/lib/drag-drop/drag-drop.service.ts:19</a></div>
                         </td>
                     </tr>
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-description"><p>Indexed DB client.</p>
+                    <div class="io-description"><p>httpContext with base values, in order to prevent the request from having no context at all.</p>
 </div>
                 </td>
             </tr>
@@ -329,74 +407,80 @@ The fetch will try to load from the local indexed db first.</p>
     <div class="tab-pane fade  tab-source-code" id="source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {HttpClient, HttpContext} from &quot;@angular/common/http&quot;;
 import {Injectable} from &quot;@angular/core&quot;;
-import {openDB, DBSchema} from &quot;idb&quot;;
-import {firstValueFrom} from &quot;rxjs&quot;;
+import {Observable} from &quot;rxjs&quot;;
 
+import {USE_API_URL} from &quot;../http-context/use-api-url&quot;;
 import {USE_LOADER} from &quot;../http-context/use-loader&quot;;
+import {USE_ERROR_HANDLER} from &quot;../http-context/use-error-handler&quot;;
 
-/** Indexed DB name. */
-const DB_NAME &#x3D; &quot;ifc-db&quot;;
 
-/** Indexed DB schema version. */
-const SCHEMA_V &#x3D; 1;
-
-/** The schema the ifc db uses. */
-interface IfcDB extends DBSchema {
-  /**
-   * Cached IFC models.
-   *
-   * The key is the path where the model is found.
-   *
-   * The value is the raw bytes of the model stored as a Blob.
-   */
-  models: {
-    key: string,
-    value: Blob
-  }
-}
-
-/**
- * Service to lazily fetch IFC models.
- * The fetch will try to load from the local indexed db first.
- */
 @Injectable({
-  providedIn: &#x27;root&#x27;
+  providedIn: &quot;root&quot;,
 })
-export class IfcService {
-
-  /** Indexed DB client. */
-  private readonly idb;
+export class DragDropService {
+  constructor(private http: HttpClient) { }
 
   /**
-   * Constructor.
-   * @param http Client to request geo data
+   * httpContext with base values, in order to prevent the request from having no context at all.
    */
-  constructor(private http: HttpClient) {
-    this.idb &#x3D; openDB&lt;IfcDB&gt;(DB_NAME, SCHEMA_V, {
-      upgrade(db, oldV) {
-        if (oldV) db.deleteObjectStore(&quot;models&quot;);
-        db.createObjectStore(&quot;models&quot;);
+  httpBaseContext: HttpContext &#x3D; new HttpContext()
+    .set(USE_API_URL, true)
+    .set(USE_LOADER, false)
+    .set(USE_ERROR_HANDLER, 1);
+
+
+  /* 
+  adds all files to a formdata object, sends post request and returns res
+  @param files: a list of files to be uploaded
+  @param apiUrL: the URL where to upload the files to
+  @param listName: name of the fileList to identify it at the server side
+  @param httpContext: a context for extra functionality regarding the http-context component in common
+  */
+  postFiles(files: File[], apiUrl?: string, listName?: string, httpContext?: HttpContext): Observable&lt;any&gt; {
+
+    let formData: FormData &#x3D; new FormData();
+
+    if (!files) {
+      return this.handleError(&quot;There are no files to upload&quot;);
+    }
+
+    if (!apiUrl) {
+      return this.handleError(&quot;No URL provided&quot;);
+    }
+
+    if (!listName) {
+      return this.handleError(&quot;No name provided for the list of files&quot;);
+    } else {
+      for (let file of files) {
+        formData.append(listName, file);
       }
+    }
+
+    let ctx;
+    if (!httpContext) {
+      ctx &#x3D; this.httpBaseContext;
+      console.log(&quot;BaseHttpContext provided automatically&quot;)
+    } else {
+      ctx &#x3D; httpContext;
+    }
+
+    return this.http.post(apiUrl, formData, {
+      responseType: &quot;text&quot;,
+      context: ctx
     });
+
   }
 
   /**
-   * Asynchronously fetch IFC models.
-   *
-   * Will only fetch data if not already stored in the indexedDB.
-   * @param path The path where to download model from, will also be the cache key
-   * @param force If true, this will ignore the cache and request everything
-   */
-  async fetchModel(path: string, force: boolean &#x3D; false): Promise&lt;File&gt; {
-    const idb &#x3D; await this.idb;
-    let dbBlob &#x3D; force ? undefined : await idb.get(&quot;models&quot;, path);
-    if (dbBlob) return new File([dbBlob], path);
-    let res &#x3D; await firstValueFrom(this.http.get(path, {
-      responseType: &quot;blob&quot;,
-      context: new HttpContext().set(USE_LOADER, &quot;common.ifc.fetching&quot;)
-    }));
-    await idb.put(&quot;models&quot;, res, path);
-    return new File([res], path);
+     * creates an Observable with an error to subscribe to it and logs the information in the console.
+     * @param msg error meesage
+     * @returns observable with contained error.
+     */
+  handleError(msg: string): Observable&lt;any&gt; {
+
+    return new Observable((observer) &#x3D;&gt; {
+      observer.error(new Error(msg));
+    });
   }
 }
 </code></pre>
@@ -442,7 +526,7 @@ export class IfcService {
        <script>
             var COMPODOC_CURRENT_PAGE_DEPTH = 1;
             var COMPODOC_CURRENT_PAGE_CONTEXT = 'injectable';
-            var COMPODOC_CURRENT_PAGE_URL = 'IfcService.html';
+            var COMPODOC_CURRENT_PAGE_URL = 'DragDropService.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
 
