@@ -1,21 +1,28 @@
 import {
   Directive,
   ElementRef,
-  EventEmitter,
-  Input,
+  EventEmitter, HostBinding,
+  Input, OnDestroy,
   OnInit, Output
 } from '@angular/core';
 import * as BulmaCalendar from "bulma-calendar";
 
+/** Enum to decide in which mode the Bulma Calendar should take values. */
+export enum BulmaCalendarMode {
+  DEFAULT = "default",
+  MONTH = "month",
+  YEAR = "year"
+}
+
 /**
- * Directive to attach a Bulma calendar to date inputs.
+ * Directive to attach a bulma calendar to date inputs.
  *
  * @see https://bulma-calendar.onrender.com
  */
 @Directive({
-  selector: '[type="date"]'
+  selector: '[type="date"]',
 })
-export class BulmaCalendarDirective implements OnInit {
+export class BulmaCalendarDirective implements OnInit, OnDestroy {
 
   /** Bulma calendar instance. */
   private calendar!: BulmaCalendar;
@@ -28,6 +35,21 @@ export class BulmaCalendarDirective implements OnInit {
   @Input()
   options?: BulmaCalendar.Options;
 
+  /**
+   * Mode of value input for the bulma calendar.
+   *
+   * Only works when {@link type} is set to `"date"`.
+   *
+   * This is specifically implemented for this directive and is not part of the
+   * default bulma calendar.
+   * It works by calling some internal hooks.
+   *
+   * Functions called inside can be found in the source code of the date
+   * picker.
+   * @see https://github.com/Wikiki/bulma-calendar/blob/master/src/js/datePicker/index.js
+   */
+  @Input()
+  mode: BulmaCalendarMode = BulmaCalendarMode.DEFAULT;
 
   /**
    * Triggered when calendar is initialized.
@@ -66,10 +88,31 @@ export class BulmaCalendarDirective implements OnInit {
   constructor(private elementRef: ElementRef) {}
 
   ngOnInit(): void {
+    let options = this.options ?? {};
+
+    // override some options that are necessary for the modes to work correctly
+    if (this.mode !== BulmaCalendarMode.DEFAULT) {
+      switch (this.mode) {
+        case BulmaCalendarMode.YEAR:
+          options.dateFormat = options?.dateFormat ?? "yyyy";
+          break;
+        case BulmaCalendarMode.MONTH:
+          options.dateFormat = options?.dateFormat ?? "MM/yyyy";
+          break;
+      }
+
+      options.showFooter = false;
+      options.showHeader = false;
+    }
+
     this.calendar = BulmaCalendar.attach(
       this.elementRef.nativeElement,
-      this.options
+      options
     )[0];
+
+    // @ts-ignore this is a private field
+    let id = this.calendar._id;
+    document.getElementById(id)!.dataset["mode"] = this.mode;
 
     this.calendar.on(
       <BulmaCalendar.EventType>"ready",
@@ -95,6 +138,32 @@ export class BulmaCalendarDirective implements OnInit {
       "select:start",
         instance => this.selectStartEvent.emit(instance)
     );
+
+    if (
+      options.type == undefined ||
+      options.type == "date"
+    ) {
+      // make use of the mode here to override calendar behavior
+      switch (this.mode) {
+        case BulmaCalendarMode.YEAR:
+          this.applyYearMode();
+          break;
+
+        case BulmaCalendarMode.MONTH:
+          this.applyMonthMode();
+          break;
+
+        case BulmaCalendarMode.DEFAULT:
+        default:
+          break;
+      }
+    }
+  }
+
+  ngOnDestroy(): void {
+    // remove event listeners, the typescript type doesn't reflect the null case
+    this.calendar.removeListeners(null as any);
+    this.calendar.removeMiddleware(null as any);
   }
 
 
@@ -214,4 +283,104 @@ export class BulmaCalendarDirective implements OnInit {
   /** Set time format pattern. */
   set timeFormat(timeFormat) { this.calendar.timeFormat = timeFormat; }
 
+  /** Apply the {@link BulmaCalendarMode.YEAR} mode. */
+  private applyYearMode() {
+    let calendar = this.calendar as typeof this.calendar & {
+      // this datepicker refers to "private" functions of the internal date picker
+      datePicker: {
+        onSelectYearDatePicker: Function,
+        onYearClickDatePicker: Function,
+        onDateClickDatePicker: Function,
+        onNextDatePicker: Function,
+        _format: String,
+      }
+    };
+
+    let dummyEvent = {
+      preventDefault() {},
+      stopPropagation() {}
+    };
+
+    // open the calendar always in the year view
+    calendar.on("show", () => {
+      calendar.datePicker.onSelectYearDatePicker(dummyEvent);
+    });
+
+    // when year is selected, abort further selection and set first day of year
+    let ogOnYearClickDatePicker = calendar.datePicker.onYearClickDatePicker;
+    calendar.datePicker.onYearClickDatePicker = (e: any) => {
+      ogOnYearClickDatePicker(e);
+      e.currentTarget.dataset.date = `1-1-${e.currentTarget.dataset.year}`
+      calendar.datePicker.onDateClickDatePicker(e);
+      if (this.options?.isRange) {
+        // if options.isRange, jump to select year view for end date
+        calendar.datePicker.onSelectYearDatePicker(dummyEvent);
+      }
+    }
+
+    // use year selector when the picker is cleared but still open
+    // @ts-ignore this event is not public
+    calendar.on("clear", () => {
+      if (this.isOpen()) {
+        calendar.datePicker.onSelectYearDatePicker(dummyEvent);
+      }
+    });
+  }
+
+  /** Apply the {@link BulmaCalendarMode.MONTH} mode. */
+  private applyMonthMode() {
+    let calendar = this.calendar as typeof this.calendar & {
+      // this datepicker refers to "private" functions of the internal date picker
+      datePicker: {
+        onSelectYearDatePicker: Function,
+        onSelectMonthDatePicker: Function,
+        onYearClickDatePicker: Function,
+        onMonthClickDatePicker: Function,
+        onDateClickDatePicker: Function,
+        onNextDatePicker: Function,
+        _format: String,
+        _visibleDate: Date
+      }
+    };
+
+    let dummyEvent = {
+      preventDefault() {},
+      stopPropagation() {}
+    };
+
+    // open the calendar always in the month view
+    calendar.on("show", () => {
+      calendar.datePicker.onSelectMonthDatePicker(dummyEvent);
+    });
+
+    // when year is selected, abort further selection and set first day of month
+    let ogOnMonthClickDatePicker = calendar.datePicker.onMonthClickDatePicker;
+    calendar.datePicker.onMonthClickDatePicker = (e: any) => {
+      ogOnMonthClickDatePicker(e);
+      e.currentTarget.dataset.date = [
+        calendar.datePicker._visibleDate.getMonth() + 1,
+        1,
+        calendar.datePicker._visibleDate.getFullYear()
+      ].join("-");
+      calendar.datePicker.onDateClickDatePicker(e);
+      if (this.options?.isRange) {
+        // if options.isRange, jump to select month view for end date
+        calendar.datePicker.onSelectMonthDatePicker(dummyEvent);
+      }
+    }
+
+    let ogOnYearClickDatePicker = calendar.datePicker.onYearClickDatePicker;
+    calendar.datePicker.onYearClickDatePicker = (e: any) => {
+      ogOnYearClickDatePicker(e);
+      calendar.datePicker.onSelectMonthDatePicker(dummyEvent);
+    }
+
+    // use year selector when the picker is cleared but still open
+    // @ts-ignore this event is not public
+    calendar.on("clear", () => {
+      if (this.isOpen()) {
+        calendar.datePicker.onSelectMonthDatePicker(dummyEvent);
+      }
+    });
+  }
 }
