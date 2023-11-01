@@ -24,13 +24,13 @@
 <title>cluster_WisdomModule</title>
 <polygon fill="none" stroke="black" stroke-dasharray="1,5" points="8,-70 8,-268 1275,-268 1275,-70 8,-70"/>
 </g>
-<g id="clust2" class="cluster">
-<title>cluster_WisdomModule_declarations</title>
-<polygon fill="none" stroke="black" points="33,-78 33,-130 1256,-130 1256,-78 33,-78"/>
-</g>
 <g id="clust12" class="cluster">
 <title>cluster_WisdomModule_exports</title>
 <polygon fill="none" stroke="black" points="16,-208 16,-260 1267,-260 1267,-208 16,-208"/>
+</g>
+<g id="clust2" class="cluster">
+<title>cluster_WisdomModule_declarations</title>
+<polygon fill="none" stroke="black" points="33,-78 33,-130 1256,-130 1256,-78 33,-78"/>
 </g>
 <!-- BreadcrumbsComponent -->
 <g id="node1" class="node">
