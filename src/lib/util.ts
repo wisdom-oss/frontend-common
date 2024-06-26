@@ -123,3 +123,8 @@ export function getBulmaPrimaryColors() {
     text: v("text"),
   }
 }
+
+/** Inverts a given predicate. */
+export function not<F extends (...args: any[]) => boolean>(predicate: F): F {
+  return ((...args: any[]) => !predicate(...args)) as F
+}

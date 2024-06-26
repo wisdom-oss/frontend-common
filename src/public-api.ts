@@ -15,6 +15,9 @@ export * from "./lib/map/map.service";
 export * from "./lib/map/marker";
 export * from "./lib/map/resolution";
 
+export * from "./lib/map2/map2.component";
+export * from "./lib/map2/map2.service";
+
 export * from "./lib/bulma/bulma-is-toggleable.directive";
 export * from "./lib/bulma/bulma-calendar.directive";
 
