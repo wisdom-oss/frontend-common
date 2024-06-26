@@ -39,10 +39,10 @@ export class Map2Service {
     }
   }
 
-  async fetchLayerInfo(layerId: LayerId): Promise<LayerInfo | null> {
+  async fetchLayerInfo(layerRef: LayerRef): Promise<LayerInfo | null> {
     try {
       return await firstValueFrom(this.http.get<LayerInfo>(
-        `${API_URL}/${layerId}`, 
+        `${API_URL}/${layerRef}`, 
         {
           responseType: "json",
           context: new HttpContext().set(USE_API_URL, true)
@@ -56,7 +56,7 @@ export class Map2Service {
   }
 
   async fetchLayerContents(
-    layerId: LayerId,
+    layerRef: LayerRef,
     cache: boolean = true,
     filter?: LayerFilter
   ): Promise<LayerContent[] | null> {
@@ -70,14 +70,14 @@ export class Map2Service {
     try {
       if (filter) {
         return await firstValueFrom(this.http.post<LayerContent[] | null>(
-          `${API_URL}/content/${layerId}`, 
+          `${API_URL}/content/${layerRef}`, 
           filter,
           options
         ));  
       }
 
       return await firstValueFrom(this.http.get<LayerContent[] | null>(
-        `${API_URL}/content/${layerId}`,
+        `${API_URL}/content/${layerRef}`,
         options
       ));
     }
@@ -89,6 +89,8 @@ export class Map2Service {
 }
 
 export type LayerId = string;
+export type LayerKey = string;
+export type LayerRef = LayerId | LayerKey;
 export type LayerFilterOperator = "contains" | "overlaps" | "within";
 export type ShapeKey = string;
 export type LayerFilter = Record<
@@ -98,6 +100,7 @@ export type LayerFilter = Record<
 
 export interface LayerInfo {
   id: LayerId,
+  key: LayerKey,
   name: string,
   description: string,
   /** The EPSG code for the coordinate reference system used in the layer. **/

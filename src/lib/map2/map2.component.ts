@@ -1,24 +1,27 @@
 import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
-import { LayerContent, LayerFilter, LayerId, LayerInfo, Map2Service } from './map2.service';
+import { LayerContent, LayerFilter, LayerRef, LayerId, LayerInfo, Map2Service } from './map2.service';
 import * as L from "leaflet";
 import "leaflet.markercluster";
 import { not } from "../util";
 
+import "leaflet.markercluster";
+
 export namespace LayerConfig {
   /** 
-   * A layer in the config may be described either via a {@link LayerId} or by 
-   * an object with with additional properties.
+   * A layer in the config may be described either via a {@link LayerRef} which 
+   * is a {@link LayerId} or a {@link Layerkey}, or by an object with with 
+   * additional properties.
    * 
    * This also allows using {@link RawLayer}s.
    */
-  export type Descriptor = LayerId | RawLayer | ExpandedDescriptor;
+  export type Descriptor = LayerRef | RawLayer | ExpandedDescriptor;
 
   /**
    * Expanded descriptor to configure more complex layers.
    */
   export type ExpandedDescriptor = {
     /** ID of the layer. */
-    layer: LayerId,
+    layer: LayerRef,
     /** Override for layer names, especially useful if filtered. */
     name?: string,
     /** If this layer is visible by default, `true` by default. */
@@ -30,7 +33,7 @@ export namespace LayerConfig {
   };
 
   /**
-   * Instead of a {@link LayerId}, this uses a raw leaft {@link L.Layer}.
+   * Instead of a {@link LayerRef}, this uses a raw leaft {@link L.Layer}.
    * 
    * The name is required as we have no server backing up a name for that layer.
    */
@@ -44,10 +47,10 @@ export namespace LayerConfig {
   };
 
   export namespace Descriptor {
-    /** Expand {@link LayerId}s into {@link ExpandedDescriptor}. */
+    /** Expand {@link LayerRef}s into {@link ExpandedDescriptor}. */
     export function expand(
       descriptor: Descriptor
-    ): Exclude<Descriptor, LayerId> {
+    ): Exclude<Descriptor, LayerRef> {
       if (typeof descriptor != "string") return descriptor;
       return { layer: descriptor } 
     }
@@ -150,8 +153,6 @@ export class Map2Component implements OnInit, AfterViewInit {
 
     L.tileLayer(this.tileUrl).addTo(map);
 
-    let control = L.control.layers();
-
     let layerData = await this.layerData;
     for (let layerConfigItem of this.layerConfig) {
       if (!Array.isArray(layerConfigItem)) { // is not a group
@@ -161,7 +162,8 @@ export class Map2Component implements OnInit, AfterViewInit {
       }
 
       let control = L.control.layers();
-      for (let groupItem of layerConfigItem) {
+      if (layerConfigItem.length) control.addTo(map);
+      for (let [index, groupItem] of Object.entries(layerConfigItem)) {
         if (Array.isArray(groupItem)) {
           // overlay item
           let {name, layer, show = true} = this.constructLayer(groupItem[0], layerData);
@@ -171,13 +173,12 @@ export class Map2Component implements OnInit, AfterViewInit {
         }
 
         // base item
-        let {name, layer, show = true} = this.constructLayer(groupItem, layerData);
+        let {name, layer, show = (+index == 0)} = this.constructLayer(groupItem, layerData);
         control.addBaseLayer(layer, name);
         if (show) layer.addTo(map);
       }
     }
 
-    if (Object.keys(layerData).length) control.addTo(map);
     this.map = map;
   }
 
@@ -225,18 +226,44 @@ export class Map2Component implements OnInit, AfterViewInit {
     { name: string, layer: L.Layer } & 
     Omit<LayerConfig.ExpandedDescriptor, "layer"> 
   {
-    let expanded = LayerConfig.Descriptor.expand(descriptor);
-    if (expanded.layer instanceof L.Layer) {
-      // ts doesn't recognize by the instanceof here alone
-      expanded = expanded as LayerConfig.RawLayer;
-      return {...expanded, name: expanded.name, layer: expanded.layer};
-    }
+    try {
+      let expanded = LayerConfig.Descriptor.expand(descriptor);
+      if (expanded.layer instanceof L.Layer) {
+        // ts doesn't recognize by the instanceof here alone
+        expanded = expanded as LayerConfig.RawLayer;
+        return {...expanded, name: expanded.name, layer: expanded.layer};
+      }
 
-    expanded = expanded as LayerConfig.ExpandedDescriptor;
-    let thisLayerData = layerData[expanded.layer];
-    let layer = L.geoJSON();
-    for (let content of thisLayerData.contents) layer.addData(content.geometry);
-    let name = expanded.name ?? thisLayerData.info.name;
-    return {...expanded, name, layer};
+      expanded = expanded as LayerConfig.ExpandedDescriptor;
+      let thisLayerData = layerData[expanded.layer];
+      let layer: L.Layer = thisLayerData.contents.reduce(
+        (layer, content) => layer.addData(content.geometry), 
+        L.geoJSON()
+      );
+      let name = expanded.name ?? thisLayerData.info.name;
+      let allPoints = thisLayerData
+        .contents
+        .every(content => content.geometry.type == "Point");
+      if (allPoints) layer = new L.MarkerClusterGroup().addLayers([layer]);
+      return {...expanded, name, layer};
+    }
+    catch (e: any) {
+      if (!(e instanceof Error)) throw e; 
+      throw new ConstructLayerError(descriptor, layerData, e);
+    }
+  }
+}
+
+export class ConstructLayerError extends Error {
+  constructor(
+    public layerDescriptor: LayerConfig.Descriptor,
+    public layerData: Awaited<Map2Component["layerData"]>,
+    public error: Error
+  ) {
+    super([
+      `Cannot construct layer for '${layerDescriptor}', `, 
+      error.message.substring(0, 1).toLowerCase(),
+      error.message.substring(1)
+    ].join(""));
   }
 }
