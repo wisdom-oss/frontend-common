@@ -104,7 +104,8 @@ export interface LayerInfo {
   name: string,
   description: string,
   /** The EPSG code for the coordinate reference system used in the layer. **/
-  crs: number
+  crs: number,
+  attribution?: string
 }
 
 export interface LayerContent {

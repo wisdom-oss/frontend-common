@@ -5,6 +5,7 @@ import "leaflet.markercluster";
 import { not } from "../util";
 
 import "leaflet.markercluster";
+import { BehaviorSubject } from 'rxjs';
 
 export namespace LayerConfig {
   /** 
@@ -30,6 +31,13 @@ export namespace LayerConfig {
     filter?: LayerFilter,
     /** Whether this layer can be selected by user input. */
     select?: boolean,
+    /** 
+     * Override default behavior for marker clustering. 
+     * 
+     * By default markers will be clustered. 
+     * Has no effect on layers that don't have markers, e.g. polygons. 
+     */
+    cluster?: boolean,
   };
 
   /**
@@ -127,6 +135,8 @@ export class Map2Component implements OnInit, AfterViewInit {
 
   @Input("layers")
   layerConfig: LayerConfig.Input = [];
+
+  // TODO: add outputs for all the events
 
   map?: L.Map;
 
@@ -236,15 +246,19 @@ export class Map2Component implements OnInit, AfterViewInit {
 
       expanded = expanded as LayerConfig.ExpandedDescriptor;
       let thisLayerData = layerData[expanded.layer];
+      console.log(thisLayerData);
       let layer: L.Layer = thisLayerData.contents.reduce(
         (layer, content) => layer.addData(content.geometry), 
-        L.geoJSON()
+        L.geoJSON(
+          undefined, 
+          {attribution: thisLayerData.info.attribution}
+        )
       );
       let name = expanded.name ?? thisLayerData.info.name;
-      let allPoints = thisLayerData
+      let cluster = expanded.cluster ?? thisLayerData
         .contents
         .every(content => content.geometry.type == "Point");
-      if (allPoints) layer = new L.MarkerClusterGroup().addLayers([layer]);
+      if (cluster) layer = new L.MarkerClusterGroup().addLayers([layer]);
       return {...expanded, name, layer};
     }
     catch (e: any) {
