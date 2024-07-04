@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import {USE_API_URL} from "../http-context/use-api-url";
 import {USE_LOADER} from "../http-context/use-loader";
-import { GeoJsonObject } from 'geojson';
+import { GeoJsonObject, Feature, Geometry } from 'geojson';
 
 /** API url for the map to request data from. */
 const API_URL = "geodata";
@@ -85,6 +85,18 @@ export class Map2Service {
       if (e instanceof HttpErrorResponse && e.status == 404) return null;
       throw e;
     }
+  }
+
+  static layerContentToFeature(layerContent: LayerContent): Feature {
+    return {
+      type: "Feature",
+      geometry: layerContent.geometry as Geometry,
+      id: layerContent.key,
+      properties: {
+        name: layerContent.name,
+        ...layerContent.additionalProperties
+      }
+    };
   }
 }
 

@@ -6,6 +6,7 @@ import { not } from "../util";
 
 import "leaflet.markercluster";
 import { BehaviorSubject } from 'rxjs';
+import * as geojson from "geojson";
 
 export namespace LayerConfig {
   /** 
@@ -38,6 +39,21 @@ export namespace LayerConfig {
      * Has no effect on layers that don't have markers, e.g. polygons. 
      */
     cluster?: boolean,
+    /** If this layer should show names, `false` by default. */
+    showNames?: boolean,
+    /** A function defining how the polygons should be styled. */
+    style?: (
+      layerContent: LayerContent, 
+      allLayerContents: LayerContent[], 
+      info: LayerInfo
+    ) => L.PathOptions,
+    /** A function defining how marker should be created from points. */
+    marker?: (
+      latlng: L.LatLng,
+      LayerContent: LayerContent,
+      allLayerContents: LayerContent[],
+      info: LayerInfo
+    ) => L.Marker
   };
 
   /**
@@ -246,14 +262,8 @@ export class Map2Component implements OnInit, AfterViewInit {
 
       expanded = expanded as LayerConfig.ExpandedDescriptor;
       let thisLayerData = layerData[expanded.layer];
-      console.log(thisLayerData);
-      let layer: L.Layer = thisLayerData.contents.reduce(
-        (layer, content) => layer.addData(content.geometry), 
-        L.geoJSON(
-          undefined, 
-          {attribution: thisLayerData.info.attribution}
-        )
-      );
+      console.log([thisLayerData, expanded]);
+      let layer = this.constructContentLayer(expanded, thisLayerData);
       let name = expanded.name ?? thisLayerData.info.name;
       let cluster = expanded.cluster ?? thisLayerData
         .contents
@@ -265,6 +275,43 @@ export class Map2Component implements OnInit, AfterViewInit {
       if (!(e instanceof Error)) throw e; 
       throw new ConstructLayerError(descriptor, layerData, e);
     }
+  }
+
+  private constructContentLayer(
+    descriptor: LayerConfig.ExpandedDescriptor,
+    layerData: {
+      info: LayerInfo,
+      contents: LayerContent[]
+    }
+  ): L.Layer {
+    function styleFunction(content: LayerContent) {
+      if (!descriptor.style) return undefined;
+      return () => descriptor.style!(content, layerData.contents, layerData.info);
+    }
+
+    function markerFunction(content: LayerContent) {
+      if (!descriptor.marker) return undefined;
+      return (_: any, latlng: L.LatLng) => descriptor.marker!(
+        latlng,
+        content,
+        layerData.contents,
+        layerData.info
+      )
+    }
+
+    let layerGroup = L.layerGroup();
+    for (let content of layerData.contents) {
+      let layer = L.geoJSON(content.geometry, {
+        attribution: layerData.info.attribution,
+        style: styleFunction(content),
+        pointToLayer: markerFunction(content),
+        onEachFeature: (feature, layer) => {
+          if (descriptor.showNames) layer.bindTooltip(content.name);
+        }
+      });
+      layerGroup.addLayer(layer);
+    }
+    return layerGroup
   }
 }
 
