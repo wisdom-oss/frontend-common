@@ -13,7 +13,7 @@ import {IfcComponent} from "./ifc/ifc.component";
 import {IonIconComponent} from "./ion-icon/ion-icon.component";
 import {MapComponent} from "./map/map.component";
 import { BulmaCalendarDirective } from './bulma/bulma-calendar.directive';
-import { Map2Component } from './map2/map2.component';
+import { Map2Component, Map2ControlComponent } from './map2/map2.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +21,7 @@ import { Map2Component } from './map2/map2.component';
     BulmaIsToggleableDirective,
     MapComponent,
     Map2Component,
+    Map2ControlComponent,
     BreadcrumbsComponent,
     IfcComponent,
     DragDropComponent,
@@ -35,6 +36,7 @@ import { Map2Component } from './map2/map2.component';
     BulmaIsToggleableDirective,
     MapComponent,
     Map2Component,
+    Map2ControlComponent,
     BreadcrumbsComponent,
     DragDropComponent,
     DragDropDirective,

@@ -128,3 +128,6 @@ export function getBulmaPrimaryColors() {
 export function not<F extends (...args: any[]) => boolean>(predicate: F): F {
   return ((...args: any[]) => !predicate(...args)) as F
 }
+
+/** Utility type to make certain fields in a type required. */
+export type WithRequired<T, K extends keyof T> = T & Required<Pick<T, K>>;

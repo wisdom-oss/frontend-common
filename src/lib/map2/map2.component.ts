@@ -1,11 +1,11 @@
-import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ComponentRef, ElementRef, Input, OnDestroy, OnInit, Type, ViewChild, ViewContainerRef } from '@angular/core';
 import { LayerContent, LayerFilter, LayerRef, LayerId, LayerInfo, Map2Service } from './map2.service';
 import * as L from "leaflet";
 import "leaflet.markercluster";
-import { not } from "../util";
+import { not, WithRequired } from "../util";
 
 import "leaflet.markercluster";
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import * as geojson from "geojson";
 
 export namespace LayerConfig {
@@ -43,8 +43,8 @@ export namespace LayerConfig {
     showNames?: boolean,
     /** A function defining how the polygons should be styled. */
     style?: (
-      layerContent: LayerContent, 
-      allLayerContents: LayerContent[], 
+      layerContent: LayerContent,
+      allLayerContents: LayerContent[],
       info: LayerInfo
     ) => L.PathOptions,
     /** A function defining how marker should be created from points. */
@@ -53,7 +53,8 @@ export namespace LayerConfig {
       LayerContent: LayerContent,
       allLayerContents: LayerContent[],
       info: LayerInfo
-    ) => L.Marker
+    ) => L.Marker,
+    control?: [Type<Map2Control>, L.ControlPosition],
   };
 
   /**
@@ -76,7 +77,7 @@ export namespace LayerConfig {
       descriptor: Descriptor
     ): Exclude<Descriptor, LayerRef> {
       if (typeof descriptor != "string") return descriptor;
-      return { layer: descriptor } 
+      return { layer: descriptor }
     }
 
     /** Check whether a {@link Descriptor} is a {@link RawLayer}. */
@@ -130,17 +131,17 @@ export namespace LayerConfig {
     }
   `]
 })
-export class Map2Component implements OnInit, AfterViewInit {
-  @ViewChild("map") 
+export class Map2Component implements OnInit, AfterViewInit, OnDestroy {
+  @ViewChild("map")
   private mapElement!: ElementRef<HTMLDivElement>;
 
-  @Input("height") 
+  @Input("height")
   height: string = "500px";
 
-  @Input("tileUrl") 
+  @Input("tileUrl")
   tileUrl: string = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
 
-  @Input("center") 
+  @Input("center")
   center: string = "53.1434501, 8.2145521";
 
   @Input("zoom")
@@ -154,14 +155,24 @@ export class Map2Component implements OnInit, AfterViewInit {
 
   // TODO: add outputs for all the events
 
-  map?: L.Map;
+  private mapResolve!: (map: L.Map) => void;
+  map: Promise<L.Map>;
 
   private layerData!: Promise<Record<LayerId, {
     info: LayerInfo,
     contents: LayerContent[]
   }>>;
 
-  constructor(private service: Map2Service) {}
+  // container for elements to destroy on destroy
+  private components: ComponentRef<any>[] = [];
+  private subscriptions: Subscription[] = [];
+
+  constructor(
+    private service: Map2Service,
+    private vcr: ViewContainerRef
+  ) {
+    this.map = new Promise((resolve) => this.mapResolve = resolve);
+  }
 
   ngOnInit(): void {
     this.layerData = this.resolveLayers();
@@ -182,7 +193,7 @@ export class Map2Component implements OnInit, AfterViewInit {
     let layerData = await this.layerData;
     for (let layerConfigItem of this.layerConfig) {
       if (!Array.isArray(layerConfigItem)) { // is not a group
-        let {layer} = this.constructLayer(layerConfigItem, layerData);
+        let { layer } = this.constructLayer(layerConfigItem, layerData, map);
         layer.addTo(map);
         continue;
       }
@@ -192,20 +203,26 @@ export class Map2Component implements OnInit, AfterViewInit {
       for (let [index, groupItem] of Object.entries(layerConfigItem)) {
         if (Array.isArray(groupItem)) {
           // overlay item
-          let {name, layer, show = true} = this.constructLayer(groupItem[0], layerData);
+          let { name, layer, show = true } = this.constructLayer(groupItem[0], layerData, map);
           control.addOverlay(layer, name);
           if (show) layer.addTo(map);
           continue;
         }
 
         // base item
-        let {name, layer, show = (+index == 0)} = this.constructLayer(groupItem, layerData);
+        let { name, layer, show = (+index == 0) } = this.constructLayer(groupItem, layerData, map);
         control.addBaseLayer(layer, name);
         if (show) layer.addTo(map);
       }
     }
 
-    this.map = map;
+    this.mapResolve(map);
+  }
+
+  ngOnDestroy(): void {
+    this.map.then(map => map.remove());
+    for (let ref of this.components) ref.destroy();
+    for (let sub of this.subscriptions) sub.unsubscribe();
   }
 
   /**
@@ -222,8 +239,8 @@ export class Map2Component implements OnInit, AfterViewInit {
       .layerConfig
       .flat(2)
       .map(LayerConfig.Descriptor.expand)
-      .filter(not(LayerConfig.Descriptor.isRaw)) as 
-        LayerConfig.ExpandedDescriptor[];
+      .filter(not(LayerConfig.Descriptor.isRaw)) as
+      LayerConfig.ExpandedDescriptor[];
 
     let layerDataEntries = [];
     for (let layer of layers) {
@@ -238,7 +255,7 @@ export class Map2Component implements OnInit, AfterViewInit {
             .fetchLayerContents(layer.layer, true, layer.filter)
             .then(throwOnNull),
         ]);
-        return [layer.layer, {info, contents}];
+        return [layer.layer, { info, contents }];
       })())
     }
 
@@ -246,33 +263,31 @@ export class Map2Component implements OnInit, AfterViewInit {
   }
 
   private constructLayer(
-    descriptor: LayerConfig.Descriptor, 
-    layerData: Awaited<Map2Component["layerData"]>
-  ): 
-    { name: string, layer: L.Layer } & 
-    Omit<LayerConfig.ExpandedDescriptor, "layer"> 
-  {
+    descriptor: LayerConfig.Descriptor,
+    layerData: Awaited<Map2Component["layerData"]>,
+    map: L.Map
+  ): { name: string, layer: L.Layer } &
+    Omit<LayerConfig.ExpandedDescriptor, "layer"> {
     try {
       let expanded = LayerConfig.Descriptor.expand(descriptor);
       if (expanded.layer instanceof L.Layer) {
         // ts doesn't recognize by the instanceof here alone
         expanded = expanded as LayerConfig.RawLayer;
-        return {...expanded, name: expanded.name, layer: expanded.layer};
+        return { ...expanded, name: expanded.name, layer: expanded.layer };
       }
 
       expanded = expanded as LayerConfig.ExpandedDescriptor;
       let thisLayerData = layerData[expanded.layer];
-      console.log([thisLayerData, expanded]);
-      let layer = this.constructContentLayer(expanded, thisLayerData);
+      let layer = this.constructContentLayer(expanded, thisLayerData, map);
       let name = expanded.name ?? thisLayerData.info.name;
       let cluster = expanded.cluster ?? thisLayerData
         .contents
         .every(content => content.geometry.type == "Point");
       if (cluster) layer = new L.MarkerClusterGroup().addLayers([layer]);
-      return {...expanded, name, layer};
+      return { ...expanded, name, layer };
     }
     catch (e: any) {
-      if (!(e instanceof Error)) throw e; 
+      if (!(e instanceof Error)) throw e;
       throw new ConstructLayerError(descriptor, layerData, e);
     }
   }
@@ -282,7 +297,8 @@ export class Map2Component implements OnInit, AfterViewInit {
     layerData: {
       info: LayerInfo,
       contents: LayerContent[]
-    }
+    },
+    map: L.Map
   ): L.Layer {
     function styleFunction(content: LayerContent) {
       if (!descriptor.style) return undefined;
@@ -299,6 +315,12 @@ export class Map2Component implements OnInit, AfterViewInit {
       )
     }
 
+    let controlHandle;
+    if (descriptor.control) controlHandle = this.constructControl(
+      descriptor as WithRequired<LayerConfig.ExpandedDescriptor, "control">,
+      map
+    );
+
     let layerGroup = L.layerGroup();
     for (let content of layerData.contents) {
       let layer = L.geoJSON(content.geometry, {
@@ -309,9 +331,43 @@ export class Map2Component implements OnInit, AfterViewInit {
           if (descriptor.showNames) layer.bindTooltip(content.name);
         }
       });
+      controlHandle?.(layer, content, layerData.contents, layerData.info);
       layerGroup.addLayer(layer);
     }
     return layerGroup
+  }
+
+  private constructControl(
+    descriptor: WithRequired<LayerConfig.ExpandedDescriptor, "control">, 
+    map: L.Map
+  ) {
+    let component = this.vcr.createComponent(descriptor.control[0]);
+    this.components.push(component);
+    let control = new L.Control();
+    control.onAdd = () => component.location.nativeElement;
+    control.setPosition(descriptor.control[1]);
+    control.addTo(map);
+    if (component.instance.isVisible) {
+      this.subscriptions.push(component.instance.isVisible.subscribe(data => {
+        if (data) control.addTo(map);
+        else control.remove();
+      }));
+    }
+
+    return (
+      layer: L.Layer,
+      layerContent: LayerContent,
+      allLayerContents: LayerContent[],
+      info: LayerInfo,
+    ) => {
+      let evtArgs = [layerContent, allLayerContents, info] as const;
+      layer.on("click", evt => component.instance.onClick?.(...evtArgs, evt));
+      layer.on("dblclick", evt => component.instance.onDoubleClick?.(...evtArgs, evt));
+      layer.on("mousedown", evt => component.instance.onMouseDown?.(...evtArgs, evt));
+      layer.on("mouseup", evt => component.instance.onMouseUp?.(...evtArgs, evt));
+      layer.on("mouseover", evt => component.instance.onMouseOver?.(...evtArgs, evt));
+      layer.on("mouseout", evt => component.instance.onMouseOut?.(...evtArgs, evt));
+    }
   }
 }
 
@@ -322,9 +378,50 @@ export class ConstructLayerError extends Error {
     public error: Error
   ) {
     super([
-      `Cannot construct layer for '${layerDescriptor}', `, 
+      `Cannot construct layer for '${layerDescriptor}', `,
       error.message.substring(0, 1).toLowerCase(),
       error.message.substring(1)
     ].join(""));
   }
 }
+
+type MapEventHandler = (
+  layerContent: LayerContent,
+  allLayerContents: LayerContent[],
+  info: LayerInfo,
+  event: L.LeafletMouseEvent
+) => void;
+export interface Map2Control {
+  isVisible?: Observable<boolean>,
+  onClick?: MapEventHandler,
+  onDoubleClick?: MapEventHandler,
+  onMouseDown?: MapEventHandler,
+  onMouseUp?: MapEventHandler,
+  onMouseOver?: MapEventHandler,
+  onMouseOut?: MapEventHandler,
+}
+
+@Component({
+  selector: 'map2-control',
+  template: `
+    <div class="map-container">
+      <div>
+        <ng-content></ng-content>
+      </div>
+    </div>
+  `,
+  styles: [`
+    .map-container {
+      border: 2px solid rgba(0, 0, 0, 0.2);
+      background-clip: padding-box;
+      border-radius: 5px;
+    }
+    .map-container div {
+      color: #333;
+      padding: 6px 10px 6px 6px;
+      background: #fff;
+      border-radius: inherit;
+    }
+  `]
+})
+export class Map2ControlComponent {}
