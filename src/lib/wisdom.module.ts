@@ -14,6 +14,7 @@ import {IonIconComponent} from "./ion-icon/ion-icon.component";
 import {MapComponent} from "./map/map.component";
 import { BulmaCalendarDirective } from './bulma/bulma-calendar.directive';
 import { Map2Component, Map2ControlComponent } from './map2/map2.component';
+import { ResizeDirective } from './layout/resize.directive';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { Map2Component, Map2ControlComponent } from './map2/map2.component';
     DragDropComponent,
     DragDropDirective,
     BulmaCalendarDirective,
+    ResizeDirective,
   ],
   imports: [TranslateModule, CommonModule, RouterModule],
   exports: [
@@ -40,6 +42,7 @@ import { Map2Component, Map2ControlComponent } from './map2/map2.component';
     BreadcrumbsComponent,
     DragDropComponent,
     DragDropDirective,
+    ResizeDirective,
   ],
 })
 export class WisdomModule {}

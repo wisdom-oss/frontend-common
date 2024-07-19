@@ -10,6 +10,9 @@ export * from "./lib/guards/query-parameter.guard";
 
 export * from "./lib/ion-icon/ion-icon.component";
 
+export * from "./lib/layout/layout.service";
+export * from "./lib/layout/resize.directive";
+
 export * from "./lib/map/map.component";
 export * from "./lib/map/map.service";
 export * from "./lib/map/marker";

@@ -322,7 +322,6 @@ export class Map2Component implements OnInit, AfterViewInit, OnDestroy {
       while (controlDescriptor.length) {
         let component, position;
         [component, position, ...controlDescriptor] = controlDescriptor;
-        console.log([component, position]);
         controlHandle.push(this.constructControl(
           [component, position] as [Type<Map2Control>, L.ControlPosition],
           descriptor as WithRequired<LayerConfig.ExpandedDescriptor, "control">,
