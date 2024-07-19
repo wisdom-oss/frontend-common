@@ -131,3 +131,6 @@ export function not<F extends (...args: any[]) => boolean>(predicate: F): F {
 
 /** Utility type to make certain fields in a type required. */
 export type WithRequired<T, K extends keyof T> = T & Required<Pick<T, K>>;
+
+/** Utility type to describe that a type could be one or many. */
+export type OneOrMany<T> = T | T[];

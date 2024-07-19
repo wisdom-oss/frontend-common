@@ -2,7 +2,7 @@ import { AfterViewInit, Component, ComponentRef, ElementRef, Input, OnDestroy, O
 import { LayerContent, LayerFilter, LayerRef, LayerId, LayerInfo, Map2Service } from './map2.service';
 import * as L from "leaflet";
 import "leaflet.markercluster";
-import { not, WithRequired } from "../util";
+import { not, OneOrMany, WithRequired } from "../util";
 
 import "leaflet.markercluster";
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
@@ -54,7 +54,7 @@ export namespace LayerConfig {
       allLayerContents: LayerContent[],
       info: LayerInfo
     ) => L.Marker,
-    control?: [Type<Map2Control>, L.ControlPosition],
+    control?: OneOrMany<[Type<Map2Control>, L.ControlPosition]>,
   };
 
   /**
@@ -316,10 +316,20 @@ export class Map2Component implements OnInit, AfterViewInit, OnDestroy {
     }
 
     let controlHandle;
-    if (descriptor.control) controlHandle = this.constructControl(
-      descriptor as WithRequired<LayerConfig.ExpandedDescriptor, "control">,
-      map
-    );
+    if (descriptor.control) {
+      controlHandle = [];
+      let controlDescriptor = [descriptor.control].flat(2);
+      while (controlDescriptor.length) {
+        let component, position;
+        [component, position, ...controlDescriptor] = controlDescriptor;
+        console.log([component, position]);
+        controlHandle.push(this.constructControl(
+          [component, position] as [Type<Map2Control>, L.ControlPosition],
+          descriptor as WithRequired<LayerConfig.ExpandedDescriptor, "control">,
+          map
+        ));
+      }
+    }
 
     let layerGroup = L.layerGroup();
     for (let content of layerData.contents) {
@@ -331,26 +341,30 @@ export class Map2Component implements OnInit, AfterViewInit, OnDestroy {
           if (descriptor.showNames) layer.bindTooltip(content.name);
         }
       });
-      controlHandle?.(layer, content, layerData.contents, layerData.info);
+      for (let handle of controlHandle ?? []) {
+        handle(layer, content, layerData.contents, layerData.info);
+      }
+      // controlHandle?.(layer, content, layerData.contents, layerData.info);
       layerGroup.addLayer(layer);
     }
     return layerGroup
   }
 
   private constructControl(
+    control: [Type<Map2Control>, L.ControlPosition],
     descriptor: WithRequired<LayerConfig.ExpandedDescriptor, "control">, 
     map: L.Map
   ) {
-    let component = this.vcr.createComponent(descriptor.control[0]);
+    let component = this.vcr.createComponent(control[0]);
     this.components.push(component);
-    let control = new L.Control();
-    control.onAdd = () => component.location.nativeElement;
-    control.setPosition(descriptor.control[1]);
-    control.addTo(map);
+    let lControl = new L.Control();
+    lControl.onAdd = () => component.location.nativeElement;
+    lControl.setPosition(control[1]);
+    lControl.addTo(map);
     if (component.instance.isVisible) {
       this.subscriptions.push(component.instance.isVisible.subscribe(data => {
-        if (data) control.addTo(map);
-        else control.remove();
+        if (data) lControl.addTo(map);
+        else lControl.remove();
       }));
     }
 
