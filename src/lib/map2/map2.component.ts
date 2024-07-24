@@ -319,6 +319,8 @@ export class Map2Component implements OnInit, AfterViewInit, OnDestroy {
     if (descriptor.control) {
       controlHandle = [];
       let controlDescriptor = [descriptor.control].flat(2);
+      // this peculiar loop is done to handle the nested array nature of this 
+      // data structure, Array.isArray would be true for both variants
       while (controlDescriptor.length) {
         let component, position;
         [component, position, ...controlDescriptor] = controlDescriptor;
