@@ -13,17 +13,22 @@ import {IfcComponent} from "./ifc/ifc.component";
 import {IonIconComponent} from "./ion-icon/ion-icon.component";
 import {MapComponent} from "./map/map.component";
 import { BulmaCalendarDirective } from './bulma/bulma-calendar.directive';
+import { Map2Component, Map2ControlComponent } from './map2/map2.component';
+import { ResizeDirective } from './layout/resize.directive';
 
 @NgModule({
   declarations: [
     IonIconComponent,
     BulmaIsToggleableDirective,
     MapComponent,
+    Map2Component,
+    Map2ControlComponent,
     BreadcrumbsComponent,
     IfcComponent,
     DragDropComponent,
     DragDropDirective,
     BulmaCalendarDirective,
+    ResizeDirective,
   ],
   imports: [TranslateModule, CommonModule, RouterModule],
   exports: [
@@ -32,9 +37,12 @@ import { BulmaCalendarDirective } from './bulma/bulma-calendar.directive';
     BulmaCalendarDirective,
     BulmaIsToggleableDirective,
     MapComponent,
+    Map2Component,
+    Map2ControlComponent,
     BreadcrumbsComponent,
     DragDropComponent,
     DragDropDirective,
+    ResizeDirective,
   ],
 })
 export class WisdomModule {}
