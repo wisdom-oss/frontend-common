@@ -54,8 +54,17 @@ export namespace LayerConfig {
       allLayerContents: LayerContent[],
       info: LayerInfo
     ) => L.Marker,
-    control?: OneOrMany<[Type<Map2Control>, L.ControlPosition]>,
+    /** 
+     * One or a list of controls, each control needs to be a component which 
+     * implements `Map2Control`.
+     * Every control needs a location to be placed on the map.
+     * And optionally an object can be passed here to be used to initialize the 
+     * control.
+     */
+    control?: OneOrMany<[Type<Map2Control>, L.ControlPosition, ControlInit?]>,
   };
+
+  export type ControlInit = Record<string, any>;
 
   /**
    * Instead of a {@link LayerRef}, this uses a raw leaft {@link L.Layer}.
@@ -318,17 +327,16 @@ export class Map2Component implements OnInit, AfterViewInit, OnDestroy {
     let controlHandle;
     if (descriptor.control) {
       controlHandle = [];
-      let controlDescriptor = [descriptor.control].flat(2);
-      // this peculiar loop is done to handle the nested array nature of this 
-      // data structure, Array.isArray would be true for both variants
-      while (controlDescriptor.length) {
-        let component, position;
-        [component, position, ...controlDescriptor] = controlDescriptor;
+      let controlDescriptor: [Type<Map2Control>, L.ControlPosition, LayerConfig.ControlInit?][];
+      if (Array.isArray(descriptor.control[0])) controlDescriptor = descriptor.control as any;
+      else controlDescriptor = [descriptor.control] as any;
+
+      for (let [component, position, init] of controlDescriptor) {
         controlHandle.push(this.constructControl(
-          [component, position] as [Type<Map2Control>, L.ControlPosition],
+          [component, position, init ?? {}],
           descriptor as WithRequired<LayerConfig.ExpandedDescriptor, "control">,
           map
-        ));
+        ))
       }
     }
 
@@ -352,7 +360,7 @@ export class Map2Component implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private constructControl(
-    control: [Type<Map2Control>, L.ControlPosition],
+    control: [Type<Map2Control>, L.ControlPosition, LayerConfig.ControlInit],
     descriptor: WithRequired<LayerConfig.ExpandedDescriptor, "control">, 
     map: L.Map
   ) {
@@ -369,6 +377,8 @@ export class Map2Component implements OnInit, AfterViewInit, OnDestroy {
       }));
     }
 
+    component.instance.controlInit?.(control[2]);
+
     return (
       layer: L.Layer,
       layerContent: LayerContent,
@@ -376,6 +386,8 @@ export class Map2Component implements OnInit, AfterViewInit, OnDestroy {
       info: LayerInfo,
     ) => {
       let evtArgs = [layerContent, allLayerContents, info] as const;
+      layer.on("add", evt => component.instance.onLayerAdd?.(...evtArgs, evt));
+      layer.on("remove", evt => component.instance.onLayerRemove?.(...evtArgs, evt));
       layer.on("click", evt => component.instance.onClick?.(...evtArgs, evt));
       layer.on("dblclick", evt => component.instance.onDoubleClick?.(...evtArgs, evt));
       layer.on("mousedown", evt => component.instance.onMouseDown?.(...evtArgs, evt));
@@ -400,20 +412,23 @@ export class ConstructLayerError extends Error {
   }
 }
 
-type MapEventHandler = (
+type MapEventHandler<E = L.LeafletEvent> = (
   layerContent: LayerContent,
   allLayerContents: LayerContent[],
   info: LayerInfo,
-  event: L.LeafletMouseEvent
+  event: E
 ) => void;
 export interface Map2Control {
+  controlInit?: (args: object) => void,
   isVisible?: Observable<boolean>,
-  onClick?: MapEventHandler,
-  onDoubleClick?: MapEventHandler,
-  onMouseDown?: MapEventHandler,
-  onMouseUp?: MapEventHandler,
-  onMouseOver?: MapEventHandler,
-  onMouseOut?: MapEventHandler,
+  onLayerAdd?: MapEventHandler,
+  onLayerRemove?: MapEventHandler,
+  onClick?: MapEventHandler<L.LeafletMouseEvent>,
+  onDoubleClick?: MapEventHandler<L.LeafletMouseEvent>,
+  onMouseDown?: MapEventHandler<L.LeafletMouseEvent>,
+  onMouseUp?: MapEventHandler<L.LeafletMouseEvent>,
+  onMouseOver?: MapEventHandler<L.LeafletMouseEvent>,
+  onMouseOut?: MapEventHandler<L.LeafletMouseEvent>,
 }
 
 @Component({
