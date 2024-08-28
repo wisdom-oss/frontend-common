@@ -373,11 +373,12 @@ export class Map2Component implements OnInit, AfterViewInit, OnDestroy {
 
       if (descriptor.select) layer.on("click", () => layer.toggle());
       for (let handle of controlHandle ?? []) {
-        handle(layer, content, layerData.contents, layerData.info);
+        handle.registerEvents(layer, content, layerData.contents, layerData.info);
       }
       layerGroup.addLayer(layer);
     }
 
+    for (let handle of controlHandle ?? []) handle.init(layerGroup);
     layerGroup.on("add", () => this.onLayerAdd(descriptor.layer));
     layerGroup.on("remove", () => this.onLayerRemove(descriptor.layer)); 
 
@@ -402,23 +403,26 @@ export class Map2Component implements OnInit, AfterViewInit, OnDestroy {
       }));
     }
 
-    component.instance.controlInit?.(control[2]);
-
-    return (
-      layer: L.Layer,
-      layerContent: LayerContent,
-      allLayerContents: LayerContent[],
-      info: LayerInfo,
-    ) => {
-      let evtArgs = [layerContent, allLayerContents, info] as const;
-      layer.on("add", evt => component.instance.onLayerAdd?.(...evtArgs, evt));
-      layer.on("remove", evt => component.instance.onLayerRemove?.(...evtArgs, evt));
-      layer.on("click", evt => component.instance.onClick?.(...evtArgs, evt));
-      layer.on("dblclick", evt => component.instance.onDoubleClick?.(...evtArgs, evt));
-      layer.on("mousedown", evt => component.instance.onMouseDown?.(...evtArgs, evt));
-      layer.on("mouseup", evt => component.instance.onMouseUp?.(...evtArgs, evt));
-      layer.on("mouseover", evt => component.instance.onMouseOver?.(...evtArgs, evt));
-      layer.on("mouseout", evt => component.instance.onMouseOut?.(...evtArgs, evt));
+    return {
+      init: (layerGroup: L.LayerGroup) => {
+        component.instance.controlInit?.(control[2], layerGroup);
+      },
+      registerEvents: (
+        layer: L.Layer,
+        layerContent: LayerContent,
+        allLayerContents: LayerContent[],
+        info: LayerInfo,
+      ) => {
+        let evtArgs = [layerContent, allLayerContents, info] as const;
+        layer.on("add", evt => component.instance.onLayerAdd?.(...evtArgs, evt));
+        layer.on("remove", evt => component.instance.onLayerRemove?.(...evtArgs, evt));
+        layer.on("click", evt => component.instance.onClick?.(...evtArgs, evt));
+        layer.on("dblclick", evt => component.instance.onDoubleClick?.(...evtArgs, evt));
+        layer.on("mousedown", evt => component.instance.onMouseDown?.(...evtArgs, evt));
+        layer.on("mouseup", evt => component.instance.onMouseUp?.(...evtArgs, evt));
+        layer.on("mouseover", evt => component.instance.onMouseOver?.(...evtArgs, evt));
+        layer.on("mouseout", evt => component.instance.onMouseOut?.(...evtArgs, evt));
+      }
     }
   }
 
@@ -504,7 +508,7 @@ type MapEventHandler<E = L.LeafletEvent> = (
   event: E
 ) => void;
 export interface Map2Control {
-  controlInit?: (args: object) => void,
+  controlInit?: (args: object, layerGroup: L.LayerGroup<SelectableGeoJSON>) => void,
   isVisible?: Observable<boolean>,
   onLayerAdd?: MapEventHandler,
   onLayerRemove?: MapEventHandler,
