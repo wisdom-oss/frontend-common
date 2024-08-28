@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ComponentRef, ElementRef, Input, OnDestroy, OnInit, Type, ViewChild, ViewContainerRef } from '@angular/core';
+import { AfterViewInit, Component, ComponentRef, ElementRef, Input, OnDestroy, OnInit, Output, Type, ViewChild, ViewContainerRef, EventEmitter } from '@angular/core';
 import { LayerContent, LayerFilter, LayerRef, LayerId, LayerInfo, Map2Service } from './map2.service';
 import * as L from "leaflet";
 import "leaflet.markercluster";
@@ -172,6 +172,18 @@ export class Map2Component implements OnInit, AfterViewInit, OnDestroy {
     contents: LayerContent[]
   }>>;
 
+  @Output("visibleLayers")
+  visibleLayersEvent = new EventEmitter<Map2Component["visibleLayersSet"]>();
+  private visibleLayersSet: Set<LayerId> = new Set();
+  private visibleLayersSubject = new BehaviorSubject(this.visibleLayersSet);
+  visibleLayers = this.visibleLayersSubject.asObservable();
+
+  @Output("selectedLayers")
+  selectedLayersEvent = new EventEmitter<Map2Component["selectedLayersRecord"]>();
+  private selectedLayersRecord: Record<LayerId, Set<LayerContent>> = {};
+  private selectedLayersSubject = new BehaviorSubject(this.selectedLayersRecord);
+  selectedLayers = this.selectedLayersSubject.asObservable();
+
   // container for elements to destroy on destroy
   private components: ComponentRef<any>[] = [];
   private subscriptions: Subscription[] = [];
@@ -342,20 +354,33 @@ export class Map2Component implements OnInit, AfterViewInit, OnDestroy {
 
     let layerGroup = L.layerGroup();
     for (let content of layerData.contents) {
-      let layer = L.geoJSON(content.geometry, {
-        attribution: layerData.info.attribution,
-        style: styleFunction(content),
-        pointToLayer: markerFunction(content),
-        onEachFeature: (feature, layer) => {
-          if (descriptor.showNames) layer.bindTooltip(content.name);
+      let onSelect = () => this.selectLayer(descriptor.layer, content);
+      let onUnselect = () => this.unselectLayer(descriptor.layer, content);
+
+      let layer = new SelectableGeoJSON(
+        onSelect, 
+        onUnselect, 
+        content.geometry, 
+        {
+          attribution: layerData.info.attribution,
+          style: styleFunction(content),
+          pointToLayer: markerFunction(content),
+          onEachFeature: (feature, layer) => {
+            if (descriptor.showNames) layer.bindTooltip(content.name);
+          }
         }
-      });
+      );
+
+      if (descriptor.select) layer.on("click", () => layer.toggle());
       for (let handle of controlHandle ?? []) {
         handle(layer, content, layerData.contents, layerData.info);
       }
-      // controlHandle?.(layer, content, layerData.contents, layerData.info);
       layerGroup.addLayer(layer);
     }
+
+    layerGroup.on("add", () => this.onLayerAdd(descriptor.layer));
+    layerGroup.on("remove", () => this.onLayerRemove(descriptor.layer)); 
+
     return layerGroup
   }
 
@@ -396,6 +421,34 @@ export class Map2Component implements OnInit, AfterViewInit, OnDestroy {
       layer.on("mouseout", evt => component.instance.onMouseOut?.(...evtArgs, evt));
     }
   }
+
+  private onLayerAdd(layerId: LayerId) {
+    this.visibleLayersSet.add(layerId);
+    this.visibleLayersSubject.next(this.visibleLayersSet);
+    this.visibleLayersEvent.next(this.visibleLayersSet);
+  }
+
+  private onLayerRemove(layerId: LayerId) {
+    this.visibleLayersSet.delete(layerId);
+    this.visibleLayersSubject.next(this.visibleLayersSet);
+    this.visibleLayersEvent.next(this.visibleLayersSet);
+  }
+
+  private selectLayer(layerId: LayerId, content: LayerContent) {
+    if (!this.selectedLayersRecord[layerId]) {
+      this.selectedLayersRecord[layerId] = new Set();
+    }
+      
+    this.selectedLayersRecord[layerId].add(content);
+    this.selectedLayersSubject.next(this.selectedLayersRecord);
+    this.selectedLayersEvent.emit(this.selectedLayersRecord);
+  }
+
+  private unselectLayer(layerId: LayerId, content: LayerContent) {
+    this.selectedLayersRecord[layerId]?.delete(content);
+    this.selectedLayersSubject.next(this.selectedLayersRecord);
+    this.selectedLayersEvent.emit(this.selectedLayersRecord);
+  }
 }
 
 export class ConstructLayerError extends Error {
@@ -409,6 +462,38 @@ export class ConstructLayerError extends Error {
       error.message.substring(0, 1).toLowerCase(),
       error.message.substring(1)
     ].join(""));
+  }
+}
+
+export class SelectableGeoJSON extends L.GeoJSON {
+  private isSelected = false;
+  
+  constructor(
+    private onSelect: () => void,
+    private onUnselect: () => void,
+    geojson?: geojson.GeoJsonObject, 
+    options?: L.GeoJSONOptions,
+  ) {
+    super(geojson, options);
+  } 
+
+  toggle() {
+    if (this.isSelected) return this.unselect();
+    this.select();
+  }
+
+  select() {
+    this.isSelected = true;
+    this.setStyle({ color: "#d35a0c" });
+    this.bringToFront();
+    this.onSelect();
+  }
+
+  unselect() {
+    this.isSelected = false;
+    this.resetStyle();
+    this.bringToBack();
+    this.onUnselect();
   }
 }
 
