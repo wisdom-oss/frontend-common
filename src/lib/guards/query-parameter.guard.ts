@@ -40,7 +40,7 @@ export class QueryParameterGuard  {
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    let redirect  = route.data["redirect"] ?? false;
+    let redirect  = route.data["redirectTo"] ?? route.data["redirect"] ?? false;
     if (typeof redirect === "string") redirect = this.router.parseUrl(redirect);
     for (let param of [route.data["queryParams"] ?? []].flat()) {
       if (route.queryParams[param] === undefined) return redirect;
