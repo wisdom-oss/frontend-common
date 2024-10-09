@@ -15,7 +15,7 @@ import {Observable} from "rxjs";
  * {@link UrlTree} or a string that will be passed to {@link Router#parseUrl}
  * and `queryParams` containing a string or an array of strings.
  *
- * - `redirect` will be used when the check fails.
+ * - `redirectTo` will be used when the check fails.
  * - `queryParams` will be iterated to check for the keys
  */
 @Injectable({
@@ -39,7 +39,8 @@ export class QueryParameterGuard  {
    */
   canActivate(
     route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+    state: RouterStateSnapshot
+  ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     let redirect  = route.data["redirectTo"] ?? route.data["redirect"] ?? false;
     if (typeof redirect === "string") redirect = this.router.parseUrl(redirect);
     for (let param of [route.data["queryParams"] ?? []].flat()) {
