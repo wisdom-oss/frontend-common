@@ -134,3 +134,14 @@ export type WithRequired<T, K extends keyof T> = T & Required<Pick<T, K>>;
 
 /** Utility type to describe that a type could be one or many. */
 export type OneOrMany<T> = T | T[];
+
+/** A manually resolvable `Promise<void>`.*/
+export class ManualPromise extends Promise<void> {
+  resolve!: () => void;
+  
+  constructor() {
+    let resolver: undefined | (() => void);
+    super(resolve => resolver = resolve);
+    this.resolve = resolver!;
+  }
+}
