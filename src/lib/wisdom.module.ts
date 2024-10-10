@@ -44,6 +44,7 @@ import { TransformStringPipe } from "./pipes/transform-string.pipe";
     Map2Component,
     Map2ControlComponent,
     EmptyPipe,
+    TransformStringPipe,
     BreadcrumbsComponent,
     DragDropComponent,
     DragDropDirective,
