@@ -16,7 +16,7 @@ import { BulmaCalendarDirective } from './bulma/bulma-calendar.directive';
 import { Map2Component, Map2ControlComponent } from './map2/map2.component';
 import { ResizeDirective } from './layout/resize.directive';
 import { EmptyPipe } from './pipes/empty.pipe';
-import { TransformStringPipe } from "./transform-string.pipe";
+import { TransformStringPipe } from "./pipes/transform-string.pipe";
 
 @NgModule({
   declarations: [
