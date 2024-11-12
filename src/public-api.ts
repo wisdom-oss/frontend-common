@@ -21,6 +21,9 @@ export * from "./lib/map/resolution";
 export * from "./lib/map2/map2.component";
 export * from "./lib/map2/map2.service";
 
+export * from "./lib/pipes/empty.pipe";
+export * from "./lib/pipes/transform-string.pipe"
+
 export * from "./lib/bulma/bulma-is-toggleable.directive";
 export * from "./lib/bulma/bulma-calendar.directive";
 
@@ -38,8 +41,8 @@ export * from "./lib/loader/loader.injector";
 
 export * from "./lib/util";
 
-export {default as de_DELang} from "./i18n/de_DE";
-export {default as en_USLang} from "./i18n/en_US";
+export { default as de_DELang } from "./i18n/de_DE";
+export { default as en_USLang } from "./i18n/en_US";
 
-export {WisdomInterface} from "./WisdomInterface";
+export { WisdomInterface } from "./WisdomInterface";
 

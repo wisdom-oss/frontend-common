@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ComponentRef, ElementRef, Input, OnDestroy, OnInit, Type, ViewChild, ViewContainerRef } from '@angular/core';
+import { AfterViewInit, Component, ComponentRef, ElementRef, Input, OnDestroy, OnInit, Output, Type, ViewChild, ViewContainerRef, EventEmitter } from '@angular/core';
 import { LayerContent, LayerFilter, LayerRef, LayerId, LayerInfo, Map2Service } from './map2.service';
 import * as L from "leaflet";
 import "leaflet.markercluster";
@@ -54,8 +54,17 @@ export namespace LayerConfig {
       allLayerContents: LayerContent[],
       info: LayerInfo
     ) => L.Marker,
-    control?: OneOrMany<[Type<Map2Control>, L.ControlPosition]>,
+    /** 
+     * One or a list of controls, each control needs to be a component which 
+     * implements `Map2Control`.
+     * Every control needs a location to be placed on the map.
+     * And optionally an object can be passed here to be used to initialize the 
+     * control.
+     */
+    control?: OneOrMany<[Type<Map2Control>, L.ControlPosition, ControlInit?]>,
   };
+
+  export type ControlInit = Record<string, any>;
 
   /**
    * Instead of a {@link LayerRef}, this uses a raw leaft {@link L.Layer}.
@@ -162,6 +171,18 @@ export class Map2Component implements OnInit, AfterViewInit, OnDestroy {
     info: LayerInfo,
     contents: LayerContent[]
   }>>;
+
+  @Output("visibleLayers")
+  visibleLayersEvent = new EventEmitter<Map2Component["visibleLayersSet"]>();
+  private visibleLayersSet: Set<LayerId> = new Set();
+  private visibleLayersSubject = new BehaviorSubject(this.visibleLayersSet);
+  visibleLayers = this.visibleLayersSubject.asObservable();
+
+  @Output("selectedLayers")
+  selectedLayersEvent = new EventEmitter<Map2Component["selectedLayersRecord"]>();
+  private selectedLayersRecord: Record<LayerId, Set<LayerContent>> = {};
+  private selectedLayersSubject = new BehaviorSubject(this.selectedLayersRecord);
+  selectedLayers = this.selectedLayersSubject.asObservable();
 
   // container for elements to destroy on destroy
   private components: ComponentRef<any>[] = [];
@@ -318,41 +339,54 @@ export class Map2Component implements OnInit, AfterViewInit, OnDestroy {
     let controlHandle;
     if (descriptor.control) {
       controlHandle = [];
-      let controlDescriptor = [descriptor.control].flat(2);
-      // this peculiar loop is done to handle the nested array nature of this 
-      // data structure, Array.isArray would be true for both variants
-      while (controlDescriptor.length) {
-        let component, position;
-        [component, position, ...controlDescriptor] = controlDescriptor;
+      let controlDescriptor: [Type<Map2Control>, L.ControlPosition, LayerConfig.ControlInit?][];
+      if (Array.isArray(descriptor.control[0])) controlDescriptor = descriptor.control as any;
+      else controlDescriptor = [descriptor.control] as any;
+
+      for (let [component, position, init] of controlDescriptor) {
         controlHandle.push(this.constructControl(
-          [component, position] as [Type<Map2Control>, L.ControlPosition],
+          [component, position, init ?? {}],
           descriptor as WithRequired<LayerConfig.ExpandedDescriptor, "control">,
           map
-        ));
+        ))
       }
     }
 
     let layerGroup = L.layerGroup();
     for (let content of layerData.contents) {
-      let layer = L.geoJSON(content.geometry, {
-        attribution: layerData.info.attribution,
-        style: styleFunction(content),
-        pointToLayer: markerFunction(content),
-        onEachFeature: (feature, layer) => {
-          if (descriptor.showNames) layer.bindTooltip(content.name);
+      let onSelect = () => this.selectLayer(descriptor.layer, content);
+      let onUnselect = () => this.unselectLayer(descriptor.layer, content);
+
+      let layer = new SelectableGeoJSON(
+        onSelect, 
+        onUnselect, 
+        content.geometry, 
+        {
+          attribution: layerData.info.attribution,
+          style: styleFunction(content),
+          pointToLayer: markerFunction(content),
+          onEachFeature: (feature, layer) => {
+            if (descriptor.showNames) layer.bindTooltip(content.name);
+          }
         }
-      });
+      );
+
+      if (descriptor.select) layer.on("click", () => layer.toggle());
       for (let handle of controlHandle ?? []) {
-        handle(layer, content, layerData.contents, layerData.info);
+        handle.registerEvents(layer, content, layerData.contents, layerData.info);
       }
-      // controlHandle?.(layer, content, layerData.contents, layerData.info);
       layerGroup.addLayer(layer);
     }
+
+    for (let handle of controlHandle ?? []) handle.init(layerGroup);
+    layerGroup.on("add", () => this.onLayerAdd(descriptor.layer));
+    layerGroup.on("remove", () => this.onLayerRemove(descriptor.layer)); 
+
     return layerGroup
   }
 
   private constructControl(
-    control: [Type<Map2Control>, L.ControlPosition],
+    control: [Type<Map2Control>, L.ControlPosition, LayerConfig.ControlInit],
     descriptor: WithRequired<LayerConfig.ExpandedDescriptor, "control">, 
     map: L.Map
   ) {
@@ -369,20 +403,55 @@ export class Map2Component implements OnInit, AfterViewInit, OnDestroy {
       }));
     }
 
-    return (
-      layer: L.Layer,
-      layerContent: LayerContent,
-      allLayerContents: LayerContent[],
-      info: LayerInfo,
-    ) => {
-      let evtArgs = [layerContent, allLayerContents, info] as const;
-      layer.on("click", evt => component.instance.onClick?.(...evtArgs, evt));
-      layer.on("dblclick", evt => component.instance.onDoubleClick?.(...evtArgs, evt));
-      layer.on("mousedown", evt => component.instance.onMouseDown?.(...evtArgs, evt));
-      layer.on("mouseup", evt => component.instance.onMouseUp?.(...evtArgs, evt));
-      layer.on("mouseover", evt => component.instance.onMouseOver?.(...evtArgs, evt));
-      layer.on("mouseout", evt => component.instance.onMouseOut?.(...evtArgs, evt));
+    return {
+      init: (layerGroup: L.LayerGroup) => {
+        component.instance.controlInit?.(control[2], layerGroup);
+      },
+      registerEvents: (
+        layer: L.Layer,
+        layerContent: LayerContent,
+        allLayerContents: LayerContent[],
+        info: LayerInfo,
+      ) => {
+        let evtArgs = [layerContent, allLayerContents, info] as const;
+        layer.on("add", evt => component.instance.onLayerAdd?.(...evtArgs, evt));
+        layer.on("remove", evt => component.instance.onLayerRemove?.(...evtArgs, evt));
+        layer.on("click", evt => component.instance.onClick?.(...evtArgs, evt));
+        layer.on("dblclick", evt => component.instance.onDoubleClick?.(...evtArgs, evt));
+        layer.on("mousedown", evt => component.instance.onMouseDown?.(...evtArgs, evt));
+        layer.on("mouseup", evt => component.instance.onMouseUp?.(...evtArgs, evt));
+        layer.on("mouseover", evt => component.instance.onMouseOver?.(...evtArgs, evt));
+        layer.on("mouseout", evt => component.instance.onMouseOut?.(...evtArgs, evt));
+      }
     }
+  }
+
+  private onLayerAdd(layerId: LayerId) {
+    this.visibleLayersSet.add(layerId);
+    this.visibleLayersSubject.next(this.visibleLayersSet);
+    this.visibleLayersEvent.next(this.visibleLayersSet);
+  }
+
+  private onLayerRemove(layerId: LayerId) {
+    this.visibleLayersSet.delete(layerId);
+    this.visibleLayersSubject.next(this.visibleLayersSet);
+    this.visibleLayersEvent.next(this.visibleLayersSet);
+  }
+
+  private selectLayer(layerId: LayerId, content: LayerContent) {
+    if (!this.selectedLayersRecord[layerId]) {
+      this.selectedLayersRecord[layerId] = new Set();
+    }
+      
+    this.selectedLayersRecord[layerId].add(content);
+    this.selectedLayersSubject.next(this.selectedLayersRecord);
+    this.selectedLayersEvent.emit(this.selectedLayersRecord);
+  }
+
+  private unselectLayer(layerId: LayerId, content: LayerContent) {
+    this.selectedLayersRecord[layerId]?.delete(content);
+    this.selectedLayersSubject.next(this.selectedLayersRecord);
+    this.selectedLayersEvent.emit(this.selectedLayersRecord);
   }
 }
 
@@ -400,20 +469,55 @@ export class ConstructLayerError extends Error {
   }
 }
 
-type MapEventHandler = (
+export class SelectableGeoJSON extends L.GeoJSON {
+  private isSelected = false;
+  
+  constructor(
+    private onSelect: () => void,
+    private onUnselect: () => void,
+    geojson?: geojson.GeoJsonObject, 
+    options?: L.GeoJSONOptions,
+  ) {
+    super(geojson, options);
+  } 
+
+  toggle() {
+    if (this.isSelected) return this.unselect();
+    this.select();
+  }
+
+  select() {
+    this.isSelected = true;
+    this.setStyle({ color: "#d35a0c" });
+    this.bringToFront();
+    this.onSelect();
+  }
+
+  unselect() {
+    this.isSelected = false;
+    this.resetStyle();
+    this.bringToBack();
+    this.onUnselect();
+  }
+}
+
+type MapEventHandler<E = L.LeafletEvent> = (
   layerContent: LayerContent,
   allLayerContents: LayerContent[],
   info: LayerInfo,
-  event: L.LeafletMouseEvent
+  event: E
 ) => void;
 export interface Map2Control {
+  controlInit?: (args: object, layerGroup: L.LayerGroup<SelectableGeoJSON>) => void,
   isVisible?: Observable<boolean>,
-  onClick?: MapEventHandler,
-  onDoubleClick?: MapEventHandler,
-  onMouseDown?: MapEventHandler,
-  onMouseUp?: MapEventHandler,
-  onMouseOver?: MapEventHandler,
-  onMouseOut?: MapEventHandler,
+  onLayerAdd?: MapEventHandler,
+  onLayerRemove?: MapEventHandler,
+  onClick?: MapEventHandler<L.LeafletMouseEvent>,
+  onDoubleClick?: MapEventHandler<L.LeafletMouseEvent>,
+  onMouseDown?: MapEventHandler<L.LeafletMouseEvent>,
+  onMouseUp?: MapEventHandler<L.LeafletMouseEvent>,
+  onMouseOver?: MapEventHandler<L.LeafletMouseEvent>,
+  onMouseOut?: MapEventHandler<L.LeafletMouseEvent>,
 }
 
 @Component({
